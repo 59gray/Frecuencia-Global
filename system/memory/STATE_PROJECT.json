@@ -1,0 +1,71 @@
+{
+  "last_checkpoint_timestamp": "2026-04-02T21:17:02.971203-06:00",
+  "last_checkpoint_file": "01_Estrategia/FG_Checkpoint_AUTO_2026-04-02_2117.md",
+  "repo_dirty_clean_status": "dirty",
+  "touched_areas": [
+    "system",
+    "01_Estrategia",
+    "02_Brand_System",
+    "04_Produccion",
+    "06_Assets",
+    "07_Operaciones",
+    "08_n8n",
+    "website",
+    "scripts"
+  ],
+  "key_files_updated": [
+    "01_Estrategia/FG_Checkpoint_AUTO_2026-04-02_1438.md",
+    "07_Operaciones/logs/checkpoint_log_2026-04-02.json",
+    "07_Operaciones/logs/checkpoint_runner.log",
+    "08_n8n/scripts/activate_core_workflows.js",
+    "08_n8n/scripts/deploy_cloud.js",
+    "08_n8n/scripts/link_cloud_workflows.js",
+    "08_n8n/scripts/verify_core_workflows.js",
+    "08_n8n/templates/brief_template.md",
+    "08_n8n/workflows_cloud/WF-002_registro_brief.json",
+    "scripts/README_AUTOMATIONS.md",
+    "scripts/apply_tiktok_identity.ps1",
+    "scripts/fg_automation_config.mjs",
+    "scripts/fg_automation_config.ps1",
+    "scripts/fg_automation_config.py",
+    "scripts/google_accountchooser_inspect.png",
+    "scripts/google_frames.png",
+    "scripts/instagram_preflight.ps1",
+    "scripts/instagram_profile_avatar.py",
+    "scripts/linkedin_pipeline.ps1",
+    "scripts/linkedin_preflight.ps1"
+  ],
+  "latest_assets_detected": [
+    "Frecuencia_Global_Assets_Base/assets/fg_banner_team.png",
+    "Frecuencia_Global_Assets_Base/assets/fg_corchetes.svg",
+    "Frecuencia_Global_Assets_Base/assets/fg_isotipo.svg",
+    "Frecuencia_Global_Assets_Base/assets/fg_isotipo_512.png",
+    "Frecuencia_Global_Assets_Base/assets/fg_nodo.svg",
+    "Frecuencia_Global_Assets_Base/assets/fg_tiktok_cover_1080x1920.png",
+    "Frecuencia_Global_Assets_Base/assets/fg_tiktok_cover_1080x1920_guides.png",
+    "Frecuencia_Global_Assets_Base/assets/fg_tiktok_profile_200x200.png",
+    "Frecuencia_Global_Assets_Base/assets/fg_wordmark_dark.svg",
+    "Frecuencia_Global_Assets_Base/assets/fg_wordmark_light.svg",
+    "06_Assets/fg_youtube_watermark_150.png",
+    "website/public/images/logo/fg_isotipo.svg",
+    "website/public/images/logo/fg_isotipo_512.png",
+    "website/public/images/logo/fg_wordmark_dark.svg",
+    "website/public/images/logo/fg_wordmark_light.svg"
+  ],
+  "website_status": {
+    "build_exists": true,
+    "build_fresh": true,
+    "build_age_hours": 6.7,
+    "article_count": 2
+  },
+  "pending_priorities": [
+    "P1: Diseño final de P1_001 en Canva — verificar y exportar",
+    "P1: Configurar Canva Brand Kit nativo (6 colores + 3 fuentes)",
+    "P1: Banner YouTube (2560×1440) diseñado y subido",
+    "P2: Guías editoriales por pilar",
+    "P2: Levantar n8n y testear workflows completos"
+  ],
+  "blockers": [],
+  "next_recommended_action": "Revisar cambios recientes y avanzar pipeline editorial",
+  "next_chat_setup_file": "system/memory/checkpoints_chat_setup_latest.md"
+}

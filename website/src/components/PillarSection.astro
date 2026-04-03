@@ -1,0 +1,163 @@
+---
+import PillarPill from './PillarPill.astro';
+import SignalNode from './SignalNode.astro';
+
+interface Article {
+  title: string;
+  description: string;
+  date: Date;
+  pilar: 'p1' | 'p2' | 'p3' | 'p4';
+  slug: string;
+  image?: string;
+}
+
+interface Props {
+  pilar: 'p1' | 'p2' | 'p3' | 'p4';
+  title: string;
+  description: string;
+  articles: Article[];
+  href: string;
+}
+
+const { pilar, title, description, articles, href } = Astro.props;
+
+const pilarColors: Record<string, string> = {
+  p1: 'var(--color-pilar-p1)',
+  p2: 'var(--color-pilar-p2)',
+  p3: 'var(--color-pilar-p3)',
+  p4: 'var(--color-pilar-p4)',
+};
+
+const headingToneMap: Record<string, string> = {
+  p1: 'text-pilar-p1',
+  p2: 'text-pilar-p2',
+  p3: 'text-pilar-p3',
+  p4: 'text-pilar-p4',
+};
+
+const lineToneMap: Record<string, string> = {
+  p1: 'bg-[linear-gradient(180deg,rgba(0,229,255,0.75),transparent)]',
+  p2: 'bg-[linear-gradient(180deg,rgba(255,0,229,0.75),transparent)]',
+  p3: 'bg-[linear-gradient(180deg,rgba(184,255,0,0.75),transparent)]',
+  p4: 'bg-[linear-gradient(180deg,rgba(74,107,255,0.75),transparent)]',
+};
+
+const sectionNumberMap: Record<string, string> = {
+  p1: '01',
+  p2: '02',
+  p3: '03',
+  p4: '04',
+};
+
+const statusLabel =
+  articles.length > 0
+    ? `${String(articles.length).padStart(2, '0')} drops listos`
+    : 'canal en preparación';
+---
+
+<section class="relative py-16 lg:py-24">
+  <div class="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)]" aria-hidden="true"></div>
+
+  <div class="mx-auto grid max-w-[1500px] gap-10 px-md lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-14 lg:px-xl">
+    <div class="h-fit lg:sticky lg:top-24">
+      <div class="mb-4 flex items-center gap-3 font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">
+        <SignalNode size="sm" color={pilarColors[pilar]} />
+        <span>{sectionNumberMap[pilar]} / canal</span>
+      </div>
+
+      <h2 class:list={['font-display text-4xl leading-[0.86] tracking-[0.08em] sm:text-5xl lg:text-6xl', headingToneMap[pilar]]}>
+        {title}
+      </h2>
+      <p class="mt-4 max-w-sm text-base leading-relaxed text-fg-gray">
+        {description}
+      </p>
+      <p class="mt-6 font-data text-[11px] uppercase tracking-[0.28em] text-white/55">
+        {statusLabel}
+      </p>
+      <a
+        href={href}
+        class:list={['mt-7 inline-flex items-center font-data text-xs uppercase tracking-[0.26em] transition-colors duration-300 hover:text-fg-white', headingToneMap[pilar]]}
+      >
+        entrar al pilar →
+      </a>
+    </div>
+
+    <div class="relative">
+      <div class:list={['absolute bottom-0 left-0 top-0 w-px opacity-80', lineToneMap[pilar]]} aria-hidden="true"></div>
+
+      <div class="pl-6 sm:pl-8">
+        {articles.length > 0 ? (
+          articles.map((article, index) => {
+            const formattedDate = article.date.toLocaleDateString('es-MX', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+            });
+
+            return (
+              <article class="group grid gap-6 border-b border-white/10 py-8 first:pt-0 last:border-b-0 last:pb-0 lg:grid-cols-[minmax(0,1fr)_260px] lg:gap-8">
+                <div>
+                  <div class="flex flex-wrap items-center gap-3 font-data text-[11px] uppercase tracking-[0.24em] text-fg-gray">
+                    <span class="text-white/45">#{String(index + 1).padStart(2, '0')}</span>
+                    <span class="text-white/20">/</span>
+                    <time datetime={article.date.toISOString()}>{formattedDate}</time>
+                  </div>
+
+                  <a href={`/contenido/${article.slug}`} class="mt-4 block">
+                    <h3 class="font-display text-2xl leading-[0.9] tracking-[0.05em] text-fg-white transition-colors duration-300 group-hover:text-fg-cyan sm:text-3xl">
+                      {article.title}
+                    </h3>
+                  </a>
+
+                  <p class="mt-4 max-w-2xl text-sm leading-relaxed text-fg-gray sm:text-base">
+                    {article.description}
+                  </p>
+
+                  <div class="mt-5 flex flex-wrap items-center gap-4">
+                    <PillarPill pilar={article.pilar} />
+                    <a
+                      href={`/contenido/${article.slug}`}
+                      class:list={['font-data text-xs uppercase tracking-[0.24em] transition-colors duration-300 hover:text-fg-white', headingToneMap[pilar]]}
+                    >
+                      leer análisis →
+                    </a>
+                  </div>
+                </div>
+
+                {article.image ? (
+                  <a
+                    href={`/contenido/${article.slug}`}
+                    class="block aspect-[4/3] overflow-hidden border border-white/10 bg-fg-surface/30"
+                  >
+                    <img
+                      src={article.image}
+                      alt={article.title}
+                      class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                      loading="lazy"
+                    />
+                  </a>
+                ) : (
+                  <div class="flex aspect-[4/3] items-end border border-dashed border-white/10 bg-black/20 p-4">
+                    <p class="font-data text-[11px] uppercase tracking-[0.24em] text-white/45">
+                      visual en preparación
+                    </p>
+                  </div>
+                )}
+              </article>
+            );
+          })
+        ) : (
+          <div class="py-10">
+            <p class:list={['font-display text-3xl leading-[0.9] tracking-[0.05em]', headingToneMap[pilar]]}>
+              afinando la señal
+            </p>
+            <p class="mt-4 max-w-2xl text-base leading-relaxed text-fg-gray">
+              Este canal ya tiene identidad editorial definida, pero todavía estamos armando su primera tanda de piezas.
+              La idea es que la portada también muestre qué viene después, no solo lo ya publicado.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</section>

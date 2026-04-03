@@ -1,0 +1,106 @@
+{
+  "name": "SUB-001 — Escribir Markdown (Cloud)",
+  "nodes": [
+    {
+      "id": "sub001_trigger",
+      "name": "Ejecutar por Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [0, 300],
+      "parameters": {}
+    },
+    {
+      "id": "sub001_validate",
+      "name": "Validar Parámetros",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\nif (!data.filePath || !data.content) {\n  throw new Error('Parámetros requeridos: filePath, content');\n}\n\n// Normalize: remove /workspace/ prefix if present — cloud uses repo-relative paths\nlet filePath = data.filePath.replace(/^\\/workspace\\//, '');\n\nreturn [{ json: { filePath, content: data.content } }];"
+      }
+    },
+    {
+      "id": "sub001_check_exists",
+      "name": "GitHub: Verificar Si Existe",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [500, 300],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/{{$json.filePath}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [{"name": "ref", "value": "={{$vars.GITHUB_BRANCH || 'main'}}"}]
+        },
+        "options": {"response": {"response": {"neverError": true}}}
+      },
+      "credentials": {
+        "httpHeaderAuth": {"id": "V0SuupEfkzLlD5iJ", "name": "FG GitHub Auth"}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "sub001_prepare",
+      "name": "Preparar Para GitHub",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [750, 300],
+      "parameters": {
+        "jsCode": "const githubCheck = $input.first().json;\nconst params = $('Validar Parámetros').first().json;\n\nconst base64Content = Buffer.from(params.content).toString('base64');\nconst sha = githubCheck.sha || null; // null if file doesn't exist yet\n\nreturn [{ json: { filePath: params.filePath, base64Content, sha } }];"
+      }
+    },
+    {
+      "id": "sub001_write",
+      "name": "GitHub: Escribir Archivo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1000, 300],
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/{{$json.filePath}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={{ JSON.stringify({ message: 'n8n: write ' + $json.filePath, content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main', ...($json.sha ? { sha: $json.sha } : {}) }) }}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {"id": "V0SuupEfkzLlD5iJ", "name": "FG GitHub Auth"}
+      }
+    },
+    {
+      "id": "sub001_confirm",
+      "name": "Confirmar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 300],
+      "parameters": {
+        "jsCode": "return [{ json: { ok: true, filePath: $('Validar Parámetros').first().json.filePath, written: true } }];"
+      }
+    }
+  ],
+  "connections": {
+    "Ejecutar por Workflow": {
+      "main": [[{"node": "Validar Parámetros", "type": "main", "index": 0}]]
+    },
+    "Validar Parámetros": {
+      "main": [[{"node": "GitHub: Verificar Si Existe", "type": "main", "index": 0}]]
+    },
+    "GitHub: Verificar Si Existe": {
+      "main": [[{"node": "Preparar Para GitHub", "type": "main", "index": 0}]]
+    },
+    "Preparar Para GitHub": {
+      "main": [[{"node": "GitHub: Escribir Archivo", "type": "main", "index": 0}]]
+    },
+    "GitHub: Escribir Archivo": {
+      "main": [[{"node": "Confirmar", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "staticData": null,
+  "triggerCount": 0,
+  "meta": {"instanceId": ""}
+}

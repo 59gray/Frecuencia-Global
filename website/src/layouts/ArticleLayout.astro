@@ -1,0 +1,87 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import PillarPill from '../components/PillarPill.astro';
+import FrequencyLine from '../components/FrequencyLine.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  pilar: 'p1' | 'p2' | 'p3' | 'p4';
+  tags?: string[];
+  image?: string;
+}
+
+const { title, description, date, pilar, tags, image } = Astro.props;
+
+const pilarNames: Record<string, string> = {
+  p1: 'Geopolitik Drop',
+  p2: 'Bass & Borders',
+  p3: 'Frecuencia Global',
+  p4: 'Behind the Policy',
+};
+
+const dateFormatted = date.toLocaleDateString('es-ES', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  type="article"
+  pilar={pilar}
+  image={image}
+>
+  <article class="max-w-3xl mx-auto px-md py-2xl">
+    <!-- Article Header -->
+    <header class="mb-2xl">
+      <div class="flex items-center gap-sm mb-lg">
+        <PillarPill pilar={pilar} />
+        <time class="font-data text-sm text-fg-gray" datetime={date.toISOString()}>
+          [{dateFormatted}]
+        </time>
+      </div>
+
+      <h1 class="font-display text-4xl md:text-5xl lg:text-6xl text-fg-white leading-none tracking-wide mb-lg">
+        {title}
+      </h1>
+
+      <p class="text-lg text-fg-gray leading-relaxed">
+        {description}
+      </p>
+
+      <FrequencyLine class="mt-lg" />
+    </header>
+
+    {tags && tags.length > 0 && (
+      <div class="flex flex-wrap gap-xs mb-xl">
+        {tags.map((tag: string) => (
+          <span class="font-data text-xs text-fg-gray bg-fg-surface px-xs py-2xs rounded-sm">
+            [{tag}]
+          </span>
+        ))}
+      </div>
+    )}
+
+    <!-- Article Body -->
+    <div class="prose">
+      <slot />
+    </div>
+
+    <!-- Article Footer -->
+    <footer class="mt-2xl pt-xl border-t border-fg-surface">
+      <FrequencyLine />
+      <div class="mt-lg flex items-center justify-between">
+        <a href="/contenido" class="font-body text-fg-cyan hover:text-fg-white transition-colors">
+          ← Volver a contenido
+        </a>
+        <span class="font-data text-sm text-fg-gray">
+          {pilarNames[pilar]}
+        </span>
+      </div>
+    </footer>
+  </article>
+</BaseLayout>

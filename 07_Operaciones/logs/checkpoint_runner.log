@@ -1,0 +1,141 @@
+ 
+============================================================ 
+[Wed 04/01/2026 14:57:26.97] Checkpoint iniciado 
+============================================================ 
+[OK] venv activado 
+
+[ERROR] Checkpoint fall�: 'charmap' codec can't encode characters in position 0-2: character maps to <undefined>
+[Wed 04/01/2026 14:57:27.37] Checkpoint FALLO (exit 1) 
+ 
+============================================================ 
+[Wed 04/01/2026 14:59:10.13] Checkpoint iniciado 
+============================================================ 
+[OK] venv activado 
+
+[ERROR] Checkpoint fall�: 'charmap' codec can't encode characters in position 0-2: character maps to <undefined>
+[Wed 04/01/2026 14:59:10.54] Checkpoint FALLO (exit 1) 
+ 
+============================================================ 
+[Wed 04/01/2026 15:00:33.88] Checkpoint iniciado 
+============================================================ 
+[OK] venv activado 
+═══ Frecuencia Global — Checkpoint 2026-04-01 15:00 ═══
+  TZ: local-system | Lookback: 24h | Repo: C:\Users\farid\Documents\Frecuencia Global
+
+  [1/7] Leyendo estado git…
+  [2/7] Escaneando directorios…
+  [3/7] Verificando website…
+  [4/7] Detectando assets…
+  [5/7] Evaluando bloqueadores…
+  [6/7] Generando artefactos…
+    ✓ Markdown  → 01_Estrategia/FG_Checkpoint_AUTO_2026-04-01_1500.md
+    ✓ State     → system/memory/STATE_PROJECT.json
+    ✓ Log       → 07_Operaciones\logs\checkpoint_log_2026-04-01.json
+    ✓ Payload   → system\memory\checkpoint_payload_latest.json
+    ✓ ChatSetup → system\memory\checkpoints_chat_setup_latest.md
+  [7/7] Notificando n8n…
+  [n8n] No disponible (HTTP Error 404: Not Found) — payload guardado en disco
+
+═══ Checkpoint completado ═══
+  Áreas tocadas:        13
+  Archivos nuevos:      218
+  Archivos modificados: 15
+  Archivos clave:       97
+  Bloqueadores:         0
+  Siguiente acción:     Revisar cambios recientes y avanzar pipeline editorial
+
+[Wed 04/01/2026 15:00:34.73] Checkpoint OK (exit 0
+[Wed 04/01/2026 15:00:34.75] Checkpoint FALLO (exit 0) 
+ 
+============================================================ 
+[Wed 04/01/2026 15:01:16.17] Checkpoint iniciado 
+============================================================ 
+[OK] venv activado 
+═══ Frecuencia Global — Checkpoint 2026-04-01 15:01 ═══
+  TZ: local-system | Lookback: 24h | Repo: C:\Users\farid\Documents\Frecuencia Global
+
+  [1/7] Leyendo estado git…
+  [2/7] Escaneando directorios…
+  [3/7] Verificando website…
+  [4/7] Detectando assets…
+  [5/7] Evaluando bloqueadores…
+  [6/7] Generando artefactos…
+    ✓ Markdown  → 01_Estrategia/FG_Checkpoint_AUTO_2026-04-01_1501.md
+    ✓ State     → system/memory/STATE_PROJECT.json
+    ✓ Log       → 07_Operaciones\logs\checkpoint_log_2026-04-01.json
+    ✓ Payload   → system\memory\checkpoint_payload_latest.json
+    ✓ ChatSetup → system\memory\checkpoints_chat_setup_latest.md
+  [7/7] Notificando n8n…
+  [n8n] No disponible (HTTP Error 404: Not Found) — payload guardado en disco
+
+═══ Checkpoint completado ═══
+  Áreas tocadas:        13
+  Archivos nuevos:      219
+  Archivos modificados: 15
+  Archivos clave:       98
+  Bloqueadores:         0
+  Siguiente acción:     Revisar cambios recientes y avanzar pipeline editorial
+
+[Wed 04/01/2026 15:01:16.79] Checkpoint OK (exit 0) 
+ 
+============================================================ 
+[Wed 04/01/2026 19:40:06.93] Checkpoint iniciado 
+============================================================ 
+[OK] venv activado 
+═══ Frecuencia Global — Checkpoint 2026-04-01 19:40 ═══
+  TZ: local-system | Lookback: 24h | Repo: C:\Users\farid\Documents\Frecuencia Global
+
+  [1/7] Leyendo estado git…
+  [2/7] Escaneando directorios…
+  [3/7] Verificando website…
+  [4/7] Detectando assets…
+  [5/7] Evaluando bloqueadores…
+  [6/7] Generando artefactos…
+    ✓ Markdown  → 01_Estrategia/FG_Checkpoint_AUTO_2026-04-01_1940.md
+    ✓ State     → system/memory/STATE_PROJECT.json
+    ✓ Log       → 07_Operaciones\logs\checkpoint_log_2026-04-01.json
+    ✓ Payload   → system\memory\checkpoint_payload_latest.json
+    ✓ ChatSetup → system\memory\checkpoints_chat_setup_latest.md
+  [7/7] Notificando n8n…
+  [n8n] No disponible (<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>) — payload guardado en disco
+
+═══ Checkpoint completado ═══
+  Áreas tocadas:        13
+  Archivos nuevos:      217
+  Archivos modificados: 19
+  Archivos clave:       100
+  Bloqueadores:         0
+  Siguiente acción:     Revisar cambios recientes y avanzar pipeline editorial
+
+[Wed 04/01/2026 19:40:11.90] Checkpoint OK (exit 0) 
+ 
+============================================================ 
+[Thu 04/02/2026 21:17:02.42] Checkpoint iniciado 
+============================================================ 
+[OK] venv activado 
+═══ Frecuencia Global — Checkpoint 2026-04-02 21:17 ═══
+  TZ: local-system | Lookback: 24h | Repo: C:\Users\farid\Documents\Frecuencia Global
+
+  [1/7] Leyendo estado git…
+  [2/7] Escaneando directorios…
+  [3/7] Verificando website…
+  [4/7] Detectando assets…
+  [5/7] Evaluando bloqueadores…
+  [6/7] Generando artefactos…
+    ✓ Markdown  → 01_Estrategia/FG_Checkpoint_AUTO_2026-04-02_2117.md
+    ✓ State     → system/memory/STATE_PROJECT.json
+    ✓ Log       → 07_Operaciones\logs\checkpoint_log_2026-04-02.json
+    ✓ Payload   → system\memory\checkpoint_payload_latest.json
+    ✓ ChatSetup → system\memory\checkpoints_chat_setup_latest.md
+  [7/7] Notificando n8n…
+  [n8n] No disponible (<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>) — payload guardado en disco
+
+═══ Checkpoint completado ═══
+  Áreas tocadas:        9
+  Archivos nuevos:      63
+  Archivos modificados: 64
+  Archivos clave:       55
+  Bloqueadores:         0
+  Siguiente acción:     Revisar cambios recientes y avanzar pipeline editorial
+
+[Thu 04/02/2026 21:17:07.37] Checkpoint OK (exit 0) 

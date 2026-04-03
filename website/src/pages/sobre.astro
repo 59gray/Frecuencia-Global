@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FrequencyLine from '../components/FrequencyLine.astro';
+import SignalNode from '../components/SignalNode.astro';
+---
+
+<BaseLayout title="Sobre — Frecuencia Global" description="Análisis internacional con estética de club nocturno. Conoce la marca que traduce la geopolítica al lenguaje de una nueva generación.">
+  <section class="max-w-3xl mx-auto px-md lg:px-xl py-3xl">
+    <h1 class="font-display text-5xl sm:text-6xl tracking-wider text-fg-white mb-lg">SOBRE FRECUENCIA GLOBAL</h1>
+
+    <FrequencyLine />
+
+    <div class="space-y-xl font-body text-fg-gray leading-relaxed">
+      <p class="text-lg text-fg-white">
+        Frecuencia Global es una plataforma de <strong class="text-fg-cyan">análisis internacional</strong> que traduce la complejidad geopolítica al lenguaje visual y narrativo de una nueva generación.
+      </p>
+
+      <p>
+        Nació de una convicción: que la geopolítica, la cultura global y la tecnología son demasiado importantes para quedar envueltas en jerga académica o titulares vacíos. Merecen un formato que respete tanto la inteligencia del lector como su tiempo.
+      </p>
+
+      <p>
+        Nuestra estética viene del mundo de la <strong class="text-pilar-p2">música electrónica</strong> — los clubs oscuros, las frecuencias graves, las luces neón que cortan la oscuridad. No es decoración. Es una declaración: el análisis internacional puede ser riguroso y magnético al mismo tiempo.
+      </p>
+
+      <FrequencyLine color="var(--color-pilar-p2)" />
+
+      <h2 class="font-display text-2xl tracking-wider text-fg-white">LOS CUATRO PILARES</h2>
+
+      <div class="space-y-md">
+        <div class="flex items-start gap-sm">
+          <SignalNode color="var(--color-pilar-p1)" />
+          <div>
+            <h3 class="font-display text-lg text-pilar-p1">GEOPOLITIK DROP</h3>
+            <p class="text-sm">Poder, conflicto y los movimientos estratégicos que reconfiguran el mapa global.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-sm">
+          <SignalNode color="var(--color-pilar-p2)" />
+          <div>
+            <h3 class="font-display text-lg text-pilar-p2">BASS & BORDERS</h3>
+            <p class="text-sm">Música electrónica como lente para entender migración, identidad y cultura global.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-sm">
+          <SignalNode color="var(--color-pilar-p3)" />
+          <div>
+            <h3 class="font-display text-lg text-pilar-p3">FRECUENCIA GLOBAL</h3>
+            <p class="text-sm">Tecnología, datos y las fuerzas invisibles que dan forma al mundo conectado.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-sm">
+          <SignalNode color="var(--color-pilar-p4)" />
+          <div>
+            <h3 class="font-display text-lg text-pilar-p4">BEHIND THE POLICY</h3>
+            <p class="text-sm">Lo que hay detrás de las políticas públicas que afectan tu vida diaria.</p>
+          </div>
+        </div>
+      </div>
+
+      <FrequencyLine color="var(--color-pilar-p3)" />
+
+      <h2 class="font-display text-2xl tracking-wider text-fg-white">MANIFIESTO</h2>
+
+      <blockquote class="border-l-2 border-fg-cyan pl-md italic text-fg-white">
+        "No simplificamos. Traducimos. No somos neutrales. Somos rigurosos. No competimos por clicks. Competimos por comprensión."
+      </blockquote>
+
+      <p>
+        Frecuencia Global opera en la intersección de periodismo, diseño y tecnología. Cada pieza es investigada, escrita y diseñada como un sistema — no como un post más.
+      </p>
+
+      <p class="font-data text-xs tracking-widest text-fg-cyan">
+        &#x25CF; TRANSMITIENDO DESDE 2026
+      </p>
+    </div>
+  </section>
+</BaseLayout>

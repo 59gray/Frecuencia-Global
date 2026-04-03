@@ -1,0 +1,94 @@
+---
+const pilars = [
+  { label: 'Geopolitik Drop', href: '/pilares/geopolitik-drop', color: 'text-pilar-p1' },
+  { label: 'Bass & Borders', href: '/pilares/bass-and-borders', color: 'text-pilar-p2' },
+  { label: 'Frecuencia Global', href: '/pilares/frecuencia-global', color: 'text-pilar-p3' },
+  { label: 'Behind the Policy', href: '/pilares/behind-the-policy', color: 'text-pilar-p4' },
+];
+
+const links = [
+  { label: 'Contenido', href: '/contenido' },
+  { label: 'Podcast', href: '/podcast' },
+  { label: 'Sobre', href: '/sobre' },
+  { label: 'Contacto', href: '/contacto' },
+  { label: 'RSS Artículos', href: '/rss.xml' },
+  { label: 'RSS Podcast', href: '/podcast/rss.xml' },
+];
+
+const socials = [
+  { label: 'Instagram', href: 'https://instagram.com/globalfrequency.es' },
+  { label: 'YouTube', href: 'https://youtube.com/@FrecuenciaGlobal' },
+  { label: 'TikTok', href: 'https://tiktok.com/@frecuenciaglobal' },
+  { label: 'X', href: 'https://x.com/frec_global' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/frecuencia-global' },
+];
+---
+
+<footer class="relative mt-20 border-t border-white/10">
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(0,229,255,0.08),transparent_25%),radial-gradient(circle_at_78%_18%,rgba(74,107,255,0.08),transparent_24%)]" aria-hidden="true"></div>
+
+  <div class="relative mx-auto max-w-[1500px] px-md py-12 lg:px-xl lg:py-16">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_0.8fr_0.8fr]">
+      <div>
+        <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">fin de transmisión</p>
+        <h2 class="mt-4 font-display text-4xl leading-[0.86] tracking-[0.08em] text-fg-white sm:text-5xl">
+          FRECUENCIA GLOBAL
+        </h2>
+        <p class="mt-4 max-w-xl text-base leading-relaxed text-fg-gray">
+          Geopolítica, cultura y tecnología contadas con rigor editorial y energía de club nocturno.
+        </p>
+      </div>
+
+      <div class="grid gap-10 sm:grid-cols-2 lg:col-span-2">
+        <div>
+          <h3 class="font-data text-[11px] uppercase tracking-[0.28em] text-fg-gray">pilares</h3>
+          <ul class="mt-4 space-y-3">
+            {pilars.map((p) => (
+              <li>
+                <a href={p.href} class:list={['font-body text-sm transition-colors duration-300 hover:text-fg-white', p.color]}>
+                  {p.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-data text-[11px] uppercase tracking-[0.28em] text-fg-gray">rutas</h3>
+          <ul class="mt-4 space-y-3">
+            {links.map((l) => (
+              <li>
+                <a href={l.href} class="font-body text-sm text-fg-gray transition-colors duration-300 hover:text-fg-white">
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="sm:col-span-2">
+          <h3 class="font-data text-[11px] uppercase tracking-[0.28em] text-fg-gray">social</h3>
+          <div class="mt-4 flex flex-wrap gap-4">
+            {socials.map((s) => (
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-data text-[11px] uppercase tracking-[0.24em] text-fg-gray transition-colors duration-300 hover:text-fg-cyan"
+              >
+                {s.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-10 flex flex-col gap-3 border-t border-white/10 pt-5 font-data text-[11px] uppercase tracking-[0.24em] text-fg-gray sm:flex-row sm:items-center sm:justify-between">
+      <p>© {new Date().getFullYear()} Frecuencia Global. Todos los derechos reservados.</p>
+      <p>
+        <span class="text-fg-cyan">●</span> transmitiendo
+      </p>
+    </div>
+  </div>
+</footer>

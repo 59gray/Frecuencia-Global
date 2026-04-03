@@ -1,0 +1,65 @@
+{
+  "P1_001": {
+    "historial": [
+      {
+        "estado": "PUBLISH_READY",
+        "timestamp": "2026-04-01T16:27:41.990Z"
+      },
+      {
+        "estado": "PUBLISH_READY",
+        "timestamp": "2026-04-01T22:00:06.326Z"
+      }
+    ],
+    "estado_actual": "PUBLISH_READY",
+    "ultima_actualizacion": "2026-04-01T22:00:06.326Z"
+  },
+  "P1_002": {
+    "historial": [
+      {
+        "estado": "BRIEF_READY",
+        "timestamp": "2026-04-01T23:00:00.000Z",
+        "nota": "Sincronizado manualmente — Brief existente detectado"
+      }
+    ],
+    "estado_actual": "BRIEF_READY",
+    "ultima_actualizacion": "2026-04-01T23:00:00.000Z"
+  },
+  "P1_003": {
+    "historial": [
+      {
+        "estado": "BRIEF_READY",
+        "timestamp": "2026-04-01T23:00:00.000Z",
+        "nota": "Sincronizado manualmente — Brief existente detectado"
+      }
+    ],
+    "estado_actual": "BRIEF_READY",
+    "ultima_actualizacion": "2026-04-01T23:00:00.000Z"
+  },
+  "P1_004": {
+    "historial": [
+      {
+        "estado": "BRIEF_READY",
+        "timestamp": "2026-04-01T15:52:40.207Z"
+      }
+    ],
+    "estado_actual": "BRIEF_READY",
+    "ultima_actualizacion": "2026-04-01T15:52:40.207Z"
+  },
+  "EP_001": {
+    "tipo": "podcast",
+    "historial": [
+      {
+        "estado": "BRIEF_READY",
+        "timestamp": "2026-04-02T18:00:00.000Z",
+        "nota": "Episodio piloto inicializado para flujo podcast + videopodcast"
+      },
+      {
+        "estado": "PUBLISH_READY",
+        "timestamp": "2026-04-02T18:30:00.000Z",
+        "nota": "PublishReady base creado para validacion operativa"
+      }
+    ],
+    "estado_actual": "PUBLISH_READY",
+    "ultima_actualizacion": "2026-04-02T18:30:00.000Z"
+  }
+}

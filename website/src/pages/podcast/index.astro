@@ -1,0 +1,144 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EpisodeCard from '../../components/EpisodeCard.astro';
+import FrequencyLine from '../../components/FrequencyLine.astro';
+import PillarPill from '../../components/PillarPill.astro';
+import { getCollection } from 'astro:content';
+
+const allEpisodes = await getCollection('episodes', ({ data }) => !data.draft);
+const sorted = allEpisodes.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+const latestEpisode = sorted[0];
+---
+
+<BaseLayout title="Podcast — Frecuencia Global" description="Archivo del podcast y videopodcast de Frecuencia Global: episodios semanales con salida a RSS, web y YouTube.">
+  <section class="mx-auto max-w-[1500px] px-md py-2xl lg:px-xl">
+    <div class="grid gap-10 border-b border-white/10 pb-xl lg:grid-cols-[minmax(0,1.15fr)_380px]">
+      <div>
+        <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">frecuencia global podcast</p>
+        <h1 class="mt-4 max-w-[10ch] font-display text-5xl leading-[0.84] tracking-[0.08em] text-fg-white sm:text-6xl">
+          audio-first, con videopodcast en youtube
+        </h1>
+        <p class="mt-5 max-w-3xl text-lg leading-relaxed text-fg-gray">
+          Un episodio semanal que vive en tres superficies al mismo tiempo: feed RSS, archivo público del sitio y videopodcast largo con visualizer editorial 16:9.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a
+            href="/podcast/rss.xml"
+            class="inline-flex items-center justify-center border border-fg-cyan bg-fg-cyan px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-black transition-transform duration-300 hover:-translate-y-0.5"
+          >
+            abrir rss
+          </a>
+          <a
+            href="https://youtube.com/@FrecuenciaGlobal"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center border border-white/15 px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-white transition-colors duration-300 hover:border-white/35 hover:bg-white/5"
+          >
+            canal de youtube
+          </a>
+        </div>
+      </div>
+
+      <aside class="overflow-hidden border border-white/10 bg-white/[0.03] p-6">
+        <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">estado del feed</p>
+        <dl class="mt-6 grid grid-cols-2 gap-4">
+          <div>
+            <dt class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray">episodios</dt>
+            <dd class="mt-2 font-display text-4xl tracking-[0.08em] text-fg-cyan">{String(sorted.length).padStart(2, '0')}</dd>
+          </div>
+          <div>
+            <dt class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray">cadencia</dt>
+            <dd class="mt-2 font-display text-4xl tracking-[0.08em] text-pilar-p4">01</dd>
+          </div>
+        </dl>
+        <p class="mt-6 text-sm leading-relaxed text-fg-gray">
+          Cada episodio genera audio RSS, página pública, videopodcast largo y cortes sociales derivados.
+        </p>
+      </aside>
+    </div>
+
+    {latestEpisode && (
+      <section class="mt-xl grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_360px]">
+        <div class="overflow-hidden border border-white/10 bg-white/[0.03]">
+          <a href={`/podcast/${latestEpisode.id}`} class="block aspect-video overflow-hidden border-b border-white/10">
+            <img src={latestEpisode.data.coverImage} alt={latestEpisode.data.title} class="h-full w-full object-cover" />
+          </a>
+          <div class="px-6 py-6">
+            <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">episodio más reciente</p>
+            <div class="mt-4 flex flex-wrap items-center gap-3">
+              <PillarPill pilar={latestEpisode.data.pilar} size="md" />
+              <span class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray">
+                s{latestEpisode.data.season} / ep{String(latestEpisode.data.episodeNumber).padStart(2, '0')}
+              </span>
+            </div>
+            <h2 class="mt-5 font-display text-4xl leading-[0.9] tracking-[0.06em] text-fg-white">
+              {latestEpisode.data.title}
+            </h2>
+            <p class="mt-4 max-w-2xl text-base leading-relaxed text-fg-gray">
+              {latestEpisode.data.description}
+            </p>
+            <div class="mt-6 flex flex-wrap gap-4">
+              <a href={`/podcast/${latestEpisode.id}`} class="font-data text-xs uppercase tracking-[0.26em] text-fg-cyan hover:text-fg-white">
+                abrir episodio →
+              </a>
+              <a
+                href={`https://www.youtube.com/watch?v=${latestEpisode.data.youtubeVideoId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-data text-xs uppercase tracking-[0.26em] text-fg-gray hover:text-fg-white"
+              >
+                ver en youtube
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <aside class="border border-white/10 bg-white/[0.03] px-6 py-6">
+          <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">pipeline del episodio</p>
+          <ul class="mt-5 space-y-3 text-sm leading-relaxed text-fg-gray">
+            <li>audio master para Spotify, Apple Podcasts y web</li>
+            <li>visualizer editorial 16:9 para videopodcast</li>
+            <li>show notes y metadata para RSS</li>
+            <li>2-3 clips para Shorts, Reels y TikTok</li>
+            <li>copy nativo para X y LinkedIn</li>
+          </ul>
+        </aside>
+      </section>
+    )}
+
+    <section class="mt-xl">
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">archivo</p>
+          <h2 class="mt-3 font-display text-4xl tracking-[0.06em] text-fg-white sm:text-5xl">todos los episodios</h2>
+        </div>
+      </div>
+
+      <FrequencyLine class="mt-6" />
+
+      <div class="mt-xl grid grid-cols-1 gap-lg md:grid-cols-2 lg:grid-cols-3">
+        {sorted.map((episode) => (
+          <EpisodeCard
+            title={episode.data.title}
+            description={episode.data.description}
+            publishDate={episode.data.publishDate}
+            pilar={episode.data.pilar}
+            slug={episode.id}
+            coverImage={episode.data.coverImage}
+            duration={episode.data.duration}
+            episodeNumber={episode.data.episodeNumber}
+            season={episode.data.season}
+            videoMode={episode.data.videoMode}
+            platformLinks={episode.data.platformLinks}
+          />
+        ))}
+      </div>
+
+      {sorted.length === 0 && (
+        <div class="py-3xl text-center">
+          <p class="font-data text-sm tracking-widest text-fg-gray">[SIN EPISODIOS PUBLICADOS AÚN]</p>
+        </div>
+      )}
+    </section>
+  </section>
+</BaseLayout>

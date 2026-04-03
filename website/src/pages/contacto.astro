@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactForm from '../components/ContactForm.astro';
+import FrequencyLine from '../components/FrequencyLine.astro';
+---
+
+<BaseLayout title="Contacto — Frecuencia Global" description="Colaboraciones, prensa, ideas o simplemente quieres conectar. Transmite tu mensaje.">
+  <section class="max-w-3xl mx-auto px-md lg:px-xl py-3xl">
+    <h1 class="font-display text-5xl sm:text-6xl tracking-wider text-fg-white mb-md text-center">CONTACTO</h1>
+    <p class="font-body text-fg-gray text-center mb-xl max-w-xl mx-auto">
+      Colaboraciones, prensa, ideas o simplemente quieres conectar. Abrimos frecuencia.
+    </p>
+
+    <FrequencyLine />
+
+    <div class="mt-xl">
+      <ContactForm />
+    </div>
+
+    <div class="mt-3xl text-center">
+      <p class="font-data text-xs tracking-widest text-fg-gray mb-sm">TAMBIÉN NOS ENCUENTRAS EN</p>
+      <div class="flex justify-center gap-md">
+        <a href="https://instagram.com/globalfrequency.es" target="_blank" rel="noopener noreferrer" class="font-data text-sm text-fg-gray hover:text-fg-cyan transition-colors">Instagram</a>
+        <a href="https://youtube.com/@FrecuenciaGlobal" target="_blank" rel="noopener noreferrer" class="font-data text-sm text-fg-gray hover:text-fg-cyan transition-colors">YouTube</a>
+        <a href="https://tiktok.com/@frecuenciaglobal" target="_blank" rel="noopener noreferrer" class="font-data text-sm text-fg-gray hover:text-fg-cyan transition-colors">TikTok</a>
+          <a href="https://www.linkedin.com/company/frecuencia-global" target="_blank" rel="noopener noreferrer" class="font-data text-sm text-fg-gray hover:text-fg-cyan transition-colors">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

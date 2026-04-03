@@ -1,0 +1,250 @@
+{
+  "name": "WF-008 — Publicar en Instagram (Cloud)",
+  "nodes": [
+    {
+      "id": "wf008c_trigger",
+      "name": "Webhook Publish Instagram",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "publish-instagram",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "publish-instagram"
+    },
+    {
+      "id": "wf008c_validate",
+      "name": "Validar Input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [220, 300],
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": false},
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.body.pieza }}",
+              "rightValue": "",
+              "operator": {"type": "string", "operation": "notEmpty"}
+            },
+            {
+              "leftValue": "={{ $json.body.imageUrl }}",
+              "rightValue": "",
+              "operator": {"type": "string", "operation": "notEmpty"}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "wf008c_error",
+      "name": "Error: Input Invalido",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [440, 440],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, error: 'Campos requeridos: pieza, imageUrl' }) }}",
+        "options": {"responseCode": 400}
+      }
+    },
+    {
+      "id": "wf008c_get_ready",
+      "name": "GitHub: Leer PublishReady",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [440, 180],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/{{$('Webhook Publish Instagram').first().json.body.pieza}}_PublishReady.md",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [{"name": "ref", "value": "={{$vars.GITHUB_BRANCH || 'main'}}"}]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {"id": "V0SuupEfkzLlD5iJ", "name": "FG GitHub Auth"}
+      }
+    },
+    {
+      "id": "wf008c_extract_copy",
+      "name": "Extraer Instagram Caption",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 180],
+      "parameters": {
+        "jsCode": "const pieza = $('Webhook Publish Instagram').first().json.body.pieza;\nconst imageUrl = $('Webhook Publish Instagram').first().json.body.imageUrl;\nconst content = Buffer.from($json.content, 'base64').toString('utf8');\n\nconst rgx = /## Instagram\\s*\\n\\s*\\*\\*Caption:\\*\\*\\s*\\n([\\s\\S]*?)\\n\\s*---/m;\nconst match = content.match(rgx);\nif (!match || !match[1]) throw new Error('No Instagram caption found in ' + pieza + '_PublishReady.md');\n\nconst caption = match[1].trim();\nif (!caption) throw new Error('Empty Instagram caption in ' + pieza + '_PublishReady.md');\n\nreturn [{ json: { pieza, imageUrl, caption } }];"
+      }
+    },
+    {
+      "id": "wf008c_publish_ig",
+      "name": "Publicar en Instagram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [880, 180],
+      "parameters": {
+        "method": "POST",
+        "url": "={{$vars.IG_PUBLISH_WEBHOOK_URL}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={{ JSON.stringify({ pieza: $json.pieza, caption: $json.caption, imageUrl: $json.imageUrl }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {"id": "__PLACEHOLDER_IG_AUTH__", "name": "FG Instagram Auth"}
+      }
+    },
+    {
+      "id": "wf008c_get_tracker",
+      "name": "GitHub: GET Tracker",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1100, 180],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [{"name": "ref", "value": "={{$vars.GITHUB_BRANCH || 'main'}}"}]
+        },
+        "options": {"response": {"response": {"neverError": true}}}
+      },
+      "credentials": {
+        "httpHeaderAuth": {"id": "V0SuupEfkzLlD5iJ", "name": "FG GitHub Auth"}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "wf008c_update_tracker",
+      "name": "Actualizar Tracker",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1320, 180],
+      "parameters": {
+        "jsCode": "const trackerRes = $input.first().json;\nconst publishRes = $('Publicar en Instagram').first().json;\nconst cap = $('Extraer Instagram Caption').first().json;\nconst pieza = cap.pieza;\nconst postId = publishRes.postId || publishRes.id || publishRes.media_id || 'unknown';\n\nlet tracker = {};\nif (trackerRes.content) {\n  try { tracker = JSON.parse(Buffer.from(trackerRes.content, 'base64').toString('utf8')); } catch(e) {}\n}\nconst sha = trackerRes.sha || null;\n\nconst ahora = new Date().toISOString();\nif (!tracker[pieza]) tracker[pieza] = { historial: [], publicaciones: [] };\ntracker[pieza].historial = tracker[pieza].historial || [];\ntracker[pieza].publicaciones = tracker[pieza].publicaciones || [];\ntracker[pieza].historial.push({ estado: 'PUBLISHED_INSTAGRAM', timestamp: ahora });\ntracker[pieza].publicaciones.push({ plataforma: 'Instagram', timestamp: ahora, postId });\ntracker[pieza].estado_actual = 'PUBLISHED_INSTAGRAM';\ntracker[pieza].ultima_actualizacion = ahora;\n\nconst base64Content = Buffer.from(JSON.stringify(tracker, null, 2)).toString('base64');\nreturn [{ json: { pieza, postId, base64Content, ...(sha ? { sha } : {}) } }];"
+      }
+    },
+    {
+      "id": "wf008c_put_tracker",
+      "name": "GitHub: PUT Tracker",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1540, 180],
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={{ JSON.stringify({ message: 'tracker: published_instagram ' + $json.pieza, content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main', ...($json.sha ? { sha: $json.sha } : {}) }) }}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {"id": "V0SuupEfkzLlD5iJ", "name": "FG GitHub Auth"}
+      }
+    },
+    {
+      "id": "wf008c_telegram",
+      "name": "Notificar Telegram",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [1760, 180],
+      "parameters": {
+        "workflowId": "a1b2c3d4-0002-4000-8000-000000000002",
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "mensaje": "={{ '\\uD83D\\uDCF8 Publicado en Instagram: ' + $('Actualizar Tracker').first().json.pieza + '\\nPost ID: ' + $('Actualizar Tracker').first().json.postId }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "wf008c_log",
+      "name": "Registrar Evento",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [1980, 180],
+      "parameters": {
+        "workflowId": "a1b2c3d4-0004-4000-8000-000000000004",
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "evento": "PUBLISHED_INSTAGRAM",
+            "pieza": "={{ $('Actualizar Tracker').first().json.pieza }}",
+            "detalles": "={{ 'Post ID: ' + $('Actualizar Tracker').first().json.postId }}",
+            "timestamp": "={{ new Date().toISOString() }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "wf008c_respond",
+      "name": "Responder OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2200, 180],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, plataforma: 'Instagram', pieza: $('Actualizar Tracker').first().json.pieza, postId: $('Actualizar Tracker').first().json.postId }) }}"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Publish Instagram": {
+      "main": [[{"node": "Validar Input", "type": "main", "index": 0}]]
+    },
+    "Validar Input": {
+      "main": [
+        [{"node": "GitHub: Leer PublishReady", "type": "main", "index": 0}],
+        [{"node": "Error: Input Invalido", "type": "main", "index": 0}]
+      ]
+    },
+    "GitHub: Leer PublishReady": {
+      "main": [[{"node": "Extraer Instagram Caption", "type": "main", "index": 0}]]
+    },
+    "Extraer Instagram Caption": {
+      "main": [[{"node": "Publicar en Instagram", "type": "main", "index": 0}]]
+    },
+    "Publicar en Instagram": {
+      "main": [[{"node": "GitHub: GET Tracker", "type": "main", "index": 0}]]
+    },
+    "GitHub: GET Tracker": {
+      "main": [[{"node": "Actualizar Tracker", "type": "main", "index": 0}]]
+    },
+    "Actualizar Tracker": {
+      "main": [[{"node": "GitHub: PUT Tracker", "type": "main", "index": 0}]]
+    },
+    "GitHub: PUT Tracker": {
+      "main": [[{"node": "Notificar Telegram", "type": "main", "index": 0}]]
+    },
+    "Notificar Telegram": {
+      "main": [[{"node": "Registrar Evento", "type": "main", "index": 0}]]
+    },
+    "Registrar Evento": {
+      "main": [[{"node": "Responder OK", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "staticData": null,
+  "triggerCount": 0,
+  "meta": {"instanceId": ""}
+}

@@ -1,0 +1,73 @@
+---
+interface Props {
+  action?: string;
+}
+
+const { action = 'https://formspree.io/f/[PLACEHOLDER]' } = Astro.props;
+---
+
+<form
+  method="POST"
+  action={action}
+  class="max-w-xl mx-auto space-y-md"
+>
+  <div>
+    <label for="name" class="block font-data text-xs tracking-widest text-fg-gray mb-2xs">NOMBRE</label>
+    <input
+      type="text"
+      id="name"
+      name="name"
+      required
+      class="w-full bg-fg-surface border border-fg-surface focus:border-fg-cyan text-fg-white font-body text-sm px-md py-sm rounded-sm outline-none transition-colors"
+      placeholder="Tu nombre"
+    />
+  </div>
+
+  <div>
+    <label for="email" class="block font-data text-xs tracking-widest text-fg-gray mb-2xs">EMAIL</label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      required
+      class="w-full bg-fg-surface border border-fg-surface focus:border-fg-cyan text-fg-white font-body text-sm px-md py-sm rounded-sm outline-none transition-colors"
+      placeholder="tu@email.com"
+    />
+  </div>
+
+  <div>
+    <label for="subject" class="block font-data text-xs tracking-widest text-fg-gray mb-2xs">ASUNTO</label>
+    <input
+      type="text"
+      id="subject"
+      name="subject"
+      required
+      class="w-full bg-fg-surface border border-fg-surface focus:border-fg-cyan text-fg-white font-body text-sm px-md py-sm rounded-sm outline-none transition-colors"
+      placeholder="¿De qué se trata?"
+    />
+  </div>
+
+  <div>
+    <label for="message" class="block font-data text-xs tracking-widest text-fg-gray mb-2xs">MENSAJE</label>
+    <textarea
+      id="message"
+      name="message"
+      required
+      rows="5"
+      class="w-full bg-fg-surface border border-fg-surface focus:border-fg-cyan text-fg-white font-body text-sm px-md py-sm rounded-sm outline-none transition-colors resize-y"
+      placeholder="Tu mensaje..."
+    ></textarea>
+  </div>
+
+  <!-- Honeypot anti-spam -->
+  <div class="hidden" aria-hidden="true">
+    <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <button
+    type="submit"
+    class="w-full font-data text-sm tracking-widest text-fg-cyan border border-fg-cyan px-xl py-sm rounded-sm hover:bg-fg-cyan/10 transition-colors cursor-pointer"
+  >
+    TRANSMITIR MENSAJE
+  </button>
+</form>

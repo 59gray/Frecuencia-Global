@@ -1,0 +1,56 @@
+{
+  "id": "fg_wf_001",
+  "name": "WF-001 â€” Intake de Ideas",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "intake",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wf001-trigger",
+      "name": "Webhook Intake",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "webhookId": "fg-intake-webhook",
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst path = '/workspace/03_Editorial';\nif (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });\n\nconst body = $json.body || {};\nif (!body.titulo || !body.pilar || !body.angulo || !body.formato) {\n  return [{ json: { ok: false, error: 'Campos requeridos: titulo, pilar, angulo, formato' } }];\n}\n\nlet maxNum = 0;\nfor (const file of fs.readdirSync(path)) {\n  const m = file.match(/^P1_(\\d{3})/);\n  if (m) maxNum = Math.max(maxNum, parseInt(m[1], 10));\n}\nconst next = String(maxNum + 1).padStart(3, '0');\nconst idPieza = `P1_${next}`;\nconst fecha = new Date().toISOString().split('T')[0];\nconst content = `# BRIEF DE CONTENIDO\\n\\n## METADATOS\\n- **ID de pieza:** FG-${new Date().getFullYear()}-${idPieza}\\n- **Fecha:** ${fecha}\\n- **TÃ­tulo:** ${body.titulo}\\n- **Pilar:** ${body.pilar}\\n- **Ãngulo:** ${body.angulo}\\n- **Formato:** ${body.formato}\\n`;\nconst filePath = `${path}/${idPieza}_Brief.md`;\nfs.writeFileSync(filePath, content, 'utf8');\nreturn [{ json: { ok: true, pieza: idPieza, archivo: `03_Editorial/${idPieza}_Brief.md` } }];"
+      },
+      "id": "wf001-build",
+      "name": "Crear Brief",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseCode": "={{ $json.ok ? 200 : 400 }}"
+        }
+      },
+      "id": "wf001-respond",
+      "name": "Responder",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [760, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Intake": {
+      "main": [[{ "node": "Crear Brief", "type": "main", "index": 0 }]]
+    },
+    "Crear Brief": {
+      "main": [[{ "node": "Responder", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

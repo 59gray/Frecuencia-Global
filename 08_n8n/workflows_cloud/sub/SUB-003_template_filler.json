@@ -1,0 +1,69 @@
+{
+  "name": "SUB-003 — Template Filler (Cloud)",
+  "nodes": [
+    {
+      "id": "sub003_trigger",
+      "name": "Ejecutar por Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [0, 300],
+      "parameters": {}
+    },
+    {
+      "id": "sub003_validate",
+      "name": "Validar Parámetros",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\nif (!data.templatePath) {\n  throw new Error('Parámetro requerido: templatePath');\n}\nif (!data.variables || typeof data.variables !== 'object') {\n  throw new Error('Parámetro requerido: variables (objeto con claves y valores)');\n}\n\n// Normalize: remove /workspace/ prefix\nlet templatePath = data.templatePath.replace(/^\\/workspace\\//, '');\n\nreturn [{ json: { templatePath, variables: data.variables } }];"
+      }
+    },
+    {
+      "id": "sub003_read_template",
+      "name": "GitHub: Leer Template",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [500, 300],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/{{$json.templatePath}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [{"name": "ref", "value": "={{$vars.GITHUB_BRANCH || 'main'}}"}]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {"id": "V0SuupEfkzLlD5iJ", "name": "FG GitHub Auth"}
+      }
+    },
+    {
+      "id": "sub003_replace",
+      "name": "Reemplazar Variables",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [750, 300],
+      "parameters": {
+        "jsCode": "let template = Buffer.from($json.content, 'base64').toString('utf8');\nconst variables = $('Validar Parámetros').first().json.variables;\n\nfor (const [key, value] of Object.entries(variables)) {\n  const placeholder = new RegExp(`\\\\{\\\\{${key}\\\\}\\\\}`, 'g');\n  template = template.replace(placeholder, value || '');\n}\n\nreturn [{ json: { content: template, variables } }];"
+      }
+    }
+  ],
+  "connections": {
+    "Ejecutar por Workflow": {
+      "main": [[{"node": "Validar Parámetros", "type": "main", "index": 0}]]
+    },
+    "Validar Parámetros": {
+      "main": [[{"node": "GitHub: Leer Template", "type": "main", "index": 0}]]
+    },
+    "GitHub: Leer Template": {
+      "main": [[{"node": "Reemplazar Variables", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "staticData": null,
+  "triggerCount": 0,
+  "meta": {"instanceId": ""}
+}

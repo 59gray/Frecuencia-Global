@@ -1,0 +1,45 @@
+{
+  "pieza": "EP_001",
+  "is_podcast": true,
+  "missing_sections": [],
+  "x_copy": "Nuevo episodio: Frecuencia Global Podcast 001: cables, poder y la infraestructura que no vemos\n\nhttps://rss.com/podcasts/frecuencia-global-podcast\n\n#FrecuenciaGlobal #AnalisisInternacional #Geopolitica",
+  "x_length": 201,
+  "threads_copy": "Nuevo episodio: Frecuencia Global Podcast 001: cables, poder y la infraestructura que no vemos\n\nhttps://rss.com/podcasts/frecuencia-global-podcast\n\n#FrecuenciaGlobal #AnalisisInternacional #Geopolitica\n\nFrecuencia Global conecta analisis internacional, podcast y videopodcast. #FrecuenciaGlobal #Podcast",
+  "tiktok_copy": "Frecuencia Global Podcast 001 podcast + videopodcast #FrecuenciaGlobal #AnalisisInternacional #Geopolitica",
+  "tiktok_length": 106,
+  "present_sections": {
+    "Podcast / RSS.com / Web": true,
+    "YouTube Videopodcast": true,
+    "X (Twitter)": true,
+    "Instagram": true,
+    "LinkedIn": true,
+    "TikTok": true
+  },
+  "podcast_show_url": "https://rss.com/podcasts/frecuencia-global-podcast",
+  "podcast_feed_url": "https://media.rss.com/frecuencia-global-podcast/feed.xml",
+  "editorial_url": "https://frecuenciaglobal.vercel.app/podcast/frecuencia-global-podcast-ep-001",
+  "canonical_url": null,
+  "slug": "frecuencia-global-podcast-ep-001",
+  "youtube_title": "Frecuencia Global Podcast 001: cables, poder y la infraestructura que no vemos",
+  "video_mode": "editorial-visualizer",
+  "chapters_count": 5,
+  "clips_count": 3,
+  "chapters": [
+    "00:00 Intro",
+    "02:30 Contexto",
+    "07:30 Desarrollo",
+    "12:30 Implicaciones",
+    "16:00 Cierre"
+  ],
+  "clips": [
+    "Clip 1 - hook principal (0:30-1:00)",
+    "Clip 2 - tension o dato fuerte (7:30-8:15)",
+    "Clip 3 - cierre / CTA (15:45-16:20)"
+  ],
+  "show_notes_present": true,
+  "webhook": {
+    "called": false,
+    "status_code": null,
+    "body": "skip-webhook"
+  }
+}

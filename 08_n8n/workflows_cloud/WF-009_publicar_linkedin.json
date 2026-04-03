@@ -1,0 +1,245 @@
+{
+  "name": "WF-009 — Publicar en LinkedIn (Cloud)",
+  "nodes": [
+    {
+      "id": "wf009c_trigger",
+      "name": "Webhook Publish LinkedIn",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "publish-linkedin",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "publish-linkedin"
+    },
+    {
+      "id": "wf009c_validate",
+      "name": "Validar Input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [220, 300],
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": false},
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.body.pieza }}",
+              "rightValue": "",
+              "operator": {"type": "string", "operation": "notEmpty"}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "wf009c_error",
+      "name": "Error: Input Invalido",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [440, 440],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, error: 'Campo requerido: pieza' }) }}",
+        "options": {"responseCode": 400}
+      }
+    },
+    {
+      "id": "wf009c_get_ready",
+      "name": "GitHub: Leer PublishReady",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [440, 180],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/{{$('Webhook Publish LinkedIn').first().json.body.pieza}}_PublishReady.md",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [{"name": "ref", "value": "={{$vars.GITHUB_BRANCH || 'main'}}"}]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {"id": "V0SuupEfkzLlD5iJ", "name": "FG GitHub Auth"}
+      }
+    },
+    {
+      "id": "wf009c_extract_copy",
+      "name": "Extraer LinkedIn Copy",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 180],
+      "parameters": {
+        "jsCode": "const pieza = $('Webhook Publish LinkedIn').first().json.body.pieza;\nconst content = Buffer.from($json.content, 'base64').toString('utf8');\n\nconst rgx = /## LinkedIn\\s*\\n([\\s\\S]*?)\\n\\s*---/m;\nconst match = content.match(rgx);\nif (!match || !match[1]) throw new Error('No LinkedIn copy found in ' + pieza + '_PublishReady.md');\n\nconst text = match[1].trim();\nif (!text) throw new Error('Empty LinkedIn copy in ' + pieza + '_PublishReady.md');\n\nreturn [{ json: { pieza, text } }];"
+      }
+    },
+    {
+      "id": "wf009c_publish_li",
+      "name": "Publicar en LinkedIn",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [880, 180],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.linkedin.com/v2/ugcPosts",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "linkedInCommunityManagementOAuth2Api",
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={{ JSON.stringify({ author: $vars.LINKEDIN_AUTHOR_URN, lifecycleState: 'PUBLISHED', specificContent: { 'com.linkedin.ugc.ShareContent': { shareCommentary: { text: $json.text }, shareMediaCategory: 'NONE' } }, visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' } }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "linkedInCommunityManagementOAuth2Api": {"id": "__PLACEHOLDER_LINKEDIN_AUTH__", "name": "FG LinkedIn Auth"}
+      }
+    },
+    {
+      "id": "wf009c_get_tracker",
+      "name": "GitHub: GET Tracker",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1100, 180],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [{"name": "ref", "value": "={{$vars.GITHUB_BRANCH || 'main'}}"}]
+        },
+        "options": {"response": {"response": {"neverError": true}}}
+      },
+      "credentials": {
+        "httpHeaderAuth": {"id": "V0SuupEfkzLlD5iJ", "name": "FG GitHub Auth"}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "wf009c_update_tracker",
+      "name": "Actualizar Tracker",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1320, 180],
+      "parameters": {
+        "jsCode": "const trackerRes = $input.first().json;\nconst publishRes = $('Publicar en LinkedIn').first().json;\nconst data = $('Extraer LinkedIn Copy').first().json;\nconst pieza = data.pieza;\nconst postId = publishRes.id || publishRes.urn || 'unknown';\n\nlet tracker = {};\nif (trackerRes.content) {\n  try { tracker = JSON.parse(Buffer.from(trackerRes.content, 'base64').toString('utf8')); } catch(e) {}\n}\nconst sha = trackerRes.sha || null;\n\nconst ahora = new Date().toISOString();\nif (!tracker[pieza]) tracker[pieza] = { historial: [], publicaciones: [] };\ntracker[pieza].historial = tracker[pieza].historial || [];\ntracker[pieza].publicaciones = tracker[pieza].publicaciones || [];\ntracker[pieza].historial.push({ estado: 'PUBLISHED_LINKEDIN', timestamp: ahora });\ntracker[pieza].publicaciones.push({ plataforma: 'LinkedIn', timestamp: ahora, postId });\ntracker[pieza].estado_actual = 'PUBLISHED_LINKEDIN';\ntracker[pieza].ultima_actualizacion = ahora;\n\nconst base64Content = Buffer.from(JSON.stringify(tracker, null, 2)).toString('base64');\nreturn [{ json: { pieza, postId, base64Content, ...(sha ? { sha } : {}) } }];"
+      }
+    },
+    {
+      "id": "wf009c_put_tracker",
+      "name": "GitHub: PUT Tracker",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1540, 180],
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={{ JSON.stringify({ message: 'tracker: published_linkedin ' + $json.pieza, content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main', ...($json.sha ? { sha: $json.sha } : {}) }) }}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {"id": "V0SuupEfkzLlD5iJ", "name": "FG GitHub Auth"}
+      }
+    },
+    {
+      "id": "wf009c_telegram",
+      "name": "Notificar Telegram",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [1760, 180],
+      "parameters": {
+        "workflowId": "a1b2c3d4-0002-4000-8000-000000000002",
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "mensaje": "={{ '\\uD83D\\uDCBC Publicado en LinkedIn: ' + $('Actualizar Tracker').first().json.pieza + '\\nPost: ' + $('Actualizar Tracker').first().json.postId }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "wf009c_log",
+      "name": "Registrar Evento",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [1980, 180],
+      "parameters": {
+        "workflowId": "a1b2c3d4-0004-4000-8000-000000000004",
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "evento": "PUBLISHED_LINKEDIN",
+            "pieza": "={{ $('Actualizar Tracker').first().json.pieza }}",
+            "detalles": "={{ 'Post: ' + $('Actualizar Tracker').first().json.postId }}",
+            "timestamp": "={{ new Date().toISOString() }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "wf009c_respond",
+      "name": "Responder OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2200, 180],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, plataforma: 'LinkedIn', pieza: $('Actualizar Tracker').first().json.pieza, postId: $('Actualizar Tracker').first().json.postId }) }}"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Publish LinkedIn": {
+      "main": [[{"node": "Validar Input", "type": "main", "index": 0}]]
+    },
+    "Validar Input": {
+      "main": [
+        [{"node": "GitHub: Leer PublishReady", "type": "main", "index": 0}],
+        [{"node": "Error: Input Invalido", "type": "main", "index": 0}]
+      ]
+    },
+    "GitHub: Leer PublishReady": {
+      "main": [[{"node": "Extraer LinkedIn Copy", "type": "main", "index": 0}]]
+    },
+    "Extraer LinkedIn Copy": {
+      "main": [[{"node": "Publicar en LinkedIn", "type": "main", "index": 0}]]
+    },
+    "Publicar en LinkedIn": {
+      "main": [[{"node": "GitHub: GET Tracker", "type": "main", "index": 0}]]
+    },
+    "GitHub: GET Tracker": {
+      "main": [[{"node": "Actualizar Tracker", "type": "main", "index": 0}]]
+    },
+    "Actualizar Tracker": {
+      "main": [[{"node": "GitHub: PUT Tracker", "type": "main", "index": 0}]]
+    },
+    "GitHub: PUT Tracker": {
+      "main": [[{"node": "Notificar Telegram", "type": "main", "index": 0}]]
+    },
+    "Notificar Telegram": {
+      "main": [[{"node": "Registrar Evento", "type": "main", "index": 0}]]
+    },
+    "Registrar Evento": {
+      "main": [[{"node": "Responder OK", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "staticData": null,
+  "triggerCount": 0,
+  "meta": {"instanceId": ""}
+}

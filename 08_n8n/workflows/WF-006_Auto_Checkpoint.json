@@ -1,0 +1,143 @@
+{
+  "name": "WF-006A — Auto Checkpoint (Hybrid)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "checkpoint",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wf008-trigger",
+      "name": "Webhook Checkpoint",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "checkpoint"
+    },
+    {
+      "parameters": {},
+      "id": "wf008-manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 120]
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date();\nconst date = now.toISOString().split('T')[0];\nreturn [{\n  json: {\n    event: 'checkpoint_generated',\n    timestamp: now.toISOString(),\n    checkpoint_file: '01_Estrategia/FG_Checkpoint_AUTO_TEST_' + date + '.md',\n    summary: 'Prueba manual de checkpoint desde n8n',\n    git_status: 'unknown',\n    git_branch: 'unknown',\n    touched_areas: ['system', 'scripts', '08_n8n'],\n    new_files_count: 0,\n    modified_files_count: 0,\n    key_files: ['system/memory/STATE_PROJECT.json'],\n    blockers: [],\n    next_action: 'Revisar resultado manual',\n    website_build_exists: false,\n    website_article_count: 0\n  }\n}];"
+      },
+      "id": "wf008-manual-payload",
+      "name": "Payload Manual de Prueba",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 120]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate and enrich checkpoint payload\nconst body = $input.first().json.body || $input.first().json;\n\nif (!body.event || body.event !== 'checkpoint_generated') {\n  throw new Error('Payload inválido: falta event=checkpoint_generated');\n}\n\nconst ts = body.timestamp || new Date().toISOString();\nconst date = ts.split('T')[0];\n\nconst summary = body.summary || 'Sin resumen';\nconst gitStatus = body.git_status || 'unknown';\nconst branch = body.git_branch || 'unknown';\nconst areas = body.touched_areas || [];\nconst blockers = body.blockers || [];\nconst nextAction = body.next_action || '';\nconst newCount = body.new_files_count || 0;\nconst modCount = body.modified_files_count || 0;\nconst keyFiles = body.key_files || [];\nconst checkpointFile = body.checkpoint_file || '';\n\n// Build Telegram message (for optional use)\nconst lines = [\n  '📡 *Checkpoint FG*',\n  '',\n  '📅 ' + date,\n  '🔀 Repo: ' + gitStatus + ' (' + branch + ')',\n  '📁 ' + newCount + ' nuevos, ' + modCount + ' modificados',\n  '📂 Áreas: ' + (areas.length > 0 ? areas.join(', ') : 'ninguna'),\n];\nif (blockers.length > 0) {\n  lines.push('');\n  lines.push('⚠️ *Bloqueadores:*');\n  for (const b of blockers) {\n    lines.push('  • ' + b);\n  }\n}\nif (nextAction) {\n  lines.push('');\n  lines.push('➡️ ' + nextAction);\n}\nconst telegramText = lines.join('\\n');\n\nreturn [{\n  json: {\n    timestamp: ts,\n    date,\n    summary,\n    gitStatus,\n    branch,\n    areas,\n    blockers,\n    nextAction,\n    newCount,\n    modCount,\n    keyFiles,\n    checkpointFile,\n    telegramText,\n    receivedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "wf008-process",
+      "name": "Procesar Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Write/append to n8n-side checkpoint log\nconst fs = require('fs');\nconst d = $input.first().json;\nconst logDir = '/workspace/07_Operaciones/logs';\n\ntry { fs.mkdirSync(logDir, { recursive: true }); } catch(e) {}\n\nconst logFile = logDir + '/n8n_checkpoint_log_' + d.date + '.json';\n\nlet entries = [];\ntry {\n  const raw = fs.readFileSync(logFile, 'utf8');\n  entries = JSON.parse(raw);\n  if (!Array.isArray(entries)) entries = [entries];\n} catch(e) {\n  entries = [];\n}\n\nentries.push({\n  received_at: d.receivedAt,\n  checkpoint_timestamp: d.timestamp,\n  checkpoint_file: d.checkpointFile,\n  git_status: d.gitStatus,\n  branch: d.branch,\n  areas_count: d.areas.length,\n  new_files: d.newCount,\n  modified_files: d.modCount,\n  blockers_count: d.blockers.length,\n  next_action: d.nextAction\n});\n\nfs.writeFileSync(logFile, JSON.stringify(entries, null, 2), 'utf8');\n\nreturn [{ json: Object.assign({}, d, { logFile, logWritten: true }) }];"
+      },
+      "id": "wf008-log",
+      "name": "Escribir Log n8n",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $env.TELEGRAM_BOT_TOKEN }}/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\",\n  \"text\": {{ JSON.stringify($json.telegramText) }},\n  \"parse_mode\": \"Markdown\"\n}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "wf008-telegram",
+      "name": "Telegram (opcional)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [960, 440],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, event: 'checkpoint_received', checkpoint: $json.checkpointFile, log: $json.logFile, timestamp: $json.receivedAt }) }}",
+        "options": { "responseCode": 200 }
+      },
+      "id": "wf008-respond",
+      "name": "Responder OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [960, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, error: $json.message || 'Error procesando checkpoint' }) }}",
+        "options": { "responseCode": 500 }
+      },
+      "id": "wf008-error",
+      "name": "Responder Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [720, 500]
+    }
+  ],
+  "connections": {
+    "Webhook Checkpoint": {
+      "main": [
+        [
+          { "node": "Procesar Payload", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [
+          { "node": "Payload Manual de Prueba", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Payload Manual de Prueba": {
+      "main": [
+        [
+          { "node": "Procesar Payload", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Procesar Payload": {
+      "main": [
+        [
+          { "node": "Escribir Log n8n", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Escribir Log n8n": {
+      "main": [
+        [
+          { "node": "Responder OK", "type": "main", "index": 0 },
+          { "node": "Telegram (opcional)", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "tags": []
+}

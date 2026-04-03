@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import FrequencyLine from '../../components/FrequencyLine.astro';
+import PillarPill from '../../components/PillarPill.astro';
+import { getCollection } from 'astro:content';
+
+const allArticles = await getCollection('articles', ({ data }) => !data.draft);
+const sorted = allArticles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const pilars = ['all', 'p1', 'p2', 'p3', 'p4'] as const;
+const pilarLabels: Record<string, string> = {
+  all: 'TODOS',
+  p1: 'GEOPOLITIK DROP',
+  p2: 'BASS & BORDERS',
+  p3: 'FRECUENCIA GLOBAL',
+  p4: 'BEHIND THE POLICY',
+};
+---
+
+<BaseLayout title="Contenido — Frecuencia Global" description="Todo el contenido de Frecuencia Global: geopolítica, música electrónica, tecnología y política pública.">
+  <section class="max-w-7xl mx-auto px-md lg:px-xl py-3xl">
+    <h1 class="font-display text-5xl sm:text-6xl tracking-wider text-fg-white mb-md">CONTENIDO</h1>
+    <p class="font-body text-fg-gray mb-xl max-w-2xl">
+      Todas las transmisiones. Filtra por pilar o explora todo.
+    </p>
+
+    <!-- Filters -->
+    <div class="flex flex-wrap gap-sm mb-xl" id="pilar-filters">
+      {pilars.map((p) => (
+        <button
+          data-pilar={p}
+          class:list={[
+            'font-data text-xs tracking-widest px-md py-xs border rounded-sm transition-colors cursor-pointer pilar-filter',
+            p === 'all'
+              ? 'text-fg-cyan border-fg-cyan bg-fg-cyan/10'
+              : 'text-fg-gray border-fg-surface hover:border-fg-cyan hover:text-fg-cyan',
+          ]}
+        >
+          {pilarLabels[p]}
+        </button>
+      ))}
+    </div>
+
+    <FrequencyLine />
+
+    <!-- Articles grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg mt-xl" id="articles-grid">
+      {sorted.map((article) => (
+        <div data-pilar={article.data.pilar} class="article-item">
+          <ArticleCard
+            title={article.data.title}
+            description={article.data.description}
+            date={article.data.date}
+            pilar={article.data.pilar}
+            slug={article.id}
+            image={article.data.image}
+          />
+        </div>
+      ))}
+    </div>
+
+    {sorted.length === 0 && (
+      <div class="text-center py-3xl">
+        <p class="font-data text-sm tracking-widest text-fg-gray">[SIN SEÑAL — PRÓXIMAMENTE]</p>
+      </div>
+    )}
+  </section>
+</BaseLayout>
+
+<script>
+  const filters = document.querySelectorAll('.pilar-filter');
+  const items = document.querySelectorAll('.article-item');
+
+  filters.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const pilar = (btn as HTMLElement).dataset.pilar;
+
+      // Update active filter
+      filters.forEach((f) => {
+        f.classList.remove('text-fg-cyan', 'border-fg-cyan', 'bg-fg-cyan/10');
+        f.classList.add('text-fg-gray', 'border-fg-surface');
+      });
+      btn.classList.remove('text-fg-gray', 'border-fg-surface');
+      btn.classList.add('text-fg-cyan', 'border-fg-cyan', 'bg-fg-cyan/10');
+
+      // Filter articles
+      items.forEach((item) => {
+        const el = item as HTMLElement;
+        if (pilar === 'all' || el.dataset.pilar === pilar) {
+          el.style.display = '';
+        } else {
+          el.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

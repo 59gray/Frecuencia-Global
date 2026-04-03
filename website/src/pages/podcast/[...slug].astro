@@ -1,0 +1,33 @@
+---
+import EpisodeLayout from '../../layouts/EpisodeLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const episodes = await getCollection('episodes');
+  return episodes.map((episode) => ({
+    params: { slug: episode.id },
+    props: { episode },
+  }));
+}
+
+const { episode } = Astro.props;
+const { Content } = await render(episode);
+---
+
+<EpisodeLayout
+  title={episode.data.title}
+  description={episode.data.description}
+  publishDate={episode.data.publishDate}
+  pilar={episode.data.pilar}
+  season={episode.data.season}
+  episodeNumber={episode.data.episodeNumber}
+  duration={episode.data.duration}
+  audioUrl={episode.data.audioUrl}
+  coverImage={episode.data.coverImage}
+  youtubeVideoId={episode.data.youtubeVideoId}
+  videoMode={episode.data.videoMode}
+  explicit={episode.data.explicit}
+  platformLinks={episode.data.platformLinks}
+>
+  <Content />
+</EpisodeLayout>

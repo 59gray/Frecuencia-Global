@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SignalNode from '../../components/SignalNode.astro';
+import FrequencyLine from '../../components/FrequencyLine.astro';
+
+const pilars = [
+  {
+    id: 'p1',
+    title: 'GEOPOLITIK DROP',
+    description: 'Poder, conflicto y los movimientos estratégicos que reconfiguran el mapa global. Donde la geopolítica deja de ser abstracta y se vuelve urgente.',
+    href: '/pilares/geopolitik-drop',
+    color: 'var(--color-pilar-p1)',
+    textColor: 'text-pilar-p1',
+  },
+  {
+    id: 'p2',
+    title: 'BASS & BORDERS',
+    description: 'Música electrónica como lente para entender migración, identidad y cultura global. El sonido no conoce fronteras — nosotros te mostramos por qué.',
+    href: '/pilares/bass-and-borders',
+    color: 'var(--color-pilar-p2)',
+    textColor: 'text-pilar-p2',
+  },
+  {
+    id: 'p3',
+    title: 'FRECUENCIA GLOBAL',
+    description: 'Tecnología, datos y las fuerzas invisibles que dan forma al mundo conectado. Cables, algoritmos, infraestructura — lo que nadie ve pero todos usan.',
+    href: '/pilares/frecuencia-global',
+    color: 'var(--color-pilar-p3)',
+    textColor: 'text-pilar-p3',
+  },
+  {
+    id: 'p4',
+    title: 'BEHIND THE POLICY',
+    description: 'Lo que hay detrás de las políticas públicas que afectan tu vida diaria. Regulaciones, tratados y decisiones que se toman lejos pero impactan cerca.',
+    href: '/pilares/behind-the-policy',
+    color: 'var(--color-pilar-p4)',
+    textColor: 'text-pilar-p4',
+  },
+];
+---
+
+<BaseLayout title="Pilares — Frecuencia Global" description="Los cuatro pilares editoriales de Frecuencia Global: geopolítica, cultura musical, tecnología y política pública.">
+  <section class="max-w-4xl mx-auto px-md lg:px-xl py-3xl">
+    <h1 class="font-display text-5xl sm:text-6xl tracking-wider text-fg-white mb-md">PILARES</h1>
+    <p class="font-body text-fg-gray mb-xl max-w-2xl">
+      Cuatro frecuencias. Cuatro formas de leer el mundo. Cada pilar es un lente editorial que analiza la realidad global desde un ángulo distinto.
+    </p>
+
+    <FrequencyLine />
+
+    <div class="mt-xl space-y-xl">
+      {pilars.map((p) => (
+        <a
+          href={p.href}
+          class="block group bg-fg-surface/30 border border-fg-surface rounded-sm p-lg hover:border-current transition-colors"
+          style={`--tw-border-opacity: 0.3;`}
+        >
+          <div class="flex items-center gap-sm mb-sm">
+            <SignalNode color={p.color} size="lg" />
+            <h2 class:list={['font-display text-2xl tracking-wider', p.textColor]}>{p.title}</h2>
+          </div>
+          <p class="font-body text-fg-gray group-hover:text-fg-white transition-colors">
+            {p.description}
+          </p>
+          <span class="inline-block mt-sm font-data text-xs tracking-widest text-fg-gray group-hover:text-fg-cyan transition-colors">
+            VER CONTENIDO &rarr;
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

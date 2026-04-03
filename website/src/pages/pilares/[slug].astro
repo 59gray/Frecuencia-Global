@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import FrequencyLine from '../../components/FrequencyLine.astro';
+import SignalNode from '../../components/SignalNode.astro';
+import { getCollection } from 'astro:content';
+
+interface PilarInfo {
+  id: 'p1' | 'p2' | 'p3' | 'p4';
+  title: string;
+  description: string;
+  color: string;
+  textColor: string;
+}
+
+const pilarMap: Record<string, PilarInfo> = {
+  'geopolitik-drop': {
+    id: 'p1',
+    title: 'GEOPOLITIK DROP',
+    description: 'Poder, conflicto y los movimientos estratégicos que reconfiguran el mapa global. Donde la geopolítica deja de ser abstracta y se vuelve urgente.',
+    color: 'var(--color-pilar-p1)',
+    textColor: 'text-pilar-p1',
+  },
+  'bass-and-borders': {
+    id: 'p2',
+    title: 'BASS & BORDERS',
+    description: 'Música electrónica como lente para entender migración, identidad y cultura global. El sonido no conoce fronteras.',
+    color: 'var(--color-pilar-p2)',
+    textColor: 'text-pilar-p2',
+  },
+  'frecuencia-global': {
+    id: 'p3',
+    title: 'FRECUENCIA GLOBAL',
+    description: 'Tecnología, datos y las fuerzas invisibles que dan forma al mundo conectado.',
+    color: 'var(--color-pilar-p3)',
+    textColor: 'text-pilar-p3',
+  },
+  'behind-the-policy': {
+    id: 'p4',
+    title: 'BEHIND THE POLICY',
+    description: 'Lo que hay detrás de las políticas públicas que afectan tu vida diaria.',
+    color: 'var(--color-pilar-p4)',
+    textColor: 'text-pilar-p4',
+  },
+};
+
+export function getStaticPaths() {
+  return [
+    { params: { slug: 'geopolitik-drop' } },
+    { params: { slug: 'bass-and-borders' } },
+    { params: { slug: 'frecuencia-global' } },
+    { params: { slug: 'behind-the-policy' } },
+  ];
+}
+
+const { slug } = Astro.params;
+const pilar = pilarMap[slug!];
+
+if (!pilar) {
+  return Astro.redirect('/pilares');
+}
+
+const articles = await getCollection('articles', ({ data }) => !data.draft && data.pilar === pilar.id);
+const sorted = articles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout title={`${pilar.title} — Frecuencia Global`} description={pilar.description} pilar={pilar.id}>
+  <section class="max-w-7xl mx-auto px-md lg:px-xl py-3xl">
+    <div class="flex items-center gap-sm mb-md">
+      <SignalNode color={pilar.color} size="lg" />
+      <h1 class:list={['font-display text-4xl sm:text-5xl tracking-wider', pilar.textColor]}>
+        {pilar.title}
+      </h1>
+    </div>
+    <p class="font-body text-fg-gray max-w-2xl mb-xl">{pilar.description}</p>
+
+    <FrequencyLine color={pilar.color} />
+
+    {sorted.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg mt-xl">
+        {sorted.map((article) => (
+          <ArticleCard
+            title={article.data.title}
+            description={article.data.description}
+            date={article.data.date}
+            pilar={article.data.pilar}
+            slug={article.id}
+            image={article.data.image}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="mt-xl text-center py-3xl">
+        <p class="font-data text-sm tracking-widest text-fg-gray">[SIN SEÑAL — PRÓXIMAMENTE]</p>
+        <p class="font-body text-fg-gray mt-sm">Estamos preparando contenido para este pilar.</p>
+      </div>
+    )}
+
+    <div class="mt-xl">
+      <a href="/pilares" class="font-data text-xs tracking-widest text-fg-gray hover:text-fg-cyan transition-colors">
+        &larr; TODOS LOS PILARES
+      </a>
+    </div>
+  </section>
+</BaseLayout>

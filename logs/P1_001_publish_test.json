@@ -1,0 +1,21 @@
+{
+  "pieza": "P1_001",
+  "is_podcast": false,
+  "missing_sections": [],
+  "x_copy": "Los cables submarinos que conectan (y controlan) internet\n\n#FrecuenciaGlobal #AnalisisInternacional #Geopolitica",
+  "x_length": 112,
+  "threads_copy": "Los cables submarinos que conectan (y controlan) internet\n\n#FrecuenciaGlobal #AnalisisInternacional #Geopolitica\n\nFrecuencia Global conecta analisis internacional, podcast y videopodcast. #FrecuenciaGlobal #Podcast",
+  "tiktok_copy": "Los cables submarinos que conectan (y controlan) internet #FrecuenciaGlobal #AnalisisInternacional #Geopolitica",
+  "tiktok_length": 111,
+  "present_sections": {
+    "X (Twitter)": true,
+    "Instagram": true,
+    "LinkedIn": true,
+    "TikTok": true
+  },
+  "webhook": {
+    "called": false,
+    "status_code": null,
+    "body": "skip-webhook"
+  }
+}

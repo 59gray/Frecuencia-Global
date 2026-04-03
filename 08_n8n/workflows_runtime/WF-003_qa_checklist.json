@@ -1,0 +1,279 @@
+{
+  "name": "WF-003 — QA Checklist",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "qa",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wf003-trigger",
+      "name": "Webhook QA",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "qa-checklist"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.body.pieza }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ]
+        }
+      },
+      "id": "wf003-validate",
+      "name": "Validar Input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst pieza = $input.first().json.body.pieza;\nconst briefPath = `/workspace/03_Editorial/${pieza}_Brief.md`;\n\nif (!fs.existsSync(briefPath)) {\n  throw new Error(`Brief no encontrado: ${briefPath}`);\n}\n\nconst briefContent = fs.readFileSync(briefPath, 'utf8');\n\n// Extraer metadata básica del brief\nlet titulo = '', pilar = '', formato = '', plataformas = '';\nconst lines = briefContent.split('\\n');\nfor (const line of lines) {\n  if (line.includes('**Título:**')) titulo = line.split('**Título:**')[1]?.trim() || '';\n  if (line.includes('**Pilar:**')) pilar = line.split('**Pilar:**')[1]?.trim() || '';\n  if (line.includes('**Formato:**')) formato = line.split('**Formato:**')[1]?.trim() || '';\n  if (line.includes('**Plataforma(s):**')) plataformas = line.split('**Plataforma(s):**')[1]?.trim() || '';\n}\n\nreturn [{ json: { pieza, titulo, pilar, formato, plataformas } }];"
+      },
+      "id": "wf003-read-brief",
+      "name": "Leer Brief",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst content = fs.readFileSync('/workspace/08_n8n/templates/qa_template.md', 'utf8');\nreturn [{ json: { data: content } }];"
+      },
+      "id": "wf003-read-template",
+      "name": "Leer Template QA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const template = $('Leer Template QA').first().json.data;\nconst data = $('Leer Brief').first().json;\nconst today = new Date().toISOString().split('T')[0];\n\nlet content = template;\ncontent = content.replace(/\\{\\{ID_PIEZA\\}\\}/g, data.pieza);\ncontent = content.replace(/\\{\\{TITULO\\}\\}/g, data.titulo);\ncontent = content.replace(/\\{\\{PILAR_MARCADO\\}\\}/g, data.pilar);\ncontent = content.replace(/\\{\\{FORMATO\\}\\}/g, data.formato);\ncontent = content.replace(/\\{\\{PLATAFORMAS\\}\\}/g, data.plataformas);\ncontent = content.replace(/\\{\\{FECHA\\}\\}/g, today);\n\nreturn [{ json: { content, pieza: data.pieza, titulo: data.titulo } }];"
+      },
+      "id": "wf003-fill-template",
+      "name": "Rellenar Template QA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst pieza = $input.first().json.pieza;\nconst content = $input.first().json.content;\nconst outPath = `/workspace/04_Produccion/${pieza}_QA.md`;\nfs.writeFileSync(outPath, content, 'utf8');\nreturn [{ json: { pieza, qaPath: outPath, content } }];"
+      },
+      "id": "wf003-write-qa",
+      "name": "Escribir QA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "fg_sub_002",
+        "options": {},
+        "inputData": {
+          "mensaje": "={{ '🔍 QA generado para ' + $json.pieza + ': ' + $json.titulo }}"
+        }
+      },
+      "id": "wf003-notify",
+      "name": "Notificar Telegram",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        200
+      ],
+      "notes": "Llama a SUB-002_notificar_telegram"
+    },
+    {
+      "parameters": {
+        "workflowId": "fg_sub_004",
+        "options": {},
+        "inputData": {
+          "evento": "QA_GENERADO",
+          "pieza": "={{ $json.pieza }}",
+          "detalles": "={{ 'QA checklist creado para ' + $json.titulo }}",
+          "timestamp": "={{ new Date().toISOString() }}"
+        }
+      },
+      "id": "wf003-log",
+      "name": "Registrar Evento",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        200
+      ],
+      "notes": "Llama a SUB-004_registrar_evento"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, pieza: $('Escribir QA').first().json.pieza, archivo: '04_Produccion/' + $('Escribir QA').first().json.pieza + '_QA.md' }) }}"
+      },
+      "id": "wf003-respond-ok",
+      "name": "Responder OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, error: 'Campo requerido: pieza' }) }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "wf003-respond-error",
+      "name": "Error: Campo Faltante",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        680,
+        440
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook QA": {
+      "main": [
+        [
+          {
+            "node": "Validar Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Input": {
+      "main": [
+        [
+          {
+            "node": "Leer Brief",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error: Campo Faltante",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Brief": {
+      "main": [
+        [
+          {
+            "node": "Leer Template QA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Template QA": {
+      "main": [
+        [
+          {
+            "node": "Rellenar Template QA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rellenar Template QA": {
+      "main": [
+        [
+          {
+            "node": "Escribir QA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Escribir QA": {
+      "main": [
+        [
+          {
+            "node": "Notificar Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificar Telegram": {
+      "main": [
+        [
+          {
+            "node": "Registrar Evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar Evento": {
+      "main": [
+        [
+          {
+            "node": "Responder OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "triggerCount": 1,
+  "meta": {
+    "instanceId": "fg-local"
+  },
+  "id": "fg_wf_003",
+  "active": false
+}

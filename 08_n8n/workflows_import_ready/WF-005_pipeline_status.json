@@ -1,0 +1,121 @@
+{
+  "name": "WF-005 — Pipeline Status (Diario)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      },
+      "id": "wf005-trigger",
+      "name": "Cron 9AM Diario",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst trackerPath = '/workspace/04_Produccion/pipeline_tracker.json';\n\nlet tracker = {};\ntry {\n  const raw = fs.readFileSync(trackerPath, 'utf8');\n  tracker = JSON.parse(raw);\n} catch (e) {\n  return [{ json: { resumen: 'Sin piezas registradas en el tracker.', stats: {} } }];\n}\n\nconst piezas = Object.keys(tracker);\nconst ahora = new Date();\nconst stats = {\n  total: piezas.length,\n  por_estado: {},\n  bloqueadas_48h: []\n};\n\nfor (const p of piezas) {\n  const estado = tracker[p].estado_actual || 'DESCONOCIDO';\n  stats.por_estado[estado] = (stats.por_estado[estado] || 0) + 1;\n\n  // Detectar piezas bloqueadas > 48h\n  const ultimaAct = new Date(tracker[p].ultima_actualizacion);\n  const horasDiff = (ahora - ultimaAct) / 3600000;\n  if (horasDiff > 48 && estado !== 'PUBLISHED') {\n    stats.bloqueadas_48h.push(`${p} (${estado}, ${Math.floor(horasDiff)}h sin cambio)`);\n  }\n}\n\n// Formatear resumen\nlet resumen = `📊 *PIPELINE STATUS — ${ahora.toISOString().split('T')[0]}*\\n\\n`;\nresumen += `Total piezas: ${stats.total}\\n\\n`;\nresumen += `*Por estado:*\\n`;\nfor (const [estado, count] of Object.entries(stats.por_estado)) {\n  resumen += `  • ${estado}: ${count}\\n`;\n}\n\nif (stats.bloqueadas_48h.length > 0) {\n  resumen += `\\n⚠️ *Bloqueadas >48h:*\\n`;\n  for (const b of stats.bloqueadas_48h) {\n    resumen += `  • ${b}\\n`;\n  }\n} else {\n  resumen += `\\n✅ Sin piezas bloqueadas.\\n`;\n}\n\nreturn [{ json: { resumen, stats } }];"
+      },
+      "id": "wf005-calc-stats",
+      "name": "Calcular Estadísticas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "={{ $workflow.id }}",
+        "options": {},
+        "inputData": {
+          "mensaje": "={{ $json.resumen }}"
+        }
+      },
+      "id": "wf005-telegram",
+      "name": "Enviar Resumen Telegram",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ],
+      "notes": "Llama a SUB-002_notificar_telegram"
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst logPath = '/workspace/07_Operaciones/FG_Operations_Log.md';\nconst stats = $input.first().json.stats;\nconst today = new Date().toISOString().split('T')[0];\nconst time = new Date().toISOString().split('T')[1].substring(0, 5);\n\nconst logLine = `| ${today} | ${time} | DAILY_STATUS | — | Total: ${stats.total || 0}, Bloqueadas: ${(stats.bloqueadas_48h || []).length} |`;\n\nlet content = '';\ntry {\n  content = fs.readFileSync(logPath, 'utf8');\n} catch (e) {\n  content = `# FG Operations Log\\n\\n| Fecha | Hora | Evento | Pieza | Detalles |\\n|-------|------|--------|-------|----------|\\n`;\n}\n\ncontent += logLine + '\\n';\nfs.writeFileSync(logPath, content, 'utf8');\n\nreturn [{ json: { logged: true } }];"
+      },
+      "id": "wf005-write-log",
+      "name": "Escribir Snapshot en Log",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Cron 9AM Diario": {
+      "main": [
+        [
+          {
+            "node": "Calcular Estadísticas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calcular Estadísticas": {
+      "main": [
+        [
+          {
+            "node": "Enviar Resumen Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Resumen Telegram": {
+      "main": [
+        [
+          {
+            "node": "Escribir Snapshot en Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "operaciones"
+    },
+    {
+      "name": "daily"
+    }
+  ],
+  "triggerCount": 1,
+  "meta": {
+    "instanceId": "fg-local"
+  },
+  "id": "imp_cu2pggoc9a"
+}

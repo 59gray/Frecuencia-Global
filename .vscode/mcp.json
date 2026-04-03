@@ -1,0 +1,17 @@
+{
+  "servers": {
+    "Canva": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "mcp-remote@latest", "https://mcp.canva.com/mcp"]
+    },
+    "chrome-devtools": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-chrome-devtools"],
+      "env": {
+        "CHROME_DEBUGGING_PORT": "9222"
+      }
+    }
+  }
+}

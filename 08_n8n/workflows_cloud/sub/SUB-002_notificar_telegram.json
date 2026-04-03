@@ -1,0 +1,139 @@
+{
+  "name": "SUB-002 — Notificar Telegram (Cloud)",
+  "id": "a1b2c3d4-0002-4000-8000-000000000002",
+  "nodes": [
+    {
+      "id": "sub002_trigger",
+      "name": "Ejecutar por Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [0, 300],
+      "parameters": {}
+    },
+    {
+      "id": "sub002_check_msg",
+      "name": "Tiene Mensaje",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "strict"},
+          "conditions": [
+            {
+              "id": "cond_msg",
+              "leftValue": "={{ $json.mensaje }}",
+              "rightValue": "",
+              "operator": {"type": "string", "operation": "notEmpty"}
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "sub002_sin_mensaje",
+      "name": "Sin Mensaje",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 450],
+      "parameters": {
+        "jsCode": "return [{ json: { sent: false, reason: 'no_message' } }];"
+      }
+    },
+    {
+      "id": "sub002_verify_config",
+      "name": "Verificar Config Telegram",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 300],
+      "parameters": {
+        "jsCode": "const token = $vars.TELEGRAM_BOT_TOKEN || '';\nconst chatId = $vars.TELEGRAM_CHAT_ID || '';\n\nif (!token || !chatId || token === 'TU_TOKEN_AQUI' || chatId === 'TU_CHAT_ID_AQUI') {\n  console.log('[SUB-002] Telegram no configurado. Mensaje descartado:', $input.first().json.mensaje);\n  return [{ json: { sent: false, reason: 'telegram_not_configured' } }];\n}\n\nreturn [{ json: { mensaje: $input.first().json.mensaje, token, chatId, send: true } }];"
+      }
+    },
+    {
+      "id": "sub002_config_ok",
+      "name": "Config OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [750, 300],
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "strict"},
+          "conditions": [
+            {
+              "id": "cond_ok",
+              "leftValue": "={{ $json.send }}",
+              "rightValue": true,
+              "operator": {"type": "boolean", "operation": "equal"}
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "sub002_skip",
+      "name": "Skip (Sin Config)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1000, 450],
+      "parameters": {
+        "jsCode": "return [{ json: { sent: false, reason: 'skipped_no_config' } }];"
+      }
+    },
+    {
+      "id": "sub002_send",
+      "name": "Enviar Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1000, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://api.telegram.org/bot' + $json.token + '/sendMessage' }}",
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={{ JSON.stringify({ chat_id: $json.chatId, text: $json.mensaje }) }}",
+        "options": {"timeout": 10000, "response": {"response": {"neverError": true}}}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "sub002_enviado",
+      "name": "Enviado OK",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 300],
+      "parameters": {
+        "jsCode": "const res = $input.first().json || {};\n\nif (res.ok === false) {\n  return [{ json: { sent: false, reason: 'telegram_api_error', telegramDescription: res.description || res.message || 'unknown' } }];\n}\n\nif (res.error) {\n  const message = typeof res.error === 'string' ? res.error : (res.error.message || JSON.stringify(res.error));\n  return [{ json: { sent: false, reason: 'telegram_request_error', telegramDescription: message } }];\n}\n\nreturn [{ json: { sent: true, telegramMessageId: res.result?.message_id || null } }];"
+      }
+    }
+  ],
+  "connections": {
+    "Ejecutar por Workflow": {
+      "main": [[{"node": "Tiene Mensaje", "type": "main", "index": 0}]]
+    },
+    "Tiene Mensaje": {
+      "main": [
+        [{"node": "Verificar Config Telegram", "type": "main", "index": 0}],
+        [{"node": "Sin Mensaje", "type": "main", "index": 0}]
+      ]
+    },
+    "Verificar Config Telegram": {
+      "main": [[{"node": "Config OK?", "type": "main", "index": 0}]]
+    },
+    "Config OK?": {
+      "main": [
+        [{"node": "Enviar Telegram", "type": "main", "index": 0}],
+        [{"node": "Skip (Sin Config)", "type": "main", "index": 0}]
+      ]
+    },
+    "Enviar Telegram": {
+      "main": [[{"node": "Enviado OK", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "staticData": null,
+  "triggerCount": 0,
+  "meta": {"instanceId": ""}
+}

@@ -1,0 +1,59 @@
+{
+  "name": "SUB-004 — Registrar Evento",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "sub004-trigger",
+      "name": "Ejecutar por Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst data = $input.first().json;\nconst logPath = '/workspace/07_Operaciones/FG_Operations_Log.md';\n\nconst timestamp = data.timestamp || new Date().toISOString();\nconst date = timestamp.split('T')[0];\nconst time = timestamp.split('T')[1]?.substring(0, 5) || '00:00';\nconst evento = data.evento || 'EVENTO';\nconst pieza = data.pieza || '—';\nconst detalles = data.detalles || '';\n\nconst logLine = `| ${date} | ${time} | ${evento} | ${pieza} | ${detalles} |`;\n\nlet content = '';\ntry {\n  content = fs.readFileSync(logPath, 'utf8');\n} catch (e) {\n  content = '# FG Operations Log\\n\\n| Fecha | Hora | Evento | Pieza | Detalles |\\n|-------|------|--------|-------|----------|\\n';\n}\n\ncontent += logLine + '\\n';\nfs.writeFileSync(logPath, content, 'utf8');\n\nreturn [{ json: { logged: true, logLine } }];"
+      },
+      "id": "sub004-write-log",
+      "name": "Escribir en Log",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Ejecutar por Workflow": {
+      "main": [
+        [
+          {
+            "node": "Escribir en Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "sub-workflow"
+    },
+    {
+      "name": "logging"
+    }
+  ],
+  "triggerCount": 0,
+  "meta": {
+    "instanceId": "fg-local"
+  },
+  "id": "imp_kfv901uxx3"
+}

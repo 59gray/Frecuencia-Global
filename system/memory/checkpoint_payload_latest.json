@@ -1,0 +1,38 @@
+{
+  "event": "checkpoint_generated",
+  "timestamp": "2026-04-02T21:17:02.971203-06:00",
+  "checkpoint_file": "01_Estrategia/FG_Checkpoint_AUTO_2026-04-02_2117.md",
+  "summary": "Checkpoint 2026-04-02 21:17: 63 nuevos, 64 modificados, 9 áreas",
+  "git_status": "dirty",
+  "git_branch": "master",
+  "touched_areas": [
+    "system",
+    "01_Estrategia",
+    "02_Brand_System",
+    "04_Produccion",
+    "06_Assets",
+    "07_Operaciones",
+    "08_n8n",
+    "website",
+    "scripts"
+  ],
+  "new_files_count": 63,
+  "modified_files_count": 64,
+  "key_files": [
+    "01_Estrategia/FG_Checkpoint_AUTO_2026-04-02_1438.md",
+    "07_Operaciones/logs/checkpoint_log_2026-04-02.json",
+    "07_Operaciones/logs/checkpoint_runner.log",
+    "08_n8n/scripts/activate_core_workflows.js",
+    "08_n8n/scripts/deploy_cloud.js",
+    "08_n8n/scripts/link_cloud_workflows.js",
+    "08_n8n/scripts/verify_core_workflows.js",
+    "08_n8n/templates/brief_template.md",
+    "08_n8n/workflows_cloud/WF-002_registro_brief.json",
+    "scripts/README_AUTOMATIONS.md"
+  ],
+  "blockers": [],
+  "next_action": "Revisar cambios recientes y avanzar pipeline editorial",
+  "website_build_exists": true,
+  "website_article_count": 2,
+  "chat_setup_file": "system/memory/checkpoints_chat_setup_latest.md"
+}

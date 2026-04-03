@@ -1,0 +1,112 @@
+{
+  "name": "WF-004 — Notificación y Log",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "wf004-trigger",
+      "name": "Ejecutar por Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst timestamp = data.timestamp || new Date().toISOString();\nconst date = timestamp.split('T')[0];\nconst time = timestamp.split('T')[1]?.substring(0, 5) || '00:00';\n\nconst logLine = `| ${date} | ${time} | ${data.evento || 'N/A'} | ${data.pieza || 'N/A'} | ${data.detalles || ''} |`;\n\nreturn [{ json: { logLine, ...data } }];"
+      },
+      "id": "wf004-format",
+      "name": "Formatear Log",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst logPath = '/workspace/07_Operaciones/FG_Operations_Log.md';\nconst logLine = $input.first().json.logLine;\n\nlet content = '';\ntry {\n  content = fs.readFileSync(logPath, 'utf8');\n} catch (e) {\n  // Crear archivo con header si no existe\n  content = `# FG Operations Log\\n\\n| Fecha | Hora | Evento | Pieza | Detalles |\\n|-------|------|--------|-------|----------|\\n`;\n}\n\n// Append línea de log\ncontent += logLine + '\\n';\nfs.writeFileSync(logPath, content, 'utf8');\n\nreturn [{ json: { logged: true, ...$input.first().json } }];"
+      },
+      "id": "wf004-append-log",
+      "name": "Append a Log",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "={{ $workflow.id }}",
+        "options": {},
+        "inputData": {
+          "mensaje": "={{ '📋 [LOG] ' + $json.evento + ' — ' + $json.pieza + ': ' + $json.detalles }}"
+        }
+      },
+      "id": "wf004-telegram",
+      "name": "Notificar Telegram",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ],
+      "notes": "Llama a SUB-002_notificar_telegram"
+    }
+  ],
+  "connections": {
+    "Ejecutar por Workflow": {
+      "main": [
+        [
+          {
+            "node": "Formatear Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Log": {
+      "main": [
+        [
+          {
+            "node": "Append a Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append a Log": {
+      "main": [
+        [
+          {
+            "node": "Notificar Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "operaciones"
+    },
+    {
+      "name": "sub-workflow"
+    }
+  ],
+  "triggerCount": 0,
+  "meta": {
+    "instanceId": "fg-local"
+  },
+  "id": "imp_xzd09crlk7"
+}

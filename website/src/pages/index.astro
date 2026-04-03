@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import PillarSection from '../components/PillarSection.astro';
+import EpisodeCard from '../components/EpisodeCard.astro';
+import { getCollection } from 'astro:content';
+
+const allArticles = await getCollection('articles', ({ data }) => !data.draft);
+const sorted = allArticles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const allEpisodes = await getCollection('episodes', ({ data }) => !data.draft);
+const sortedEpisodes = allEpisodes.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+
+const pilars = [
+  { id: 'p1' as const, title: 'GEOPOLITIK DROP', desc: 'Poder, conflicto y movimientos estratégicos globales.', href: '/pilares/geopolitik-drop' },
+  { id: 'p2' as const, title: 'BASS & BORDERS', desc: 'Música electrónica como lente cultural y geopolítico.', href: '/pilares/bass-and-borders' },
+  { id: 'p3' as const, title: 'FRECUENCIA GLOBAL', desc: 'Tecnología, datos y las fuerzas que dan forma al mundo.', href: '/pilares/frecuencia-global' },
+  { id: 'p4' as const, title: 'BEHIND THE POLICY', desc: 'Lo que hay detrás de las políticas que afectan tu vida.', href: '/pilares/behind-the-policy' },
+];
+
+const latestArticle = sorted[0];
+const latestEpisode = sortedEpisodes[0];
+const activePillars = new Set(sorted.map((article) => article.data.pilar)).size;
+
+const featuredArticle = latestArticle
+  ? {
+      title: latestArticle.data.title,
+      description: latestArticle.data.description,
+      href: `/contenido/${latestArticle.id}`,
+      dateLabel: latestArticle.data.date.toLocaleDateString('es-MX', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      }),
+      pilar: latestArticle.data.pilar,
+    }
+  : undefined;
+
+const signalStats = [
+  { label: 'piezas publicadas', value: String(sorted.length).padStart(2, '0'), tone: 'cyan' as const },
+  { label: 'episodios activos', value: String(sortedEpisodes.length).padStart(2, '0'), tone: 'blue' as const },
+  { label: 'pilares activos', value: String(activePillars).padStart(2, '0'), tone: 'magenta' as const },
+  { label: 'base editorial', value: 'CDMX', tone: 'green' as const },
+];
+
+const tickerItems = [
+  'geopolítica',
+  'cultura club',
+  'tecnología',
+  'podcast',
+  'videopodcast',
+  'política pública',
+  'narrativa visual',
+  'análisis internacional',
+];
+
+const manifestoPoints = [
+  {
+    label: 'Poder',
+    title: 'Leemos actores, incentivos y conflicto sin jerga de think tank.',
+    body: 'Cada pieza prioriza contexto útil, relaciones entre actores y una lectura clara de lo que está en juego.',
+  },
+  {
+    label: 'Pulso',
+    title: 'La estética no adorna el análisis: lo vuelve magnético.',
+    body: 'Tomamos códigos del club, la radio y la cultura visual para que la información entre con más ritmo y permanezca más tiempo.',
+  },
+  {
+    label: 'Traducción',
+    title: 'No simplificamos el mundo. Lo traducimos.',
+    body: 'El objetivo es bajar complejidad sin perder rigor, para que el sitio se sienta contemporáneo y serio a la vez.',
+  },
+];
+---
+
+<BaseLayout title="Frecuencia Global — Análisis internacional a otro ritmo" description="Geopolítica, cultura y tecnología con estética de club nocturno. Análisis internacional para una nueva generación." image="/images/og/fg_website_hero_20260402_v1.webp">
+  <Hero
+    title="FRECUENCIA GLOBAL"
+    subtitle="Geopolítica, cultura y tecnología con pulso editorial de club nocturno. Un sitio para entender el mundo sin que parezca un informe gris."
+    ctaLabel="Explorar contenido"
+    ctaHref="/contenido"
+    secondaryLabel="Leer el manifiesto"
+    secondaryHref="/sobre"
+    backgroundImage="/images/og/fg_website_hero_20260402_v1.webp"
+    featuredArticle={featuredArticle}
+    stats={signalStats}
+    tickerItems={tickerItems}
+  />
+
+  {latestEpisode && (
+    <section class="relative py-16 lg:py-24">
+      <div class="mx-auto max-w-[1500px] px-md lg:px-xl">
+        <div class="grid gap-8 border border-white/10 bg-[linear-gradient(135deg,rgba(0,229,255,0.08),rgba(255,255,255,0.02))] p-6 lg:grid-cols-[minmax(0,1.1fr)_340px] lg:p-8">
+          <div>
+            <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">podcast + videopodcast</p>
+            <h2 class="mt-4 max-w-[12ch] font-display text-4xl leading-[0.86] tracking-[0.08em] text-fg-white sm:text-5xl">
+              La señal ahora también sale en audio RSS y YouTube largo.
+            </h2>
+            <p class="mt-4 max-w-2xl text-base leading-relaxed text-fg-gray">
+              Cada episodio vive como audio-first en el feed del podcast, página canónica en el sitio y videopodcast 16:9 con visualizer editorial en el canal de YouTube.
+            </p>
+            <div class="mt-8 flex flex-wrap gap-4">
+              <a
+                href="/podcast"
+                class="inline-flex items-center justify-center border border-fg-cyan bg-fg-cyan px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-black transition-transform duration-300 hover:-translate-y-0.5"
+              >
+                abrir podcast
+              </a>
+              <a
+                href="/podcast/rss.xml"
+                class="inline-flex items-center justify-center border border-white/15 px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-white transition-colors duration-300 hover:border-white/35 hover:bg-white/5"
+              >
+                feed rss
+              </a>
+            </div>
+          </div>
+
+          <EpisodeCard
+            title={latestEpisode.data.title}
+            description={latestEpisode.data.description}
+            publishDate={latestEpisode.data.publishDate}
+            pilar={latestEpisode.data.pilar}
+            slug={latestEpisode.id}
+            coverImage={latestEpisode.data.coverImage}
+            duration={latestEpisode.data.duration}
+            episodeNumber={latestEpisode.data.episodeNumber}
+            season={latestEpisode.data.season}
+            videoMode={latestEpisode.data.videoMode}
+            platformLinks={latestEpisode.data.platformLinks}
+          />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="relative py-16 lg:py-24">
+    <div class="mx-auto grid max-w-[1500px] gap-10 px-md lg:grid-cols-[minmax(0,0.95fr)_1.05fr] lg:gap-14 lg:px-xl">
+      <div>
+        <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">modo de lectura</p>
+        <h2 class="mt-4 max-w-[12ch] font-display text-4xl leading-[0.86] tracking-[0.08em] text-fg-white sm:text-5xl lg:text-6xl">
+          No contamos el mundo como noticiero. Lo pinchamos como set.
+        </h2>
+      </div>
+
+      <div class="grid gap-8 sm:grid-cols-3">
+        {manifestoPoints.map((point) => (
+          <div class="border-t border-white/10 pt-4">
+            <p class="font-data text-[10px] uppercase tracking-[0.28em] text-fg-gray">{point.label}</p>
+            <h3 class="mt-3 font-body text-base font-semibold leading-snug text-fg-white">
+              {point.title}
+            </h3>
+            <p class="mt-3 text-sm leading-relaxed text-fg-gray">
+              {point.body}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {pilars.map((p) => {
+    const pilarArticles = sorted
+      .filter((a) => a.data.pilar === p.id)
+      .slice(0, 3)
+      .map((a) => ({
+        title: a.data.title,
+        description: a.data.description,
+        date: a.data.date,
+        pilar: a.data.pilar,
+        slug: a.id,
+        image: a.data.image,
+      }));
+
+    return (
+      <PillarSection
+        pilar={p.id}
+        title={p.title}
+        description={p.desc}
+        articles={pilarArticles}
+        href={p.href}
+      />
+    );
+  })}
+
+  <section class="px-md pb-16 pt-8 lg:px-xl lg:pb-24">
+    <div class="mx-auto max-w-[1500px] border border-white/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))] px-6 py-8 sm:px-8 sm:py-10 lg:flex lg:items-end lg:justify-between lg:gap-10">
+      <div>
+        <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">última llamada</p>
+        <h2 class="mt-4 max-w-[13ch] font-display text-4xl leading-[0.86] tracking-[0.08em] text-fg-white sm:text-5xl">
+          Si la señal te sirve, sigamos construyéndola.
+        </h2>
+        <p class="mt-4 max-w-2xl text-base leading-relaxed text-fg-gray">
+          El siguiente paso es llenar cada pilar con más drops, consolidar la línea de podcast semanal y conectar un dominio propio para dejar atrás el `vercel.app`.
+        </p>
+      </div>
+
+      <div class="mt-8 flex flex-wrap gap-4 lg:mt-0">
+        <a
+          href="/contenido"
+          class="inline-flex items-center justify-center border border-fg-cyan bg-fg-cyan px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-black transition-transform duration-300 hover:-translate-y-0.5"
+        >
+          ver archivo
+        </a>
+        <a
+          href="/podcast"
+          class="inline-flex items-center justify-center border border-white/15 px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-white transition-colors duration-300 hover:border-white/35 hover:bg-white/5"
+        >
+          escuchar podcast
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

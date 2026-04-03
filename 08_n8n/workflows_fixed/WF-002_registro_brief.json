@@ -1,0 +1,238 @@
+{
+  "name": "WF-002 — Registro de Brief",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "register-brief",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wf002-trigger",
+      "name": "Webhook Register",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "register-brief"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.body.pieza }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            },
+            {
+              "leftValue": "={{ $json.body.estado }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ]
+        }
+      },
+      "id": "wf002-validate",
+      "name": "Validar Input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst pieza = $input.first().json.body.pieza;\nconst briefPath = `/workspace/03_Editorial/${pieza}_Brief.md`;\n\nif (!fs.existsSync(briefPath)) {\n  throw new Error(`Brief no encontrado: ${briefPath}`);\n}\n\nreturn [{ json: { pieza, briefExists: true, ...$input.first().json.body } }];"
+      },
+      "id": "wf002-check-exists",
+      "name": "Verificar Brief Existe",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst trackerPath = '/workspace/04_Produccion/pipeline_tracker.json';\nconst pieza = $input.first().json.pieza;\nconst estado = $input.first().json.estado;\nconst timestamp = new Date().toISOString();\n\nlet tracker = {};\ntry {\n  const raw = fs.readFileSync(trackerPath, 'utf8');\n  tracker = JSON.parse(raw);\n} catch (e) {\n  // Archivo nuevo\n}\n\nconst estadosValidos = ['BRIEF_READY', 'RESEARCH_DONE', 'SCRIPT_DONE', 'DESIGN_DONE', 'QA_PASS', 'PUBLISHED'];\nif (!estadosValidos.includes(estado)) {\n  throw new Error(`Estado inválido: ${estado}. Válidos: ${estadosValidos.join(', ')}`);\n}\n\nif (!tracker[pieza]) {\n  tracker[pieza] = { historial: [] };\n}\n\ntracker[pieza].estado_actual = estado;\ntracker[pieza].ultima_actualizacion = timestamp;\ntracker[pieza].historial.push({ estado, timestamp });\n\nfs.writeFileSync(trackerPath, JSON.stringify(tracker, null, 2), 'utf8');\n\nreturn [{ json: { pieza, estado, timestamp, tracker_actualizado: true } }];"
+      },
+      "id": "wf002-update-tracker",
+      "name": "Actualizar Tracker",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "imp_dotwbomoyn",
+        "options": {},
+        "inputData": {
+          "evento": "ESTADO_ACTUALIZADO",
+          "pieza": "={{ $json.pieza }}",
+          "detalles": "={{ 'Estado → ' + $json.estado }}",
+          "timestamp": "={{ $json.timestamp }}"
+        }
+      },
+      "id": "wf002-log",
+      "name": "Registrar Evento",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        200
+      ],
+      "notes": "Llama a SUB-004_registrar_evento"
+    },
+    {
+      "parameters": {
+        "workflowId": "imp_je0kp4oz4u",
+        "options": {},
+        "inputData": {
+          "mensaje": "={{ '🔄 ' + $json.pieza + ' → ' + $json.estado }}"
+        }
+      },
+      "id": "wf002-notify",
+      "name": "Notificar Telegram",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        200
+      ],
+      "notes": "Llama a SUB-002_notificar_telegram"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, pieza: $json.pieza, estado: $json.estado }) }}"
+      },
+      "id": "wf002-respond-ok",
+      "name": "Responder OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, error: 'Campos requeridos: pieza, estado' }) }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "wf002-respond-error",
+      "name": "Error: Campos Faltantes",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        680,
+        440
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Register": {
+      "main": [
+        [
+          {
+            "node": "Validar Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Input": {
+      "main": [
+        [
+          {
+            "node": "Verificar Brief Existe",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error: Campos Faltantes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar Brief Existe": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Tracker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar Tracker": {
+      "main": [
+        [
+          {
+            "node": "Registrar Evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar Evento": {
+      "main": [
+        [
+          {
+            "node": "Notificar Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificar Telegram": {
+      "main": [
+        [
+          {
+            "node": "Responder OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "triggerCount": 1,
+  "meta": {
+    "instanceId": "fg-local"
+  },
+  "id": "loc_WF_002_registro_brief"
+}

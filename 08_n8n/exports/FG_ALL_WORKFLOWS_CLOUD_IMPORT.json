@@ -1,0 +1,4402 @@
+[
+  {
+    "name": "SUB-001 — Escribir Markdown (Cloud)",
+    "nodes": [
+      {
+        "id": "sub001_trigger",
+        "name": "Ejecutar por Workflow",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 2,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {}
+      },
+      {
+        "id": "sub001_validate",
+        "name": "Validar Parámetros",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          250,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const data = $input.first().json;\n\nif (!data.filePath || !data.content) {\n  throw new Error('Parámetros requeridos: filePath, content');\n}\n\n// Normalize: remove /workspace/ prefix if present — cloud uses repo-relative paths\nlet filePath = data.filePath.replace(/^\\/workspace\\//, '');\n\nreturn [{ json: { filePath, content: data.content } }];"
+        }
+      },
+      {
+        "id": "sub001_check_exists",
+        "name": "GitHub: Verificar Si Existe",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          500,
+          300
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/{{$json.filePath}}",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "sub001_prepare",
+        "name": "Preparar Para GitHub",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          750,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const githubCheck = $input.first().json;\nconst params = $('Validar Parámetros').first().json;\n\nconst base64Content = Buffer.from(params.content).toString('base64');\nconst sha = githubCheck.sha || null; // null if file doesn't exist yet\n\nreturn [{ json: { filePath: params.filePath, base64Content, sha } }];"
+        }
+      },
+      {
+        "id": "sub001_write",
+        "name": "GitHub: Escribir Archivo",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1000,
+          300
+        ],
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/{{$json.filePath}}",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ message: 'n8n: write ' + $json.filePath, content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main', ...($json.sha ? { sha: $json.sha } : {}) }) }}",
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "sub001_confirm",
+        "name": "Confirmar",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1250,
+          300
+        ],
+        "parameters": {
+          "jsCode": "return [{ json: { ok: true, filePath: $('Validar Parámetros').first().json.filePath, written: true } }];"
+        }
+      }
+    ],
+    "connections": {
+      "Ejecutar por Workflow": {
+        "main": [
+          [
+            {
+              "node": "Validar Parámetros",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validar Parámetros": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Verificar Si Existe",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Verificar Si Existe": {
+        "main": [
+          [
+            {
+              "node": "Preparar Para GitHub",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Preparar Para GitHub": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Escribir Archivo",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Escribir Archivo": {
+        "main": [
+          [
+            {
+              "node": "Confirmar",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "triggerCount": 0,
+    "meta": {
+      "instanceId": ""
+    }
+  },
+  {
+    "name": "SUB-002 — Notificar Telegram (Cloud)",
+    "nodes": [
+      {
+        "id": "sub002_trigger",
+        "name": "Ejecutar por Workflow",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {}
+      },
+      {
+        "id": "sub002_check_msg",
+        "name": "Tiene Mensaje",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          250,
+          300
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict"
+            },
+            "conditions": [
+              {
+                "id": "cond_msg",
+                "leftValue": "={{ $json.mensaje }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              }
+            ],
+            "combinator": "and"
+          }
+        }
+      },
+      {
+        "id": "sub002_sin_mensaje",
+        "name": "Sin Mensaje",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          500,
+          450
+        ],
+        "parameters": {
+          "jsCode": "return [{ json: { sent: false, reason: 'no_message' } }];"
+        }
+      },
+      {
+        "id": "sub002_verify_config",
+        "name": "Verificar Config Telegram",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          500,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const token = $vars.TELEGRAM_BOT_TOKEN || '';\nconst chatId = $vars.TELEGRAM_CHAT_ID || '';\n\nif (!token || !chatId || token === 'TU_TOKEN_AQUI' || chatId === 'TU_CHAT_ID_AQUI') {\n  console.log('[SUB-002] Telegram no configurado. Mensaje descartado:', $input.first().json.mensaje);\n  return [{ json: { sent: false, reason: 'telegram_not_configured' } }];\n}\n\nreturn [{ json: { mensaje: $input.first().json.mensaje, token, chatId, send: true } }];"
+        }
+      },
+      {
+        "id": "sub002_config_ok",
+        "name": "Config OK?",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          750,
+          300
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict"
+            },
+            "conditions": [
+              {
+                "id": "cond_ok",
+                "leftValue": "={{ $json.send }}",
+                "rightValue": true,
+                "operator": {
+                  "type": "boolean",
+                  "operation": "equal"
+                }
+              }
+            ],
+            "combinator": "and"
+          }
+        }
+      },
+      {
+        "id": "sub002_skip",
+        "name": "Skip (Sin Config)",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1000,
+          450
+        ],
+        "parameters": {
+          "jsCode": "return [{ json: { sent: false, reason: 'skipped_no_config' } }];"
+        }
+      },
+      {
+        "id": "sub002_send",
+        "name": "Enviar Telegram",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1000,
+          300
+        ],
+        "parameters": {
+          "method": "POST",
+          "url": "={{ 'https://api.telegram.org/bot' + $json.token + '/sendMessage' }}",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ chat_id: $json.chatId, text: $json.mensaje, parse_mode: 'Markdown' }) }}",
+          "options": {}
+        }
+      },
+      {
+        "id": "sub002_enviado",
+        "name": "Enviado OK",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1250,
+          300
+        ],
+        "parameters": {
+          "jsCode": "return [{ json: { sent: true } }];"
+        }
+      }
+    ],
+    "connections": {
+      "Ejecutar por Workflow": {
+        "main": [
+          [
+            {
+              "node": "Tiene Mensaje",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Tiene Mensaje": {
+        "main": [
+          [
+            {
+              "node": "Verificar Config Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Sin Mensaje",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Verificar Config Telegram": {
+        "main": [
+          [
+            {
+              "node": "Config OK?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Config OK?": {
+        "main": [
+          [
+            {
+              "node": "Enviar Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Skip (Sin Config)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Enviar Telegram": {
+        "main": [
+          [
+            {
+              "node": "Enviado OK",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "triggerCount": 0,
+    "meta": {
+      "instanceId": ""
+    }
+  },
+  {
+    "name": "SUB-003 — Template Filler (Cloud)",
+    "nodes": [
+      {
+        "id": "sub003_trigger",
+        "name": "Ejecutar por Workflow",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {}
+      },
+      {
+        "id": "sub003_validate",
+        "name": "Validar Parámetros",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          250,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const data = $input.first().json;\n\nif (!data.templatePath) {\n  throw new Error('Parámetro requerido: templatePath');\n}\nif (!data.variables || typeof data.variables !== 'object') {\n  throw new Error('Parámetro requerido: variables (objeto con claves y valores)');\n}\n\n// Normalize: remove /workspace/ prefix\nlet templatePath = data.templatePath.replace(/^\\/workspace\\//, '');\n\nreturn [{ json: { templatePath, variables: data.variables } }];"
+        }
+      },
+      {
+        "id": "sub003_read_template",
+        "name": "GitHub: Leer Template",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          500,
+          300
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/{{$json.templatePath}}",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "sub003_replace",
+        "name": "Reemplazar Variables",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          750,
+          300
+        ],
+        "parameters": {
+          "jsCode": "let template = Buffer.from($json.content, 'base64').toString('utf8');\nconst variables = $('Validar Parámetros').first().json.variables;\n\nfor (const [key, value] of Object.entries(variables)) {\n  const placeholder = new RegExp(`\\\\{\\\\{${key}\\\\}\\\\}`, 'g');\n  template = template.replace(placeholder, value || '');\n}\n\nreturn [{ json: { content: template, variables } }];"
+        }
+      }
+    ],
+    "connections": {
+      "Ejecutar por Workflow": {
+        "main": [
+          [
+            {
+              "node": "Validar Parámetros",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validar Parámetros": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Leer Template",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Leer Template": {
+        "main": [
+          [
+            {
+              "node": "Reemplazar Variables",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "triggerCount": 0,
+    "meta": {
+      "instanceId": ""
+    }
+  },
+  {
+    "name": "SUB-004 — Registrar Evento (Cloud)",
+    "nodes": [
+      {
+        "id": "sub004_trigger",
+        "name": "Ejecutar por Workflow",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {}
+      },
+      {
+        "id": "sub004_read_log",
+        "name": "GitHub: Leer Log",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          250,
+          300
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/07_Operaciones/FG_Operations_Log.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "sub004_append",
+        "name": "Preparar y Actualizar Log",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          500,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const githubResponse = $input.first().json;\nconst input = $('Ejecutar por Workflow').first().json;\n\nconst timestamp = input.timestamp || new Date().toISOString();\nconst date = timestamp.split('T')[0];\nconst time = (timestamp.split('T')[1] || '00:00').substring(0, 5);\nconst evento = input.evento || 'EVENTO';\nconst pieza = input.pieza || '—';\nconst detalles = input.detalles || '';\n\nconst logLine = `| ${date} | ${time} | ${evento} | ${pieza} | ${detalles} |`;\n\nlet existingContent = '';\nlet sha = null;\n\nif (githubResponse.content) {\n  // File exists — decode and get SHA\n  existingContent = Buffer.from(githubResponse.content, 'base64').toString('utf8');\n  sha = githubResponse.sha;\n} else {\n  // New file\n  existingContent = '# FG Operations Log\\n\\n| Fecha | Hora | Evento | Pieza | Detalles |\\n|-------|------|--------|-------|----------|\\n';\n}\n\nconst newContent = existingContent + logLine + '\\n';\nconst base64Content = Buffer.from(newContent).toString('base64');\n\nreturn [{ json: { base64Content, sha, logLine, logged: true } }];"
+        }
+      },
+      {
+        "id": "sub004_write_log",
+        "name": "GitHub: Escribir Log",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          750,
+          300
+        ],
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/07_Operaciones/FG_Operations_Log.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ message: 'n8n: log event', content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main', ...($json.sha ? { sha: $json.sha } : {}) }) }}",
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Ejecutar por Workflow": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Leer Log",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Leer Log": {
+        "main": [
+          [
+            {
+              "node": "Preparar y Actualizar Log",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Preparar y Actualizar Log": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Escribir Log",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "triggerCount": 0,
+    "meta": {
+      "instanceId": ""
+    }
+  },
+  {
+    "name": "WF-001 — Intake Ideas (Cloud)",
+    "nodes": [
+      {
+        "id": "wf001_webhook",
+        "name": "Webhook Intake",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "intake",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "webhookId": "intake"
+      },
+      {
+        "id": "wf001_validate",
+        "name": "Validar Campos",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          250,
+          300
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict"
+            },
+            "conditions": [
+              {
+                "id": "cond_titulo",
+                "leftValue": "={{ $json.body.titulo }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              },
+              {
+                "id": "cond_pilar",
+                "leftValue": "={{ $json.body.pilar }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              }
+            ],
+            "combinator": "and"
+          }
+        }
+      },
+      {
+        "id": "wf001_error_campos",
+        "name": "Error: Campos Faltantes",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          500,
+          450
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ error: true, message: 'titulo y pilar son requeridos' }) }}",
+          "options": {
+            "responseCode": 400
+          }
+        }
+      },
+      {
+        "id": "wf001_list_piezas",
+        "name": "GitHub: Listar Piezas",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          500,
+          300
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/03_Editorial",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "wf001_calc_id",
+        "name": "Calcular Siguiente ID",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          750,
+          300
+        ],
+        "parameters": {
+          "jsCode": "// GitHub returns array of files for directory listing\nconst files = Array.isArray($input.first().json) ? $input.first().json : [];\nconst body = $('Webhook Intake').first().json.body;\n\nlet maxNum = 0;\nfor (const file of files) {\n  const match = (file.name || '').match(/^P1_(\\d{3})/);\n  if (match) {\n    const num = parseInt(match[1], 10);\n    if (num > maxNum) maxNum = num;\n  }\n}\n\nconst nextNum = String(maxNum + 1).padStart(3, '0');\nconst idPieza = `P1_${nextNum}`;\n\nconst pilares = {\n  'GD': 'Geopolitik Drop',\n  'BB': 'Bass & Borders',\n  'FG': 'Frecuencia Global',\n  'BP': 'Behind the Policy'\n};\n\nconst today = new Date().toISOString().split('T')[0];\nconst weekNum = Math.ceil((new Date() - new Date(new Date().getFullYear(), 0, 1)) / 604800000);\nconst weekId = `W${String(weekNum).padStart(2, '0')}`;\nconst idCompleto = `FG-${new Date().getFullYear()}-${weekId}-${nextNum}`;\n\nreturn [{\n  json: {\n    idPieza,\n    idCompleto,\n    nextNum,\n    titulo: body.titulo,\n    pilar: body.pilar,\n    pilarNombre: pilares[body.pilar] || body.pilar,\n    angulo: body.angulo || '',\n    formato: body.formato || 'carousel',\n    plataformas: body.plataformas || 'Instagram',\n    autor: body.autor || 'Farid Mohammadi',\n    deadline: body.deadline || '',\n    fecha: today\n  }\n}];"
+        }
+      },
+      {
+        "id": "wf001_read_template",
+        "name": "GitHub: Leer Template Brief",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1000,
+          300
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/08_n8n/templates/brief_template.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf001_fill_template",
+        "name": "Rellenar Template",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1250,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const template = Buffer.from($json.content, 'base64').toString('utf8');\nconst data = $('Calcular Siguiente ID').first().json;\n\nlet content = template;\ncontent = content.replace(/\\{\\{ID_PIEZA\\}\\}/g, data.idCompleto);\ncontent = content.replace(/\\{\\{FECHA\\}\\}/g, data.fecha);\ncontent = content.replace(/\\{\\{TITULO\\}\\}/g, data.titulo);\ncontent = content.replace(/\\{\\{PILAR_MARCADO\\}\\}/g, data.pilarNombre);\ncontent = content.replace(/\\{\\{ANGULO\\}\\}/g, data.angulo);\ncontent = content.replace(/\\{\\{FORMATO\\}\\}/g, data.formato);\ncontent = content.replace(/\\{\\{PLATAFORMAS\\}\\}/g, data.plataformas);\ncontent = content.replace(/\\{\\{AUTOR\\}\\}/g, data.autor);\ncontent = content.replace(/\\{\\{DEADLINE\\}\\}/g, data.deadline);\n\nreturn [{ json: { content, idPieza: data.idPieza, ...data } }];"
+        }
+      },
+      {
+        "id": "wf001_encode",
+        "name": "Codificar Para GitHub",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1500,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const data = $input.first().json;\nconst base64Content = Buffer.from(data.content).toString('base64');\nreturn [{ json: { ...data, base64Content } }];"
+        }
+      },
+      {
+        "id": "wf001_write_brief",
+        "name": "GitHub: Escribir Brief",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1750,
+          300
+        ],
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/03_Editorial/{{$json.idPieza}}_Brief.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ message: 'feat: brief ' + $json.idPieza, content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main' }) }}",
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf001_log",
+        "name": "Registrar Evento",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          2000,
+          300
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0004-4000-8000-000000000004",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "evento": "BRIEF_CREATED",
+              "pieza": "={{ $('Calcular Siguiente ID').first().json.idPieza }}",
+              "detalles": "={{ 'Título: ' + $('Calcular Siguiente ID').first().json.titulo }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf001_telegram",
+        "name": "Notificar Telegram",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          2250,
+          300
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0002-4000-8000-000000000002",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "mensaje": "={{ '📝 *Brief creado:* ' + $('Calcular Siguiente ID').first().json.idPieza + '\\n' + $('Calcular Siguiente ID').first().json.titulo }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf001_ok",
+        "name": "Responder OK",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          2500,
+          300
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: true, idPieza: $('Calcular Siguiente ID').first().json.idPieza, idCompleto: $('Calcular Siguiente ID').first().json.idCompleto, briefPath: '03_Editorial/' + $('Calcular Siguiente ID').first().json.idPieza + '_Brief.md' }) }}",
+          "options": {
+            "responseCode": 200
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Webhook Intake": {
+        "main": [
+          [
+            {
+              "node": "Validar Campos",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validar Campos": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Listar Piezas",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error: Campos Faltantes",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Listar Piezas": {
+        "main": [
+          [
+            {
+              "node": "Calcular Siguiente ID",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Calcular Siguiente ID": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Leer Template Brief",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Leer Template Brief": {
+        "main": [
+          [
+            {
+              "node": "Rellenar Template",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Rellenar Template": {
+        "main": [
+          [
+            {
+              "node": "Codificar Para GitHub",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Codificar Para GitHub": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Escribir Brief",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Escribir Brief": {
+        "main": [
+          [
+            {
+              "node": "Registrar Evento",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Registrar Evento": {
+        "main": [
+          [
+            {
+              "node": "Notificar Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Notificar Telegram": {
+        "main": [
+          [
+            {
+              "node": "Responder OK",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "triggerCount": 0,
+    "meta": {
+      "instanceId": ""
+    }
+  },
+  {
+    "name": "WF-002 — Registro de Brief (Cloud)",
+    "nodes": [
+      {
+        "id": "wf002_webhook",
+        "name": "Webhook Register",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "register-brief",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "webhookId": "register-brief"
+      },
+      {
+        "id": "wf002_validate",
+        "name": "Validar Input",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          250,
+          300
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": false
+            },
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "c1",
+                "leftValue": "={{ $json.body.pieza }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              },
+              {
+                "id": "c2",
+                "leftValue": "={{ $json.body.estado }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "wf002_error",
+        "name": "Error: Campos Faltantes",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          500,
+          450
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: false, error: 'Campos requeridos: pieza, estado' }) }}",
+          "options": {
+            "responseCode": 400
+          }
+        }
+      },
+      {
+        "id": "wf002_check_brief",
+        "name": "GitHub: Verificar Brief",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          500,
+          200
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/03_Editorial/{{$('Webhook Register').first().json.body.pieza}}_Brief.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "wf002_check_ok",
+        "name": "Brief Existe?",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          750,
+          200
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": false
+            },
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "c_sha",
+                "leftValue": "={{ $json.sha }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "wf002_brief_not_found",
+        "name": "Error: Brief No Existe",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          1000,
+          350
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: false, error: 'Brief no encontrado: ' + $('Webhook Register').first().json.body.pieza }) }}",
+          "options": {
+            "responseCode": 404
+          }
+        }
+      },
+      {
+        "id": "wf002_get_tracker",
+        "name": "GitHub: GET Tracker",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1000,
+          150
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "wf002_update_tracker",
+        "name": "Actualizar Tracker",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1250,
+          150
+        ],
+        "parameters": {
+          "jsCode": "const res = $input.first().json;\nlet tracker = {};\nlet sha = null;\n\nif (res.content) {\n  try { tracker = JSON.parse(Buffer.from(res.content, 'base64').toString('utf8')); } catch(e) { tracker = {}; }\n  sha = res.sha || null;\n}\n\nconst body = $('Webhook Register').first().json.body;\nconst pieza = body.pieza;\nconst estado = body.estado;\n\nconst estadosValidos = ['BRIEF_READY','RESEARCH_DONE','SCRIPT_DONE','DESIGN_DONE','QA_PASS','PUBLISHED'];\nif (!estadosValidos.includes(estado)) {\n  throw new Error(`Estado inválido: ${estado}. Válidos: ${estadosValidos.join(', ')}`);\n}\n\nif (!tracker[pieza]) tracker[pieza] = { historial: [] };\nconst ts = new Date().toISOString();\ntracker[pieza].estado_actual = estado;\ntracker[pieza].ultima_actualizacion = ts;\ntracker[pieza].historial = tracker[pieza].historial || [];\ntracker[pieza].historial.push({ estado, timestamp: ts });\n\nconst base64Content = Buffer.from(JSON.stringify(tracker, null, 2)).toString('base64');\nreturn [{ json: { pieza, estado, timestamp: ts, tracker_actualizado: true, base64Content, ...(sha ? { sha } : {}) } }];"
+        }
+      },
+      {
+        "id": "wf002_put_tracker",
+        "name": "GitHub: PUT Tracker",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1500,
+          150
+        ],
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ message: 'chore: tracker ' + $json.pieza + ' → ' + $json.estado, content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main', ...($json.sha ? { sha: $json.sha } : {}) }) }}",
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf002_log",
+        "name": "Registrar Evento",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1750,
+          150
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0004-4000-8000-000000000004",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "evento": "ESTADO_ACTUALIZADO",
+              "pieza": "={{ $('Actualizar Tracker').first().json.pieza }}",
+              "detalles": "={{ 'Estado → ' + $('Actualizar Tracker').first().json.estado }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf002_telegram",
+        "name": "Notificar Telegram",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          2000,
+          150
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0002-4000-8000-000000000002",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "mensaje": "={{ '🔄 ' + $('Actualizar Tracker').first().json.pieza + ' → ' + $('Actualizar Tracker').first().json.estado }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf002_ok",
+        "name": "Responder OK",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          2250,
+          150
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: true, pieza: $('Actualizar Tracker').first().json.pieza, estado: $('Actualizar Tracker').first().json.estado }) }}",
+          "options": {
+            "responseCode": 200
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Webhook Register": {
+        "main": [
+          [
+            {
+              "node": "Validar Input",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validar Input": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Verificar Brief",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error: Campos Faltantes",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Verificar Brief": {
+        "main": [
+          [
+            {
+              "node": "Brief Existe?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Brief Existe?": {
+        "main": [
+          [
+            {
+              "node": "GitHub: GET Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error: Brief No Existe",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: GET Tracker": {
+        "main": [
+          [
+            {
+              "node": "Actualizar Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Actualizar Tracker": {
+        "main": [
+          [
+            {
+              "node": "GitHub: PUT Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: PUT Tracker": {
+        "main": [
+          [
+            {
+              "node": "Registrar Evento",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Registrar Evento": {
+        "main": [
+          [
+            {
+              "node": "Notificar Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Notificar Telegram": {
+        "main": [
+          [
+            {
+              "node": "Responder OK",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "triggerCount": 0,
+    "meta": {
+      "instanceId": ""
+    }
+  },
+  {
+    "name": "WF-003 — QA Checklist (Cloud)",
+    "nodes": [
+      {
+        "id": "wf003_webhook",
+        "name": "Webhook QA",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "qa",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "webhookId": "qa-checklist"
+      },
+      {
+        "id": "wf003_validate",
+        "name": "Validar Input",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          250,
+          300
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": false
+            },
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "c1",
+                "leftValue": "={{ $json.body.pieza }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "wf003_error",
+        "name": "Error: Campo Faltante",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          500,
+          450
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: false, error: 'Campo requerido: pieza' }) }}",
+          "options": {
+            "responseCode": 400
+          }
+        }
+      },
+      {
+        "id": "wf003_get_brief",
+        "name": "GitHub: Leer Brief",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          500,
+          200
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/03_Editorial/{{$('Webhook QA').first().json.body.pieza}}_Brief.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf003_decode_brief",
+        "name": "Decodificar Brief",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          750,
+          200
+        ],
+        "parameters": {
+          "jsCode": "const pieza = $('Webhook QA').first().json.body.pieza;\nconst briefContent = Buffer.from($json.content, 'base64').toString('utf8');\n\nlet titulo = '', pilar = '', formato = '', plataformas = '';\nfor (const line of briefContent.split('\\n')) {\n  if (line.includes('**Título:**')) titulo = line.split('**Título:**')[1]?.trim() || titulo;\n  if (line.includes('**Pilar:**')) pilar = line.split('**Pilar:**')[1]?.trim() || pilar;\n  if (line.includes('**Formato:**')) formato = line.split('**Formato:**')[1]?.trim() || formato;\n  if (line.includes('**Plataforma(s):**')) plataformas = line.split('**Plataforma(s):**')[1]?.trim() || plataformas;\n}\n\nreturn [{ json: { pieza, titulo, pilar, formato, plataformas } }];"
+        }
+      },
+      {
+        "id": "wf003_get_template",
+        "name": "GitHub: Leer Template QA",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1000,
+          200
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/08_n8n/templates/qa_template.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf003_fill_template",
+        "name": "Rellenar Template QA",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1250,
+          200
+        ],
+        "parameters": {
+          "jsCode": "const template = Buffer.from($json.content, 'base64').toString('utf8');\nconst data = $('Decodificar Brief').first().json;\nconst today = new Date().toISOString().split('T')[0];\n\nlet content = template;\ncontent = content.replace(/\\{\\{ID_PIEZA\\}\\}/g, data.pieza);\ncontent = content.replace(/\\{\\{TITULO\\}\\}/g, data.titulo);\ncontent = content.replace(/\\{\\{PILAR_MARCADO\\}\\}/g, data.pilar);\ncontent = content.replace(/\\{\\{FORMATO\\}\\}/g, data.formato);\ncontent = content.replace(/\\{\\{PLATAFORMAS\\}\\}/g, data.plataformas);\ncontent = content.replace(/\\{\\{FECHA\\}\\}/g, today);\n\nconst base64Content = Buffer.from(content).toString('base64');\nreturn [{ json: { content, base64Content, pieza: data.pieza, titulo: data.titulo } }];"
+        }
+      },
+      {
+        "id": "wf003_write_qa",
+        "name": "GitHub: Escribir QA",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1500,
+          200
+        ],
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/{{$json.pieza}}_QA.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ message: 'feat: QA checklist ' + $json.pieza, content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main' }) }}",
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf003_telegram",
+        "name": "Notificar Telegram",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1750,
+          200
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0002-4000-8000-000000000002",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "mensaje": "={{ '🔍 QA generado para ' + $('Rellenar Template QA').first().json.pieza + ': ' + $('Rellenar Template QA').first().json.titulo }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf003_log",
+        "name": "Registrar Evento",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          2000,
+          200
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0004-4000-8000-000000000004",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "evento": "QA_GENERADO",
+              "pieza": "={{ $('Rellenar Template QA').first().json.pieza }}",
+              "detalles": "={{ 'QA checklist creado para ' + $('Rellenar Template QA').first().json.titulo }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf003_ok",
+        "name": "Responder OK",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          2250,
+          200
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: true, pieza: $('Rellenar Template QA').first().json.pieza, archivo: '04_Produccion/' + $('Rellenar Template QA').first().json.pieza + '_QA.md' }) }}",
+          "options": {
+            "responseCode": 200
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Webhook QA": {
+        "main": [
+          [
+            {
+              "node": "Validar Input",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validar Input": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Leer Brief",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error: Campo Faltante",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Leer Brief": {
+        "main": [
+          [
+            {
+              "node": "Decodificar Brief",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Decodificar Brief": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Leer Template QA",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Leer Template QA": {
+        "main": [
+          [
+            {
+              "node": "Rellenar Template QA",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Rellenar Template QA": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Escribir QA",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Escribir QA": {
+        "main": [
+          [
+            {
+              "node": "Notificar Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Notificar Telegram": {
+        "main": [
+          [
+            {
+              "node": "Registrar Evento",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Registrar Evento": {
+        "main": [
+          [
+            {
+              "node": "Responder OK",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "triggerCount": 0,
+    "meta": {
+      "instanceId": ""
+    }
+  },
+  {
+    "name": "WF-004 — Notificación y Log (Cloud)",
+    "nodes": [
+      {
+        "id": "wf004_trigger",
+        "name": "Ejecutar por Workflow",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {}
+      },
+      {
+        "id": "wf004_format",
+        "name": "Formatear Log",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          250,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const data = $input.first().json;\nconst timestamp = data.timestamp || new Date().toISOString();\nconst date = timestamp.split('T')[0];\nconst time = (timestamp.split('T')[1] || '').substring(0, 5) || '00:00';\nconst logLine = `| ${date} | ${time} | ${data.evento || 'N/A'} | ${data.pieza || 'N/A'} | ${data.detalles || ''} |`;\nreturn [{ json: { logLine, ...data } }];"
+        }
+      },
+      {
+        "id": "wf004_get_log",
+        "name": "GitHub: GET Log",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          500,
+          300
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/07_Operaciones/FG_Operations_Log.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "wf004_append",
+        "name": "Append a Log",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          750,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const logLine = $('Formatear Log').first().json.logLine;\nconst res = $input.first().json;\n\nlet existing = '';\nlet sha = null;\nif (res.content) {\n  existing = Buffer.from(res.content, 'base64').toString('utf8');\n  sha = res.sha || null;\n} else {\n  existing = '# FG Operations Log\\n\\n| Fecha | Hora | Evento | Pieza | Detalles |\\n|-------|------|--------|-------|----------|\\n';\n}\n\nconst updated = existing + logLine + '\\n';\nconst base64Content = Buffer.from(updated).toString('base64');\nreturn [{ json: { base64Content, ...(sha ? { sha } : {}), ...$('Formatear Log').first().json } }];"
+        }
+      },
+      {
+        "id": "wf004_put_log",
+        "name": "GitHub: PUT Log",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1000,
+          300
+        ],
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/07_Operaciones/FG_Operations_Log.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ message: 'log: ' + ($json.evento || 'event') + ' - ' + ($json.pieza || '-'), content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main', ...($json.sha ? { sha: $json.sha } : {}) }) }}",
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf004_telegram",
+        "name": "Notificar Telegram",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1250,
+          300
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0002-4000-8000-000000000002",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "mensaje": "={{ '📋 [LOG] ' + $('Formatear Log').first().json.evento + ' — ' + ($('Formatear Log').first().json.pieza || '-') + ': ' + ($('Formatear Log').first().json.detalles || '') }}"
+            }
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Ejecutar por Workflow": {
+        "main": [
+          [
+            {
+              "node": "Formatear Log",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Formatear Log": {
+        "main": [
+          [
+            {
+              "node": "GitHub: GET Log",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: GET Log": {
+        "main": [
+          [
+            {
+              "node": "Append a Log",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Append a Log": {
+        "main": [
+          [
+            {
+              "node": "GitHub: PUT Log",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: PUT Log": {
+        "main": [
+          [
+            {
+              "node": "Notificar Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "triggerCount": 0,
+    "meta": {
+      "instanceId": ""
+    }
+  },
+  {
+    "name": "WF-005 — Pipeline Status Diario (Cloud)",
+    "nodes": [
+      {
+        "id": "wf005_cron",
+        "name": "Cron 9AM Diario",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "cronExpression",
+                "expression": "0 9 * * *"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "wf005_get_tracker",
+        "name": "GitHub: GET Tracker",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          250,
+          300
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "wf005_calc_stats",
+        "name": "Calcular Estadísticas",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          500,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const res = $input.first().json;\n\nif (!res.content) {\n  return [{ json: { resumen: 'Sin piezas registradas en el tracker.', stats: {}, trackerSha: null, trackerBase64: null } }];\n}\n\nlet tracker = {};\ntry { tracker = JSON.parse(Buffer.from(res.content, 'base64').toString('utf8')); } catch(e) {}\nconst trackerSha = res.sha || null;\n\nconst piezas = Object.keys(tracker);\nconst ahora = new Date();\nconst stats = { total: piezas.length, por_estado: {}, bloqueadas_48h: [] };\n\nfor (const p of piezas) {\n  const estado = tracker[p].estado_actual || 'DESCONOCIDO';\n  stats.por_estado[estado] = (stats.por_estado[estado] || 0) + 1;\n  const ultimaAct = new Date(tracker[p].ultima_actualizacion);\n  const horasDiff = (ahora - ultimaAct) / 3600000;\n  if (horasDiff > 48 && estado !== 'PUBLISHED') {\n    stats.bloqueadas_48h.push(`${p} (${estado}, ${Math.floor(horasDiff)}h sin cambio)`);\n  }\n}\n\nconst dateStr = ahora.toISOString().split('T')[0];\nlet resumen = `📊 *PIPELINE STATUS — ${dateStr}*\\n\\nTotal piezas: ${stats.total}\\n\\n*Por estado:*\\n`;\nfor (const [estado, count] of Object.entries(stats.por_estado)) resumen += `  • ${estado}: ${count}\\n`;\nif (stats.bloqueadas_48h.length > 0) {\n  resumen += `\\n⚠️ *Bloqueadas >48h:*\\n`;\n  for (const b of stats.bloqueadas_48h) resumen += `  • ${b}\\n`;\n} else {\n  resumen += `\\n✅ Sin piezas bloqueadas.\\n`;\n}\n\nreturn [{ json: { resumen, stats, trackerSha } }];"
+        }
+      },
+      {
+        "id": "wf005_telegram",
+        "name": "Enviar Resumen Telegram",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          750,
+          300
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0002-4000-8000-000000000002",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "mensaje": "={{ $json.resumen }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf005_get_log",
+        "name": "GitHub: GET Log",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1000,
+          300
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/07_Operaciones/FG_Operations_Log.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "wf005_append_log",
+        "name": "Escribir Snapshot en Log",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1250,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const logRes = $input.first().json;\nconst stats = $('Calcular Estadísticas').first().json.stats;\nconst today = new Date().toISOString().split('T')[0];\nconst time = new Date().toISOString().split('T')[1].substring(0, 5);\nconst logLine = `| ${today} | ${time} | DAILY_STATUS | — | Total: ${stats.total || 0}, Bloqueadas: ${(stats.bloqueadas_48h || []).length} |`;\n\nlet existing = '';\nlet sha = null;\nif (logRes.content) {\n  existing = Buffer.from(logRes.content, 'base64').toString('utf8');\n  sha = logRes.sha || null;\n} else {\n  existing = '# FG Operations Log\\n\\n| Fecha | Hora | Evento | Pieza | Detalles |\\n|-------|------|--------|-------|----------|\\n';\n}\n\nconst updated = existing + logLine + '\\n';\nconst base64Content = Buffer.from(updated).toString('base64');\nreturn [{ json: { base64Content, ...(sha ? { sha } : {}) } }];"
+        }
+      },
+      {
+        "id": "wf005_put_log",
+        "name": "GitHub: PUT Log",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1500,
+          300
+        ],
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/07_Operaciones/FG_Operations_Log.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ message: 'log: daily status snapshot', content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main', ...($json.sha ? { sha: $json.sha } : {}) }) }}",
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Cron 9AM Diario": {
+        "main": [
+          [
+            {
+              "node": "GitHub: GET Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: GET Tracker": {
+        "main": [
+          [
+            {
+              "node": "Calcular Estadísticas",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Calcular Estadísticas": {
+        "main": [
+          [
+            {
+              "node": "Enviar Resumen Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Enviar Resumen Telegram": {
+        "main": [
+          [
+            {
+              "node": "GitHub: GET Log",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: GET Log": {
+        "main": [
+          [
+            {
+              "node": "Escribir Snapshot en Log",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Escribir Snapshot en Log": {
+        "main": [
+          [
+            {
+              "node": "GitHub: PUT Log",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "triggerCount": 0,
+    "meta": {
+      "instanceId": ""
+    }
+  },
+  {
+    "name": "WF-006 — Preparar Publicación (Cloud)",
+    "nodes": [
+      {
+        "id": "wf006c_trigger",
+        "name": "Webhook Prep",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "prepare-publish",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "webhookId": "prepare-publish"
+      },
+      {
+        "id": "wf006c_validate",
+        "name": "Validar Input",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          220,
+          300
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": false
+            },
+            "combinator": "and",
+            "conditions": [
+              {
+                "leftValue": "={{ $json.body.pieza }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "wf006c_error",
+        "name": "Error: Campo Inválido",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          440,
+          440
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: false, error: 'Campo requerido: pieza' }) }}",
+          "options": {
+            "responseCode": 400
+          }
+        }
+      },
+      {
+        "id": "wf006c_get_brief",
+        "name": "GitHub: Leer Brief",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          440,
+          180
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/03_Editorial/{{$('Webhook Prep').first().json.body.pieza}}_Brief.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf006c_decode_brief",
+        "name": "Leer Brief",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          660,
+          180
+        ],
+        "parameters": {
+          "jsCode": "const pieza = $('Webhook Prep').first().json.body.pieza;\nconst brief = Buffer.from($json.content, 'base64').toString('utf8');\n\nfunction parseField(content, fieldName) {\n  const lines = content.split('\\n');\n  for (const line of lines) {\n    if (line.includes('**' + fieldName + '**')) {\n      const parts = line.split('|');\n      if (parts.length >= 4) return parts[2].trim();\n    }\n  }\n  return '';\n}\n\nconst titulo = parseField(brief, 'Título de trabajo');\nconst pilarNombre = parseField(brief, 'Pilar');\nconst angulo = parseField(brief, 'Ángulo FG');\nconst tesis = parseField(brief, 'Tesis central');\nconst formato = parseField(brief, 'Formato principal');\nconst plataformas = parseField(brief, 'Plataforma(s)');\n\nconst pilarMap = {\n  'geopolitik drop': 'GD', 'bass & borders': 'BB',\n  'frecuencia global': 'FG', 'blueprint': 'BP', 'behind the policy': 'BP'\n};\nconst pilarCode = pilarMap[(pilarNombre || '').toLowerCase()] || 'FG';\n\nreturn [{ json: { pieza, titulo, pilarNombre, pilarCode, angulo, tesis, formato, plataformas } }];"
+        }
+      },
+      {
+        "id": "wf006c_gen_copy",
+        "name": "Generar Copy por Plataforma",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          880,
+          180
+        ],
+        "parameters": {
+          "jsCode": "const d = $input.first().json;\nconst { pieza, titulo, pilarCode, angulo, tesis, formato, plataformas } = d;\n\nconst hashtagSets = {\n  GD: ['#GeopolitikDrop', '#Geopolitica', '#RelacionesInternacionales', '#AsesorInternacional', '#FrecuenciaGlobal'],\n  BB: ['#BassAndBorders', '#CulturaGlobal', '#MusicaYGeopolitica', '#BordesTonales', '#FrecuenciaGlobal'],\n  FG: ['#FrecuenciaGlobal', '#AnalisisInternacional', '#Geopolitica', '#PoliticaGlobal'],\n  BP: ['#BehindThePolicy', '#Geopolitica', '#AnalisisPolitico', '#PoliticaInternacional', '#FrecuenciaGlobal']\n};\n\nconst tags = hashtagSets[pilarCode] || hashtagSets.FG;\nconst tagsFull = tags.join(' ');\nconst tagsShort = tags.slice(0, 3).join(' ');\nconst desc = (tesis && tesis !== '[pendiente de desarrollo]') ? tesis : (angulo || '');\n\nlet xCopy = titulo + '\\n\\n' + tagsShort;\nif (xCopy.length > 280) {\n  const maxTitle = 280 - tagsShort.length - 4;\n  xCopy = titulo.substring(0, maxTitle) + '...\\n\\n' + tagsShort;\n}\nxCopy = xCopy.substring(0, 280);\n\nconst igTags = tags.concat(['#AnalisisInternacional', '#ContenidoGeopolitico', '#InformacionGlobal']).join(' ');\nconst igCaption = titulo + (desc ? '\\n\\n' + desc : '') + '\\n\\n\\uD83D\\uDCCC Análisis por Frecuencia Global.\\n\\n' + igTags;\nconst liCaption = titulo + (desc ? '\\n\\n' + desc : '') + '\\n\\nEn Frecuencia Global analizamos el cruce entre geopolítica, cultura e información global.\\n\\n' + tagsFull;\nconst hookTT = titulo.length > 200 ? titulo.substring(0, 197) + '...' : titulo;\nconst ttCaption = (hookTT + ' ' + tags.slice(0, 3).join(' ')).substring(0, 300);\n\nreturn [{ json: Object.assign({}, d, { xCopy, igCaption, liCaption, ttCaption, tagsFull, tagsShort, xCharCount: xCopy.length, ttCharCount: ttCaption.length }) }];"
+        }
+      },
+      {
+        "id": "wf006c_build_ready",
+        "name": "Construir PublishReady",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1100,
+          180
+        ],
+        "parameters": {
+          "jsCode": "const d = $input.first().json;\nconst today = new Date().toISOString().split('T')[0];\nconst sections = [\n  '# Publish Ready — ' + d.pieza, '',\n  '**Pieza:** ' + d.pieza,\n  '**Fecha:** ' + today,\n  '**Estado:** PUBLISH_READY',\n  '**Formato:** ' + (d.formato || ''),\n  '**Plataformas:** ' + (d.plataformas || ''),\n  '', '---', '',\n  '## X (Twitter)',\n  '```',\n  d.xCopy,\n  '```',\n  '_Longitud: **' + d.xCharCount + '/280** caracteres_',\n  '', '---', '',\n  '## Instagram', '',\n  '**Caption:**',\n  d.igCaption,\n  '', '---', '',\n  '## LinkedIn', '',\n  d.liCaption,\n  '', '---', '',\n  '## TikTok',\n  '```',\n  d.ttCaption,\n  '```',\n  '_Longitud: **' + d.ttCharCount + '/300** caracteres_',\n  '', '---', '',\n  '> Generado el ' + today + ' por n8n WF-006. Revisar antes de publicar.'\n];\nconst publishReadyBase64 = Buffer.from(sections.join('\\n')).toString('base64');\nreturn [{ json: Object.assign({}, d, { publishReadyBase64 }) }];"
+        }
+      },
+      {
+        "id": "wf006c_get_ready",
+        "name": "GitHub: GET PublishReady Existente",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1320,
+          180
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/{{$('Leer Brief').first().json.pieza}}_PublishReady.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "wf006c_put_ready",
+        "name": "GitHub: PUT PublishReady",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1540,
+          180
+        ],
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/{{$('Leer Brief').first().json.pieza}}_PublishReady.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ message: 'content: publish ready ' + $('Leer Brief').first().json.pieza, content: $('Construir PublishReady').first().json.publishReadyBase64, branch: $vars.GITHUB_BRANCH || 'main', ...($('GitHub: GET PublishReady Existente').first().json.sha ? { sha: $('GitHub: GET PublishReady Existente').first().json.sha } : {}) }) }}",
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf006c_get_tracker",
+        "name": "GitHub: GET Tracker",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1760,
+          180
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "wf006c_update_tracker",
+        "name": "Actualizar Tracker",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1980,
+          180
+        ],
+        "parameters": {
+          "jsCode": "const trackerRes = $input.first().json;\nconst briefData = $('Leer Brief').first().json;\nconst copyData = $('Generar Copy por Plataforma').first().json;\n\nlet tracker = {};\nif (trackerRes.content) {\n  try { tracker = JSON.parse(Buffer.from(trackerRes.content, 'base64').toString('utf8')); } catch(e) {}\n}\nconst sha = trackerRes.sha || null;\n\nconst pieza = briefData.pieza;\nconst ahora = new Date().toISOString();\nif (!tracker[pieza]) tracker[pieza] = { historial: [] };\ntracker[pieza].historial = tracker[pieza].historial || [];\ntracker[pieza].historial.push({ estado: 'PUBLISH_READY', timestamp: ahora });\ntracker[pieza].estado_actual = 'PUBLISH_READY';\ntracker[pieza].ultima_actualizacion = ahora;\n\nconst base64Content = Buffer.from(JSON.stringify(tracker, null, 2)).toString('base64');\nreturn [{ json: Object.assign({}, briefData, { xCharCount: copyData.xCharCount, base64Content, ...(sha ? { sha } : {}) }) }];"
+        }
+      },
+      {
+        "id": "wf006c_put_tracker",
+        "name": "GitHub: PUT Tracker",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          2200,
+          180
+        ],
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ message: 'tracker: publish_ready ' + $json.pieza, content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main', ...($json.sha ? { sha: $json.sha } : {}) }) }}",
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf006c_telegram",
+        "name": "Notificar Telegram",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          2420,
+          180
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0002-4000-8000-000000000002",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "mensaje": "={{ '\\uD83D\\uDCE4 Listo para publicar: ' + $('Leer Brief').first().json.titulo + '\\nPieza: ' + $('Leer Brief').first().json.pieza + '\\nPlataformas: ' + $('Leer Brief').first().json.plataformas }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf006c_log",
+        "name": "Registrar Evento",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          2640,
+          180
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0004-4000-8000-000000000004",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "evento": "PUBLISH_READY",
+              "pieza": "={{ $('Actualizar Tracker').first().json.pieza }}",
+              "detalles": "={{ 'PublishReady generado: ' + $('Actualizar Tracker').first().json.titulo }}",
+              "timestamp": "={{ new Date().toISOString() }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf006c_respond",
+        "name": "Responder OK",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          2860,
+          180
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: true, pieza: $('Actualizar Tracker').first().json.pieza, archivo: '04_Produccion/' + $('Actualizar Tracker').first().json.pieza + '_PublishReady.md', plataformas: $('Actualizar Tracker').first().json.plataformas, xCharCount: $('Actualizar Tracker').first().json.xCharCount }) }}"
+        }
+      }
+    ],
+    "connections": {
+      "Webhook Prep": {
+        "main": [
+          [
+            {
+              "node": "Validar Input",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validar Input": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Leer Brief",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error: Campo Inválido",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Leer Brief": {
+        "main": [
+          [
+            {
+              "node": "Leer Brief",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Leer Brief": {
+        "main": [
+          [
+            {
+              "node": "Generar Copy por Plataforma",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Generar Copy por Plataforma": {
+        "main": [
+          [
+            {
+              "node": "Construir PublishReady",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Construir PublishReady": {
+        "main": [
+          [
+            {
+              "node": "GitHub: GET PublishReady Existente",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: GET PublishReady Existente": {
+        "main": [
+          [
+            {
+              "node": "GitHub: PUT PublishReady",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: PUT PublishReady": {
+        "main": [
+          [
+            {
+              "node": "GitHub: GET Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: GET Tracker": {
+        "main": [
+          [
+            {
+              "node": "Actualizar Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Actualizar Tracker": {
+        "main": [
+          [
+            {
+              "node": "GitHub: PUT Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: PUT Tracker": {
+        "main": [
+          [
+            {
+              "node": "Notificar Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Notificar Telegram": {
+        "main": [
+          [
+            {
+              "node": "Registrar Evento",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Registrar Evento": {
+        "main": [
+          [
+            {
+              "node": "Responder OK",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "triggerCount": 0,
+    "meta": {
+      "instanceId": ""
+    }
+  },
+  {
+    "name": "WF-007 — Publicar en X (Cloud)",
+    "nodes": [
+      {
+        "id": "wf007c_trigger",
+        "name": "Webhook Publish X",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "publish-x",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "webhookId": "publish-x"
+      },
+      {
+        "id": "wf007c_validate",
+        "name": "Validar Input",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          220,
+          300
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": false
+            },
+            "combinator": "and",
+            "conditions": [
+              {
+                "leftValue": "={{ $json.body.pieza }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "wf007c_error",
+        "name": "Error: Campo Inválido",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          440,
+          440
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: false, error: 'Campo requerido: pieza' }) }}",
+          "options": {
+            "responseCode": 400
+          }
+        }
+      },
+      {
+        "id": "wf007c_get_ready",
+        "name": "GitHub: Leer PublishReady",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          440,
+          180
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/{{$('Webhook Publish X').first().json.body.pieza}}_PublishReady.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf007c_extract_copy",
+        "name": "Extraer X Copy",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          660,
+          180
+        ],
+        "parameters": {
+          "jsCode": "const pieza = $('Webhook Publish X').first().json.body.pieza;\nconst content = Buffer.from($json.content, 'base64').toString('utf8');\nconst lines = content.split('\\n');\n\nlet xCopy = '', state = 0;\nfor (const line of lines) {\n  if (state === 0 && line.trim() === '## X (Twitter)') { state = 1; continue; }\n  if (state === 1 && line.trim() === '```') { state = 2; continue; }\n  if (state === 2 && line.trim() === '```') break;\n  if (state === 2) xCopy += (xCopy ? '\\n' : '') + line;\n}\n\nif (!xCopy) throw new Error('No X copy block found in ' + pieza + '_PublishReady.md');\nif (xCopy.length > 280) throw new Error('X copy too long: ' + xCopy.length + ' chars (max 280) for ' + pieza);\n\nreturn [{ json: { pieza, xCopy } }];"
+        }
+      },
+      {
+        "id": "wf007c_publish_x",
+        "name": "Publicar en X",
+        "type": "n8n-nodes-base.twitter",
+        "typeVersion": 2,
+        "position": [
+          880,
+          180
+        ],
+        "parameters": {
+          "resource": "tweet",
+          "operation": "create",
+          "text": "={{ $json.xCopy }}"
+        },
+        "credentials": {
+          "twitterOAuth2Api": {
+            "id": "__PLACEHOLDER_TWITTER_AUTH__",
+            "name": "FG X (Twitter)"
+          }
+        }
+      },
+      {
+        "id": "wf007c_get_tracker",
+        "name": "GitHub: GET Tracker",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1100,
+          180
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "wf007c_update_tracker",
+        "name": "Actualizar Tracker",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1320,
+          180
+        ],
+        "parameters": {
+          "jsCode": "const trackerRes = $input.first().json;\nconst tweetData = $('Publicar en X').first().json;\nconst copyData = $('Extraer X Copy').first().json;\nconst pieza = copyData.pieza;\nconst tweetId = tweetData.id || tweetData.data?.id || 'unknown';\n\nlet tracker = {};\nif (trackerRes.content) {\n  try { tracker = JSON.parse(Buffer.from(trackerRes.content, 'base64').toString('utf8')); } catch(e) {}\n}\nconst sha = trackerRes.sha || null;\n\nconst ahora = new Date().toISOString();\nif (!tracker[pieza]) tracker[pieza] = { historial: [], publicaciones: [] };\ntracker[pieza].historial = tracker[pieza].historial || [];\ntracker[pieza].publicaciones = tracker[pieza].publicaciones || [];\ntracker[pieza].historial.push({ estado: 'PUBLISHED', timestamp: ahora });\ntracker[pieza].publicaciones.push({ plataforma: 'X', timestamp: ahora, tweetId });\ntracker[pieza].estado_actual = 'PUBLISHED';\ntracker[pieza].ultima_actualizacion = ahora;\n\nconst base64Content = Buffer.from(JSON.stringify(tracker, null, 2)).toString('base64');\nreturn [{ json: { pieza, tweetId, base64Content, ...(sha ? { sha } : {}) } }];"
+        }
+      },
+      {
+        "id": "wf007c_put_tracker",
+        "name": "GitHub: PUT Tracker",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1540,
+          180
+        ],
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ message: 'tracker: published_x ' + $json.pieza, content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main', ...($json.sha ? { sha: $json.sha } : {}) }) }}",
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf007c_telegram",
+        "name": "Notificar Telegram",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1760,
+          180
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0002-4000-8000-000000000002",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "mensaje": "={{ '\\uD83D\\uDCC8 Publicado en X: ' + $('Actualizar Tracker').first().json.pieza + '\\nTweet ID: ' + $('Actualizar Tracker').first().json.tweetId }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf007c_log",
+        "name": "Registrar Evento",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1980,
+          180
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0004-4000-8000-000000000004",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "evento": "PUBLISHED_X",
+              "pieza": "={{ $('Actualizar Tracker').first().json.pieza }}",
+              "detalles": "={{ 'Tweet ID: ' + $('Actualizar Tracker').first().json.tweetId }}",
+              "timestamp": "={{ new Date().toISOString() }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf007c_respond",
+        "name": "Responder OK",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          2200,
+          180
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: true, pieza: $('Actualizar Tracker').first().json.pieza, tweetId: $('Actualizar Tracker').first().json.tweetId, url: 'https://twitter.com/i/web/status/' + $('Actualizar Tracker').first().json.tweetId }) }}"
+        }
+      }
+    ],
+    "connections": {
+      "Webhook Publish X": {
+        "main": [
+          [
+            {
+              "node": "Validar Input",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validar Input": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Leer PublishReady",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error: Campo Inválido",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Leer PublishReady": {
+        "main": [
+          [
+            {
+              "node": "Extraer X Copy",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extraer X Copy": {
+        "main": [
+          [
+            {
+              "node": "Publicar en X",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Publicar en X": {
+        "main": [
+          [
+            {
+              "node": "GitHub: GET Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: GET Tracker": {
+        "main": [
+          [
+            {
+              "node": "Actualizar Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Actualizar Tracker": {
+        "main": [
+          [
+            {
+              "node": "GitHub: PUT Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: PUT Tracker": {
+        "main": [
+          [
+            {
+              "node": "Notificar Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Notificar Telegram": {
+        "main": [
+          [
+            {
+              "node": "Registrar Evento",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Registrar Evento": {
+        "main": [
+          [
+            {
+              "node": "Responder OK",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "triggerCount": 0,
+    "meta": {
+      "instanceId": ""
+    }
+  },
+  {
+    "name": "WF-008 — Publicar en Instagram (Cloud)",
+    "nodes": [
+      {
+        "id": "wf008c_trigger",
+        "name": "Webhook Publish Instagram",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "publish-instagram",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "webhookId": "publish-instagram"
+      },
+      {
+        "id": "wf008c_validate",
+        "name": "Validar Input",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          220,
+          300
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": false
+            },
+            "combinator": "and",
+            "conditions": [
+              {
+                "leftValue": "={{ $json.body.pieza }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              },
+              {
+                "leftValue": "={{ $json.body.imageUrl }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "wf008c_error",
+        "name": "Error: Input Invalido",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          440,
+          440
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: false, error: 'Campos requeridos: pieza, imageUrl' }) }}",
+          "options": {
+            "responseCode": 400
+          }
+        }
+      },
+      {
+        "id": "wf008c_get_ready",
+        "name": "GitHub: Leer PublishReady",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          440,
+          180
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/{{$('Webhook Publish Instagram').first().json.body.pieza}}_PublishReady.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf008c_extract_copy",
+        "name": "Extraer Instagram Caption",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          660,
+          180
+        ],
+        "parameters": {
+          "jsCode": "const pieza = $('Webhook Publish Instagram').first().json.body.pieza;\nconst imageUrl = $('Webhook Publish Instagram').first().json.body.imageUrl;\nconst content = Buffer.from($json.content, 'base64').toString('utf8');\n\nconst rgx = /## Instagram\\s*\\n\\s*\\*\\*Caption:\\*\\*\\s*\\n([\\s\\S]*?)\\n\\s*---/m;\nconst match = content.match(rgx);\nif (!match || !match[1]) throw new Error('No Instagram caption found in ' + pieza + '_PublishReady.md');\n\nconst caption = match[1].trim();\nif (!caption) throw new Error('Empty Instagram caption in ' + pieza + '_PublishReady.md');\n\nreturn [{ json: { pieza, imageUrl, caption } }];"
+        }
+      },
+      {
+        "id": "wf008c_publish_ig",
+        "name": "Publicar en Instagram",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          880,
+          180
+        ],
+        "parameters": {
+          "method": "POST",
+          "url": "={{$vars.IG_PUBLISH_WEBHOOK_URL}}",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ pieza: $json.pieza, caption: $json.caption, imageUrl: $json.imageUrl }) }}",
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "__PLACEHOLDER_IG_AUTH__",
+            "name": "FG Instagram Auth"
+          }
+        }
+      },
+      {
+        "id": "wf008c_get_tracker",
+        "name": "GitHub: GET Tracker",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1100,
+          180
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "wf008c_update_tracker",
+        "name": "Actualizar Tracker",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1320,
+          180
+        ],
+        "parameters": {
+          "jsCode": "const trackerRes = $input.first().json;\nconst publishRes = $('Publicar en Instagram').first().json;\nconst cap = $('Extraer Instagram Caption').first().json;\nconst pieza = cap.pieza;\nconst postId = publishRes.postId || publishRes.id || publishRes.media_id || 'unknown';\n\nlet tracker = {};\nif (trackerRes.content) {\n  try { tracker = JSON.parse(Buffer.from(trackerRes.content, 'base64').toString('utf8')); } catch(e) {}\n}\nconst sha = trackerRes.sha || null;\n\nconst ahora = new Date().toISOString();\nif (!tracker[pieza]) tracker[pieza] = { historial: [], publicaciones: [] };\ntracker[pieza].historial = tracker[pieza].historial || [];\ntracker[pieza].publicaciones = tracker[pieza].publicaciones || [];\ntracker[pieza].historial.push({ estado: 'PUBLISHED_INSTAGRAM', timestamp: ahora });\ntracker[pieza].publicaciones.push({ plataforma: 'Instagram', timestamp: ahora, postId });\ntracker[pieza].estado_actual = 'PUBLISHED_INSTAGRAM';\ntracker[pieza].ultima_actualizacion = ahora;\n\nconst base64Content = Buffer.from(JSON.stringify(tracker, null, 2)).toString('base64');\nreturn [{ json: { pieza, postId, base64Content, ...(sha ? { sha } : {}) } }];"
+        }
+      },
+      {
+        "id": "wf008c_put_tracker",
+        "name": "GitHub: PUT Tracker",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1540,
+          180
+        ],
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ message: 'tracker: published_instagram ' + $json.pieza, content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main', ...($json.sha ? { sha: $json.sha } : {}) }) }}",
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf008c_telegram",
+        "name": "Notificar Telegram",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1760,
+          180
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0002-4000-8000-000000000002",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "mensaje": "={{ '\\uD83D\\uDCF8 Publicado en Instagram: ' + $('Actualizar Tracker').first().json.pieza + '\\nPost ID: ' + $('Actualizar Tracker').first().json.postId }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf008c_log",
+        "name": "Registrar Evento",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1980,
+          180
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0004-4000-8000-000000000004",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "evento": "PUBLISHED_INSTAGRAM",
+              "pieza": "={{ $('Actualizar Tracker').first().json.pieza }}",
+              "detalles": "={{ 'Post ID: ' + $('Actualizar Tracker').first().json.postId }}",
+              "timestamp": "={{ new Date().toISOString() }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf008c_respond",
+        "name": "Responder OK",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          2200,
+          180
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: true, plataforma: 'Instagram', pieza: $('Actualizar Tracker').first().json.pieza, postId: $('Actualizar Tracker').first().json.postId }) }}"
+        }
+      }
+    ],
+    "connections": {
+      "Webhook Publish Instagram": {
+        "main": [
+          [
+            {
+              "node": "Validar Input",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validar Input": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Leer PublishReady",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error: Input Invalido",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Leer PublishReady": {
+        "main": [
+          [
+            {
+              "node": "Extraer Instagram Caption",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extraer Instagram Caption": {
+        "main": [
+          [
+            {
+              "node": "Publicar en Instagram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Publicar en Instagram": {
+        "main": [
+          [
+            {
+              "node": "GitHub: GET Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: GET Tracker": {
+        "main": [
+          [
+            {
+              "node": "Actualizar Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Actualizar Tracker": {
+        "main": [
+          [
+            {
+              "node": "GitHub: PUT Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: PUT Tracker": {
+        "main": [
+          [
+            {
+              "node": "Notificar Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Notificar Telegram": {
+        "main": [
+          [
+            {
+              "node": "Registrar Evento",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Registrar Evento": {
+        "main": [
+          [
+            {
+              "node": "Responder OK",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "triggerCount": 0,
+    "meta": {
+      "instanceId": ""
+    }
+  },
+  {
+    "name": "WF-009 — Publicar en LinkedIn (Cloud)",
+    "nodes": [
+      {
+        "id": "wf009c_trigger",
+        "name": "Webhook Publish LinkedIn",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "publish-linkedin",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "webhookId": "publish-linkedin"
+      },
+      {
+        "id": "wf009c_validate",
+        "name": "Validar Input",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          220,
+          300
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": false
+            },
+            "combinator": "and",
+            "conditions": [
+              {
+                "leftValue": "={{ $json.body.pieza }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "wf009c_error",
+        "name": "Error: Input Invalido",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          440,
+          440
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: false, error: 'Campo requerido: pieza' }) }}",
+          "options": {
+            "responseCode": 400
+          }
+        }
+      },
+      {
+        "id": "wf009c_get_ready",
+        "name": "GitHub: Leer PublishReady",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          440,
+          180
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/{{$('Webhook Publish LinkedIn').first().json.body.pieza}}_PublishReady.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf009c_extract_copy",
+        "name": "Extraer LinkedIn Copy",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          660,
+          180
+        ],
+        "parameters": {
+          "jsCode": "const pieza = $('Webhook Publish LinkedIn').first().json.body.pieza;\nconst content = Buffer.from($json.content, 'base64').toString('utf8');\n\nconst rgx = /## LinkedIn\\s*\\n([\\s\\S]*?)\\n\\s*---/m;\nconst match = content.match(rgx);\nif (!match || !match[1]) throw new Error('No LinkedIn copy found in ' + pieza + '_PublishReady.md');\n\nconst text = match[1].trim();\nif (!text) throw new Error('Empty LinkedIn copy in ' + pieza + '_PublishReady.md');\n\nreturn [{ json: { pieza, text } }];"
+        }
+      },
+      {
+        "id": "wf009c_publish_li",
+        "name": "Publicar en LinkedIn",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          880,
+          180
+        ],
+        "parameters": {
+          "method": "POST",
+          "url": "=https://api.linkedin.com/v2/ugcPosts",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "linkedInCommunityManagementOAuth2Api",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ author: $vars.LINKEDIN_AUTHOR_URN, lifecycleState: 'PUBLISHED', specificContent: { 'com.linkedin.ugc.ShareContent': { shareCommentary: { text: $json.text }, shareMediaCategory: 'NONE' } }, visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' } }) }}",
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "linkedInCommunityManagementOAuth2Api": {
+            "id": "__PLACEHOLDER_LINKEDIN_AUTH__",
+            "name": "FG LinkedIn Auth"
+          }
+        }
+      },
+      {
+        "id": "wf009c_get_tracker",
+        "name": "GitHub: GET Tracker",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1100,
+          180
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "wf009c_update_tracker",
+        "name": "Actualizar Tracker",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1320,
+          180
+        ],
+        "parameters": {
+          "jsCode": "const trackerRes = $input.first().json;\nconst publishRes = $('Publicar en LinkedIn').first().json;\nconst data = $('Extraer LinkedIn Copy').first().json;\nconst pieza = data.pieza;\nconst postId = publishRes.id || publishRes.urn || 'unknown';\n\nlet tracker = {};\nif (trackerRes.content) {\n  try { tracker = JSON.parse(Buffer.from(trackerRes.content, 'base64').toString('utf8')); } catch(e) {}\n}\nconst sha = trackerRes.sha || null;\n\nconst ahora = new Date().toISOString();\nif (!tracker[pieza]) tracker[pieza] = { historial: [], publicaciones: [] };\ntracker[pieza].historial = tracker[pieza].historial || [];\ntracker[pieza].publicaciones = tracker[pieza].publicaciones || [];\ntracker[pieza].historial.push({ estado: 'PUBLISHED_LINKEDIN', timestamp: ahora });\ntracker[pieza].publicaciones.push({ plataforma: 'LinkedIn', timestamp: ahora, postId });\ntracker[pieza].estado_actual = 'PUBLISHED_LINKEDIN';\ntracker[pieza].ultima_actualizacion = ahora;\n\nconst base64Content = Buffer.from(JSON.stringify(tracker, null, 2)).toString('base64');\nreturn [{ json: { pieza, postId, base64Content, ...(sha ? { sha } : {}) } }];"
+        }
+      },
+      {
+        "id": "wf009c_put_tracker",
+        "name": "GitHub: PUT Tracker",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1540,
+          180
+        ],
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ message: 'tracker: published_linkedin ' + $json.pieza, content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main', ...($json.sha ? { sha: $json.sha } : {}) }) }}",
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf009c_telegram",
+        "name": "Notificar Telegram",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1760,
+          180
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0002-4000-8000-000000000002",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "mensaje": "={{ '\\uD83D\\uDCBC Publicado en LinkedIn: ' + $('Actualizar Tracker').first().json.pieza + '\\nPost: ' + $('Actualizar Tracker').first().json.postId }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf009c_log",
+        "name": "Registrar Evento",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1980,
+          180
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0004-4000-8000-000000000004",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "evento": "PUBLISHED_LINKEDIN",
+              "pieza": "={{ $('Actualizar Tracker').first().json.pieza }}",
+              "detalles": "={{ 'Post: ' + $('Actualizar Tracker').first().json.postId }}",
+              "timestamp": "={{ new Date().toISOString() }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf009c_respond",
+        "name": "Responder OK",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          2200,
+          180
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: true, plataforma: 'LinkedIn', pieza: $('Actualizar Tracker').first().json.pieza, postId: $('Actualizar Tracker').first().json.postId }) }}"
+        }
+      }
+    ],
+    "connections": {
+      "Webhook Publish LinkedIn": {
+        "main": [
+          [
+            {
+              "node": "Validar Input",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validar Input": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Leer PublishReady",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error: Input Invalido",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Leer PublishReady": {
+        "main": [
+          [
+            {
+              "node": "Extraer LinkedIn Copy",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extraer LinkedIn Copy": {
+        "main": [
+          [
+            {
+              "node": "Publicar en LinkedIn",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Publicar en LinkedIn": {
+        "main": [
+          [
+            {
+              "node": "GitHub: GET Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: GET Tracker": {
+        "main": [
+          [
+            {
+              "node": "Actualizar Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Actualizar Tracker": {
+        "main": [
+          [
+            {
+              "node": "GitHub: PUT Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: PUT Tracker": {
+        "main": [
+          [
+            {
+              "node": "Notificar Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Notificar Telegram": {
+        "main": [
+          [
+            {
+              "node": "Registrar Evento",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Registrar Evento": {
+        "main": [
+          [
+            {
+              "node": "Responder OK",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "triggerCount": 0,
+    "meta": {
+      "instanceId": ""
+    }
+  },
+  {
+    "name": "WF-010 — Publicar en TikTok (Cloud)",
+    "nodes": [
+      {
+        "id": "wf010c_trigger",
+        "name": "Webhook Publish TikTok",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          0,
+          300
+        ],
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "publish-tiktok",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "webhookId": "publish-tiktok"
+      },
+      {
+        "id": "wf010c_validate",
+        "name": "Validar Input",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          220,
+          300
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": false
+            },
+            "combinator": "and",
+            "conditions": [
+              {
+                "leftValue": "={{ $json.body.pieza }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              },
+              {
+                "leftValue": "={{ $json.body.videoUrl }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "wf010c_error",
+        "name": "Error: Input Invalido",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          440,
+          440
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: false, error: 'Campos requeridos: pieza, videoUrl' }) }}",
+          "options": {
+            "responseCode": 400
+          }
+        }
+      },
+      {
+        "id": "wf010c_get_ready",
+        "name": "GitHub: Leer PublishReady",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          440,
+          180
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/{{$('Webhook Publish TikTok').first().json.body.pieza}}_PublishReady.md",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf010c_extract_copy",
+        "name": "Extraer TikTok Copy",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          660,
+          180
+        ],
+        "parameters": {
+          "jsCode": "const pieza = $('Webhook Publish TikTok').first().json.body.pieza;\nconst videoUrl = $('Webhook Publish TikTok').first().json.body.videoUrl;\nconst content = Buffer.from($json.content, 'base64').toString('utf8');\n\nconst rgx = /## TikTok\\s*\\n```\\s*\\n([\\s\\S]*?)\\n```/m;\nconst match = content.match(rgx);\nif (!match || !match[1]) throw new Error('No TikTok copy found in ' + pieza + '_PublishReady.md');\n\nconst caption = match[1].trim();\nif (!caption) throw new Error('Empty TikTok copy in ' + pieza + '_PublishReady.md');\n\nreturn [{ json: { pieza, videoUrl, caption } }];"
+        }
+      },
+      {
+        "id": "wf010c_publish_tt",
+        "name": "Publicar en TikTok",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          880,
+          180
+        ],
+        "parameters": {
+          "method": "POST",
+          "url": "={{$vars.TIKTOK_PUBLISH_WEBHOOK_URL}}",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ pieza: $json.pieza, caption: $json.caption, videoUrl: $json.videoUrl }) }}",
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "__PLACEHOLDER_TIKTOK_AUTH__",
+            "name": "FG TikTok Auth"
+          }
+        }
+      },
+      {
+        "id": "wf010c_get_tracker",
+        "name": "GitHub: GET Tracker",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1100,
+          180
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "={{$vars.GITHUB_BRANCH || 'main'}}"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "wf010c_update_tracker",
+        "name": "Actualizar Tracker",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1320,
+          180
+        ],
+        "parameters": {
+          "jsCode": "const trackerRes = $input.first().json;\nconst publishRes = $('Publicar en TikTok').first().json;\nconst data = $('Extraer TikTok Copy').first().json;\nconst pieza = data.pieza;\nconst postId = publishRes.postId || publishRes.id || publishRes.video_id || 'unknown';\n\nlet tracker = {};\nif (trackerRes.content) {\n  try { tracker = JSON.parse(Buffer.from(trackerRes.content, 'base64').toString('utf8')); } catch(e) {}\n}\nconst sha = trackerRes.sha || null;\n\nconst ahora = new Date().toISOString();\nif (!tracker[pieza]) tracker[pieza] = { historial: [], publicaciones: [] };\ntracker[pieza].historial = tracker[pieza].historial || [];\ntracker[pieza].publicaciones = tracker[pieza].publicaciones || [];\ntracker[pieza].historial.push({ estado: 'PUBLISHED_TIKTOK', timestamp: ahora });\ntracker[pieza].publicaciones.push({ plataforma: 'TikTok', timestamp: ahora, postId });\ntracker[pieza].estado_actual = 'PUBLISHED_TIKTOK';\ntracker[pieza].ultima_actualizacion = ahora;\n\nconst base64Content = Buffer.from(JSON.stringify(tracker, null, 2)).toString('base64');\nreturn [{ json: { pieza, postId, base64Content, ...(sha ? { sha } : {}) } }];"
+        }
+      },
+      {
+        "id": "wf010c_put_tracker",
+        "name": "GitHub: PUT Tracker",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4,
+        "position": [
+          1540,
+          180
+        ],
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/{{$vars.GITHUB_OWNER}}/{{$vars.GITHUB_REPO}}/contents/04_Produccion/pipeline_tracker.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "contentType": "json",
+          "body": "={{ JSON.stringify({ message: 'tracker: published_tiktok ' + $json.pieza, content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main', ...($json.sha ? { sha: $json.sha } : {}) }) }}",
+          "options": {}
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "V0SuupEfkzLlD5iJ",
+            "name": "FG GitHub Auth"
+          }
+        }
+      },
+      {
+        "id": "wf010c_telegram",
+        "name": "Notificar Telegram",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1760,
+          180
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0002-4000-8000-000000000002",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "mensaje": "={{ '\\uD83C\\uDFA5 Publicado en TikTok: ' + $('Actualizar Tracker').first().json.pieza + '\\nPost: ' + $('Actualizar Tracker').first().json.postId }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf010c_log",
+        "name": "Registrar Evento",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1,
+        "position": [
+          1980,
+          180
+        ],
+        "parameters": {
+          "workflowId": "a1b2c3d4-0004-4000-8000-000000000004",
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "evento": "PUBLISHED_TIKTOK",
+              "pieza": "={{ $('Actualizar Tracker').first().json.pieza }}",
+              "detalles": "={{ 'Post: ' + $('Actualizar Tracker').first().json.postId }}",
+              "timestamp": "={{ new Date().toISOString() }}"
+            }
+          }
+        }
+      },
+      {
+        "id": "wf010c_respond",
+        "name": "Responder OK",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          2200,
+          180
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: true, plataforma: 'TikTok', pieza: $('Actualizar Tracker').first().json.pieza, postId: $('Actualizar Tracker').first().json.postId }) }}"
+        }
+      }
+    ],
+    "connections": {
+      "Webhook Publish TikTok": {
+        "main": [
+          [
+            {
+              "node": "Validar Input",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validar Input": {
+        "main": [
+          [
+            {
+              "node": "GitHub: Leer PublishReady",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error: Input Invalido",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: Leer PublishReady": {
+        "main": [
+          [
+            {
+              "node": "Extraer TikTok Copy",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extraer TikTok Copy": {
+        "main": [
+          [
+            {
+              "node": "Publicar en TikTok",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Publicar en TikTok": {
+        "main": [
+          [
+            {
+              "node": "GitHub: GET Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: GET Tracker": {
+        "main": [
+          [
+            {
+              "node": "Actualizar Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Actualizar Tracker": {
+        "main": [
+          [
+            {
+              "node": "GitHub: PUT Tracker",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub: PUT Tracker": {
+        "main": [
+          [
+            {
+              "node": "Notificar Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Notificar Telegram": {
+        "main": [
+          [
+            {
+              "node": "Registrar Evento",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Registrar Evento": {
+        "main": [
+          [
+            {
+              "node": "Responder OK",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "triggerCount": 0,
+    "meta": {
+      "instanceId": ""
+    }
+  }
+]

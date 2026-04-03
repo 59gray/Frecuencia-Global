@@ -1,0 +1,21 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "configure_brandkit.js",
+  "scripts": {
+    "brandkit:configure": "node configure_brandkit.js",
+    "n8n:activate-core-ui": "node n8n_activate_core_ui.mjs",
+    "tiktok:profile": "node tiktok_apply_profile_persistent.mjs",
+    "tiktok:profile:wait-login": "node tiktok_apply_profile_wait_login.mjs",
+    "tiktok:profile:clean": "node tiktok_apply_profile.mjs",
+    "test": "echo \"No automated JS tests configured\" && exit 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "playwright-core": "^1.59.1"
+  }
+}

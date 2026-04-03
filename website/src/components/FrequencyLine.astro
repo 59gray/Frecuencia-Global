@@ -1,0 +1,12 @@
+---
+interface Props {
+  color?: string;
+}
+
+const { color = 'var(--color-fg-cyan)' } = Astro.props;
+---
+
+<div class="frequency-line w-full h-px relative overflow-hidden my-lg" role="presentation">
+  <div class="absolute inset-0" style={`background: linear-gradient(90deg, transparent, ${color}, transparent);`}></div>
+  <div class="frequency-glow absolute inset-0" style={`background: linear-gradient(90deg, transparent 25%, ${color} 50%, transparent 75%); filter: blur(4px); opacity: 0.5;`}></div>
+</div>

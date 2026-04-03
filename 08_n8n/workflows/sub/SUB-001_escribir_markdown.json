@@ -1,0 +1,74 @@
+{
+  "name": "SUB-001 — Escribir Markdown",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "sub001-trigger",
+      "name": "Ejecutar por Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\nif (!data.filePath || !data.content) {\n  throw new Error('Parámetros requeridos: filePath, content');\n}\n\n// Asegurar que el path comienza con /workspace/\nlet filePath = data.filePath;\nif (!filePath.startsWith('/workspace/')) {\n  filePath = '/workspace/' + filePath;\n}\n\nreturn [{ json: { filePath, content: data.content } }];"
+      },
+      "id": "sub001-validate",
+      "name": "Validar Parámetros",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "filePath": "={{ $json.filePath }}",
+        "fileContent": "={{ $json.content }}",
+        "options": {}
+      },
+      "id": "sub001-write",
+      "name": "Escribir Archivo",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { ok: true, filePath: $input.first().json.filePath, written: true } }];"
+      },
+      "id": "sub001-confirm",
+      "name": "Confirmar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    }
+  ],
+  "connections": {
+    "Ejecutar por Workflow": {
+      "main": [
+        [{ "node": "Validar Parámetros", "type": "main", "index": 0 }]
+      ]
+    },
+    "Validar Parámetros": {
+      "main": [
+        [{ "node": "Escribir Archivo", "type": "main", "index": 0 }]
+      ]
+    },
+    "Escribir Archivo": {
+      "main": [
+        [{ "node": "Confirmar", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    { "name": "sub-workflow" },
+    { "name": "utilidad" }
+  ],
+  "triggerCount": 0,
+  "meta": {
+    "instanceId": "fg-local"
+  }
+}

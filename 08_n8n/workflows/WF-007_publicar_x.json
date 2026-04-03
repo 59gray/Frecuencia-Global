@@ -1,0 +1,205 @@
+{
+  "name": "WF-007 — Publicar en X",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "publish-x",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wf007-trigger",
+      "name": "Webhook Publish X",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "publish-x"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": false },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.body.pieza }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "notEmpty" }
+            }
+          ]
+        }
+      },
+      "id": "wf007-validate",
+      "name": "Validar Input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, error: 'Campo requerido: pieza' }) }}",
+        "options": { "responseCode": 400 }
+      },
+      "id": "wf007-error",
+      "name": "Error: Campo Inválido",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 2,
+      "position": [680, 440]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst pieza = $input.first().json.body.pieza;\nconst filePath = '/workspace/04_Produccion/' + pieza + '_PublishReady.md';\n\nif (!fs.existsSync(filePath)) {\n  throw new Error('PublishReady no encontrado para ' + pieza + '. Ejecuta WF-006 primero.');\n}\n\nconst content = fs.readFileSync(filePath, 'utf8');\nconst lines = content.split('\\n');\nlet xCopy = '';\nlet state = 0;\n\nfor (const line of lines) {\n  if (state === 0 && line.trim() === '## X (Twitter)') { state = 1; continue; }\n  if (state === 1 && line.trim() === '```') { state = 2; continue; }\n  if (state === 2 && line.trim() === '```') { break; }\n  if (state === 2) { xCopy += (xCopy ? '\\n' : '') + line; }\n}\n\nif (!xCopy) {\n  throw new Error('No se encontró copy de X en ' + pieza + '_PublishReady.md');\n}\n\nif (xCopy.length > 280) {\n  throw new Error('Copy de X excede 280 caracteres (' + xCopy.length + '). Edita ' + pieza + '_PublishReady.md');\n}\n\nreturn [{ json: { pieza, xCopy } }];"
+      },
+      "id": "wf007-leer-ready",
+      "name": "Leer PublishReady",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "resource": "tweet",
+        "operation": "create",
+        "text": "={{ $json.xCopy }}"
+      },
+      "id": "wf007-publicar-x",
+      "name": "Publicar en X",
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 2,
+      "position": [900, 200],
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "twitterOAuth2Api": {
+          "id": "fg_cred_twitter",
+          "name": "FG X (Twitter)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst pieza = $('Leer PublishReady').first().json.pieza;\nconst tweetData = $input.first().json;\nconst tweetId = (tweetData.data && tweetData.data.id) ? tweetData.data.id : (tweetData.id || '');\nconst trackerPath = '/workspace/04_Produccion/pipeline_tracker.json';\nlet tracker = {};\ntry {\n  const raw = fs.readFileSync(trackerPath, 'utf8');\n  tracker = JSON.parse(raw);\n} catch (e) { tracker = {}; }\nif (!tracker[pieza]) tracker[pieza] = { historial: [] };\ntracker[pieza].historial = tracker[pieza].historial || [];\nconst ahora = new Date().toISOString();\ntracker[pieza].historial.push({ estado: 'PUBLISHED_X', timestamp: ahora });\ntracker[pieza].estado_actual = 'PUBLISHED_X';\ntracker[pieza].ultima_actualizacion = ahora;\ntracker[pieza].publicaciones = tracker[pieza].publicaciones || [];\ntracker[pieza].publicaciones.push({ plataforma: 'X', timestamp: ahora, tweetId });\nfs.writeFileSync(trackerPath, JSON.stringify(tracker, null, 2), 'utf8');\nreturn [{ json: { pieza, tweetId } }];"
+      },
+      "id": "wf007-actualizar-tracker",
+      "name": "Actualizar Tracker",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "workflowId": "fg_sub_002",
+        "options": {},
+        "inputData": {
+          "mensaje": "={{ '\\uD83D\\uDFE2 Publicado en X: ' + $json.pieza + '\\nhttps://x.com/frec_global/status/' + $json.tweetId }}"
+        }
+      },
+      "id": "wf007-telegram",
+      "name": "Notificar Telegram",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [1340, 200],
+      "notes": "Llama a SUB-002_notificar_telegram"
+    },
+    {
+      "parameters": {
+        "workflowId": "fg_sub_004",
+        "options": {},
+        "inputData": {
+          "evento": "PUBLISHED_X",
+          "pieza": "={{ $('Actualizar Tracker').first().json.pieza }}",
+          "detalles": "={{ 'Tweet ID: ' + $('Actualizar Tracker').first().json.tweetId }}",
+          "timestamp": "={{ new Date().toISOString() }}"
+        }
+      },
+      "id": "wf007-registrar",
+      "name": "Registrar Evento",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [1560, 200],
+      "notes": "Llama a SUB-004_registrar_evento"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, pieza: $('Actualizar Tracker').first().json.pieza, tweetId: $('Actualizar Tracker').first().json.tweetId, url: 'https://x.com/frec_global/status/' + $('Actualizar Tracker').first().json.tweetId }) }}"
+      },
+      "id": "wf007-responder",
+      "name": "Responder OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1780, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst pieza = $('Leer PublishReady').first().json.pieza;\nconst errorInfo = $input.first().json;\nconst errorMsg = (errorInfo.error && errorInfo.error.message) || errorInfo.message || JSON.stringify(errorInfo).substring(0, 200);\nconst trackerPath = '/workspace/04_Produccion/pipeline_tracker.json';\nlet tracker = {};\ntry {\n  const raw = fs.readFileSync(trackerPath, 'utf8');\n  tracker = JSON.parse(raw);\n} catch (e) { tracker = {}; }\nif (!tracker[pieza]) tracker[pieza] = { historial: [] };\ntracker[pieza].historial = tracker[pieza].historial || [];\nconst ahora = new Date().toISOString();\ntracker[pieza].historial.push({ estado: 'PUBLISH_FAILED_X', timestamp: ahora, error: errorMsg });\ntracker[pieza].estado_actual = 'PUBLISH_FAILED_X';\ntracker[pieza].ultima_actualizacion = ahora;\nfs.writeFileSync(trackerPath, JSON.stringify(tracker, null, 2), 'utf8');\nreturn [{ json: { pieza, error: errorMsg } }];"
+      },
+      "id": "wf007-error-handler",
+      "name": "Manejar Error X",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 440]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, pieza: $json.pieza, error: $json.error }) }}",
+        "options": { "responseCode": 502 }
+      },
+      "id": "wf007-responder-error",
+      "name": "Responder Error X",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1340, 440]
+    }
+  ],
+  "connections": {
+    "Webhook Publish X": {
+      "main": [
+        [{ "node": "Validar Input", "type": "main", "index": 0 }]
+      ]
+    },
+    "Validar Input": {
+      "main": [
+        [{ "node": "Leer PublishReady", "type": "main", "index": 0 }],
+        [{ "node": "Error: Campo Inválido", "type": "main", "index": 0 }]
+      ]
+    },
+    "Leer PublishReady": {
+      "main": [
+        [{ "node": "Publicar en X", "type": "main", "index": 0 }]
+      ]
+    },
+    "Publicar en X": {
+      "main": [
+        [{ "node": "Actualizar Tracker", "type": "main", "index": 0 }],
+        [{ "node": "Manejar Error X", "type": "main", "index": 0 }]
+      ]
+    },
+    "Manejar Error X": {
+      "main": [
+        [{ "node": "Responder Error X", "type": "main", "index": 0 }]
+      ]
+    },
+    "Actualizar Tracker": {
+      "main": [
+        [{ "node": "Notificar Telegram", "type": "main", "index": 0 }]
+      ]
+    },
+    "Notificar Telegram": {
+      "main": [
+        [{ "node": "Registrar Evento", "type": "main", "index": 0 }]
+      ]
+    },
+    "Registrar Evento": {
+      "main": [
+        [{ "node": "Responder OK", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": []
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "received_at": "2026-04-01T21:02:38.498Z",
+    "checkpoint_timestamp": "2026-04-01T15:01:16.472338-06:00",
+    "checkpoint_file": "01_Estrategia/FG_Checkpoint_AUTO_2026-04-01_1501.md",
+    "git_status": "dirty",
+    "branch": "master",
+    "areas_count": 13,
+    "new_files": 219,
+    "modified_files": 15,
+    "blockers_count": 0,
+    "next_action": "Revisar cambios recientes y avanzar pipeline editorial"
+  },
+  {
+    "received_at": "2026-04-01T21:04:55.025Z",
+    "checkpoint_timestamp": "2026-04-01T15:01:16.472338-06:00",
+    "checkpoint_file": "01_Estrategia/FG_Checkpoint_AUTO_2026-04-01_1501.md",
+    "git_status": "dirty",
+    "branch": "master",
+    "areas_count": 13,
+    "new_files": 219,
+    "modified_files": 15,
+    "blockers_count": 0,
+    "next_action": "Revisar cambios recientes y avanzar pipeline editorial"
+  }
+]

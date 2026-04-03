@@ -1,0 +1,73 @@
+{
+  "name": "SUB-003 — Template Filler",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "sub003-trigger",
+      "name": "Ejecutar por Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\nif (!data.templatePath) {\n  throw new Error('Parámetro requerido: templatePath');\n}\nif (!data.variables || typeof data.variables !== 'object') {\n  throw new Error('Parámetro requerido: variables (objeto con claves y valores)');\n}\n\nlet templatePath = data.templatePath;\nif (!templatePath.startsWith('/workspace/')) {\n  templatePath = '/workspace/' + templatePath;\n}\n\nreturn [{ json: { templatePath, variables: data.variables } }];"
+      },
+      "id": "sub003-validate",
+      "name": "Validar Parámetros",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "filePath": "={{ $json.templatePath }}",
+        "options": {}
+      },
+      "id": "sub003-read",
+      "name": "Leer Template",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "let template = $('Leer Template').first().json.data;\nconst variables = $('Validar Parámetros').first().json.variables;\n\nfor (const [key, value] of Object.entries(variables)) {\n  const placeholder = new RegExp(`\\\\{\\\\{${key}\\\\}\\\\}`, 'g');\n  template = template.replace(placeholder, value || '');\n}\n\nreturn [{ json: { content: template, variables } }];"
+      },
+      "id": "sub003-fill",
+      "name": "Reemplazar Variables",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    }
+  ],
+  "connections": {
+    "Ejecutar por Workflow": {
+      "main": [
+        [{ "node": "Validar Parámetros", "type": "main", "index": 0 }]
+      ]
+    },
+    "Validar Parámetros": {
+      "main": [
+        [{ "node": "Leer Template", "type": "main", "index": 0 }]
+      ]
+    },
+    "Leer Template": {
+      "main": [
+        [{ "node": "Reemplazar Variables", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    { "name": "sub-workflow" },
+    { "name": "utilidad" }
+  ],
+  "triggerCount": 0,
+  "meta": {
+    "instanceId": "fg-local"
+  }
+}
