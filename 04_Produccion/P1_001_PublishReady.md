@@ -55,7 +55,7 @@ _Longitud: **111/300** caracteres_
 
 **Display name:** Frecuencia Global
 **Username:** @frecuenciaglobal
-**Foto de perfil:** /workspace/Frecuencia_Global_Assets_Base/assets/fg_tiktok_profile_200x200.png
+**Foto de perfil:** 06_Assets/base/assets/fg_tiktok_profile_200x200.png
 **Link de perfil:** https://frecuenciaglobal.vercel.app
 
 **Bio seleccionada:**

@@ -1,0 +1,111 @@
+# Inventario de Proyecto: Frecuencia Global
+
+## Carpetas principales verificadas
+- 01_Estrategia/
+- 02_Brand_System/
+- 03_Editorial/
+- 04_Produccion/
+- 05_Monetizacion/
+- 08_n8n/
+- scripts/
+- 90_Copilot_Studio_Integration/
+
+## Carpetas NO encontradas
+- prompts/ (NO EXISTE)
+- automatizaciones/ (NO EXISTE)
+
+## Archivos clave detectados
+- 01_Estrategia/FG_Blueprint_Maestro.md
+- 01_Estrategia/FG_Blueprint_Maestro.html
+- 01_Estrategia/FG_Checkpoint_2026-03-30.md
+- 01_Estrategia/FG_Checkpoint_2026-04-01.md
+- 01_Estrategia/FG_Checkpoint_AUTO_2026-04-01_1044.md
+- 01_Estrategia/FG_Checkpoint_Proyecto.md
+- 01_Estrategia/FG_Diagnostico_Brechas.md
+- 01_Estrategia/FG_Prompt_Gemini_Rediseno.md
+- 01_Estrategia/FG_Prompt_Gemini_Video_Producer.md
+- 01_Estrategia/FG_Prompt_Onboarding_Agente.md
+- 02_Brand_System/FG_Archivo_Maestro_Visual_Canva.md
+- 02_Brand_System/FG_BrandKit_Config_Canva.md
+- 02_Brand_System/FG_Brand_Kit_Operativo.md
+- 02_Brand_System/FG_Figma_Master_Architecture.md
+- 02_Brand_System/FG_Figma_Pending_Phases.md
+- 02_Brand_System/INSTAGRAM_Asset_Specs.md
+- 02_Brand_System/LINKEDIN_Asset_Specs.md
+- 02_Brand_System/TIKTOK_Asset_Specs.md
+- 02_Brand_System/X_Asset_Specs.md
+- 03_Editorial/EP_002_Brief.md
+- 03_Editorial/P1_001_Brief.md
+- 03_Editorial/P1_001_Instagram_Caption.md
+- 03_Editorial/P1_001_Research.md
+- 03_Editorial/P1_001_Script.md
+- 03_Editorial/P1_002_Brief.md
+- 03_Editorial/P1_003_Brief.md
+- 03_Editorial/P1_004_Brief.md
+- 04_Produccion/EP_001_PublishReady.md
+- 04_Produccion/EP_002_PublishReady.md
+- 04_Produccion/FG_Flujo_Produccion_Podcast.md
+- 04_Produccion/FG_Flujo_Produccion_Video.md
+- 04_Produccion/INSTAGRAM_Test_Protocol.md
+- 04_Produccion/LINKEDIN_Test_Protocol.md
+- 04_Produccion/P1_001_Design_Handoff.md
+- 04_Produccion/P1_001_Produccion_Log.md
+- 04_Produccion/P1_001_PublishReady.md
+- 04_Produccion/P1_001_QA.md
+- 04_Produccion/P1_001_QA_FINAL.md
+- 04_Produccion/P1_002_Video_Package_TongaCable.md
+- 04_Produccion/P1_003_QA.md
+- 04_Produccion/P1_004_QA.md
+- 04_Produccion/P3_001_Video_Package.md
+- 04_Produccion/pipeline_tracker.json
+- 04_Produccion/TIKTOK_Design_Guide.md
+- 04_Produccion/TIKTOK_Test_Protocol.md
+- 04_Produccion/X_Test_Protocol.md
+- 04_Produccion/YOUTUBE_Test_Protocol.md
+- 08_n8n/.env
+- 08_n8n/.env.cloud
+- 08_n8n/.env.cloud.example
+- 08_n8n/.env.example
+- 08_n8n/.env.podcast.example
+- 08_n8n/docker-compose.yml
+- 08_n8n/export_workflows.sh
+- 08_n8n/README.md
+- 08_n8n/wf001_export.json
+- 08_n8n/wf002_export.json
+- 08_n8n/wf003_export.json
+- scripts/apply_tiktok_identity.ps1
+- scripts/brandkit_colors.png
+- scripts/brandkit_state.png
+- scripts/build_maya_host_assets.py
+- scripts/build_overlay_variants.py
+- scripts/build_podcast_cover_art.py
+- scripts/build_tiktok_assets.py
+- scripts/client_secret.json
+- scripts/client_secret_20413443867.json
+- scripts/colors_after.png
+- scripts/colors_before.png
+- scripts/color_picker_4A6BFF.png
+- scripts/color_picker_A0A0B8.png
+- scripts/color_picker_FFFFFF.png
+- scripts/configure_brandkit.js
+- scripts/debug_after_click.png
+- scripts/debug_after_load.png
+- scripts/debug_before.png
+- scripts/diag21.png
+- scripts/diag21b_1.png
+- scripts/diag22_1.png
+- scripts/diag22_after_fonts.png
+- scripts/diag22_card_click.png
+- scripts/diag22_direct.png
+- scripts/diag22_dispatch.png
+- scripts/diag22_fonts_page.png
+- scripts/diag23_after_click.png
+- scripts/diag23_dblclick.png
+- scripts/diag23_expanded.png
+- scripts/diag23_Heading_failed.png
+- scripts/diag23_hover.png
+- scripts/diag23_method1.png
+- scripts/diag23_page.png
+
+## Observaciones
+- 05_Monetizacion: carpeta verificada; enumeración parcial pendiente.

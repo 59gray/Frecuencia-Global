@@ -40,3 +40,12 @@ node_modules/
 __pycache__/
 *.pyc
 .env
+
+# === Archive / temp ===
+_archivo/
+scripts/_archive/
+tmp/
+output/
+logs/
+.sixth/
+.venv/

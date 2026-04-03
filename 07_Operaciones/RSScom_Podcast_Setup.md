@@ -40,6 +40,8 @@ Recomendado: guardarlos en variables de entorno usadas por scripts y workflows.
   - pagina editorial opcional
   - metadata para YouTube y derivados sociales
 - `scripts/n8n_platform_healthcheck.py` debe validar el show y feed de RSS.com.
+- Ver matriz recomendada de alcance en `07_Operaciones/Podcast_Distribution_Matrix_RSScom.md`.
+- Usar `07_Operaciones/RSScom_Launch_Checklist.md` como checklist de alta y claim inicial.
 
 ---
 

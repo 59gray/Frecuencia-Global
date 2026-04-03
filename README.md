@@ -23,12 +23,12 @@ system/                          -> Sistema operativo de agentes
 03_Editorial/                    -> Guias editoriales por pilar
 04_Produccion/                   -> Flujos de produccion y ejemplos reales
 05_Monetizacion/                 -> Estrategia de monetizacion
-06_Assets/                       -> Indice de assets
-07_Operaciones/                  -> Guias operativas
-
-Frecuencia_Global_Assets_Base/   -> SVGs maestros (isotipo, wordmarks)
-Frecuencia_Global_Activos_Canva_v1-v6/ -> Assets por version
+06_Assets/                       -> Assets consolidados (base, v1-v6, podcast, host)
+07_Operaciones/                  -> Guias operativas y reportes por plataforma
+08_n8n/                          -> Workflows de automatizacion (n8n cloud)
+website/                         -> Sitio Astro (Vercel)
 static/                          -> Tipografias locales
+scripts/                         -> Automatizaciones sociales y utilidades
 ```
 
 ## Pilares de contenido

@@ -253,9 +253,10 @@ Frecuencia Global/
 |-- 06_Assets/
 |-- 07_Operaciones/
 |
-|-- Frecuencia_Global_Assets_Base/
-|-- Frecuencia_Global_Activos_Canva_v1-v6/
-|-- static/
+|-- 08_n8n/                <- Workflows n8n (cloud)
+|-- website/               <- Sitio Astro (Vercel)
+|-- scripts/               <- Automatizaciones sociales
+|-- static/                <- Tipografías locales
 `-- README.md
 ```
 

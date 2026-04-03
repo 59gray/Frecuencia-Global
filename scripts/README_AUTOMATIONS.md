@@ -61,3 +61,5 @@ npm install
 
 - `scripts/n8n_platform_healthcheck.py` revisa el show y feed del podcast usando `FG_PODCAST_SHOW_URL` y `FG_PODCAST_RSS_URL`; la pagina web queda como superficie editorial secundaria.
 - `scripts/run_publish_test.py --pieza EP_001 --skip-webhook` valida un `PublishReady` de podcast/videopodcast sin disparar publicacion real.
+- `scripts/podcast_prelaunch_check.py` genera un reporte unico de readiness antes de la primera publicacion del podcast.
+- `scripts/podcast_apply_launch_values.py` aplica las URLs reales de RSS.com y, si quieres, tambien `N8N_API_KEY` y `GITHUB_PAT` en los archivos operativos.

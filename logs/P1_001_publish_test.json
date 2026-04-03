@@ -14,8 +14,8 @@
     "TikTok": true
   },
   "webhook": {
-    "called": false,
-    "status_code": null,
-    "body": "skip-webhook"
+    "called": true,
+    "status_code": 200,
+    "body": ""
   }
 }

@@ -61,5 +61,27 @@
     ],
     "estado_actual": "PUBLISH_READY",
     "ultima_actualizacion": "2026-04-02T18:30:00.000Z"
+  },
+  "EP_002": {
+    "tipo": "podcast",
+    "historial": [
+      {
+        "estado": "BRIEF_READY",
+        "timestamp": "2026-04-03T11:15:00.000Z",
+        "nota": "Episodio de prueba creado para validar automatizacion n8n"
+      },
+      {
+        "estado": "PUBLISH_READY",
+        "timestamp": "2026-04-03T11:35:00.000Z",
+        "nota": "Fixture de prueba listo para WF-006 y publish test"
+      }
+    ],
+    "estado_actual": "PUBLISH_READY",
+    "ultima_actualizacion": "2026-04-03T11:35:00.000Z",
+    "salidas": [
+      "rss",
+      "web",
+      "youtube"
+    ]
   }
 }

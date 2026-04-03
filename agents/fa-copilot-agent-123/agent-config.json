@@ -1,0 +1,26 @@
+{
+  "agentName": "fa-copilot-agent-123",
+  "description": "Conector declarativo básico para Microsoft 365 Copilot Premium",
+  "tenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "clientId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "dataSources": [
+    {
+      "name": "sample-data",
+      "type": "http",
+      "endpoint": "https://example.com/api/data",
+      "auth": {
+        "type": "clientSecret",
+        "tenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "clientId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+      }
+    }
+  ],
+  "mappings": {
+    "entities": [
+      {
+        "name": "Project",
+        "properties": ["id", "title", "status", "owner"]
+      }
+    ]
+  }
+}

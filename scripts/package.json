@@ -6,6 +6,7 @@
   "scripts": {
     "brandkit:configure": "node configure_brandkit.js",
     "n8n:activate-core-ui": "node n8n_activate_core_ui.mjs",
+    "rsscom:bootstrap": "node rsscom_bootstrap.mjs",
     "tiktok:profile": "node tiktok_apply_profile_persistent.mjs",
     "tiktok:profile:wait-login": "node tiktok_apply_profile_wait_login.mjs",
     "tiktok:profile:clean": "node tiktok_apply_profile.mjs",
