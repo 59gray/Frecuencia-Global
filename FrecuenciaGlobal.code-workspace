@@ -1,0 +1,122 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "Frecuencia Global"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "_archivo": true,
+      "scripts/_archive": true,
+      "tmp": true,
+      "output": true,
+      ".chrome-*": true,
+      ".playwright-mcp": true,
+      ".sixth": true,
+      ".venv": true,
+      "node_modules": true,
+      "website/node_modules": true,
+      "website/dist": true,
+      "website/.astro": true,
+      "website/.vercel": true,
+      "logs": true
+    },
+    "search.exclude": {
+      "_archivo": true,
+      "scripts/_archive": true,
+      "node_modules": true,
+      "website/dist": true,
+      "website/node_modules": true,
+      "tmp": true,
+      "output": true,
+      "logs": true
+    },
+    "files.associations": {
+      "*.md": "markdown"
+    },
+    "editor.wordWrap": "on",
+    "editor.minimap.enabled": false,
+    "editor.fontSize": 14,
+    "editor.tabSize": 2,
+    "markdown.preview.fontSize": 15,
+    "[markdown]": {
+      "editor.wordWrap": "on",
+      "editor.quickSuggestions": {
+        "comments": "off",
+        "strings": "off",
+        "other": "off"
+      }
+    },
+    "[json]": {
+      "editor.defaultFormatter": "vscode.json-language-features",
+      "editor.tabSize": 2
+    },
+    "[javascript]": {
+      "editor.tabSize": 2
+    },
+    "[typescript]": {
+      "editor.tabSize": 2
+    },
+    "[python]": {
+      "editor.tabSize": 4
+    },
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true
+  },
+  "extensions": {
+    "recommendations": [
+      "astro-build.astro-vscode",
+      "bradlc.vscode-tailwindcss",
+      "esbenp.prettier-vscode",
+      "github.copilot",
+      "github.copilot-chat",
+      "yzhang.markdown-all-in-one",
+      "bierner.markdown-preview-github-styles",
+      "ms-python.python",
+      "dbaeumer.vscode-eslint"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Astro Dev Server",
+        "type": "node",
+        "request": "launch",
+        "runtimeExecutable": "npm",
+        "runtimeArgs": ["run", "dev"],
+        "cwd": "${workspaceFolder}/website",
+        "console": "integratedTerminal"
+      }
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Website: Build",
+        "type": "shell",
+        "command": "npm run build",
+        "options": { "cwd": "${workspaceFolder}/website" },
+        "group": "build",
+        "problemMatcher": []
+      },
+      {
+        "label": "Website: Dev Server",
+        "type": "shell",
+        "command": "npm run dev",
+        "options": { "cwd": "${workspaceFolder}/website" },
+        "isBackground": true,
+        "problemMatcher": []
+      },
+      {
+        "label": "Checkpoint: Generate",
+        "type": "shell",
+        "command": "python scripts/generate_checkpoint.py",
+        "options": { "cwd": "${workspaceFolder}" },
+        "problemMatcher": []
+      }
+    ]
+  }
+}
