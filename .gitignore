@@ -1,6 +1,7 @@
 # === n8n ===
 08_n8n/.env
 08_n8n/.env.cloud
+08_n8n/.env.telegram
 08_n8n/n8n_data/
 
 # === Secrets ===
@@ -17,6 +18,12 @@ desktop.ini
 # === Local browser profiles / automation traces ===
 .chrome-*/
 .playwright-mcp/
+chrome-sessions/
+
+# Scripts: temp clones, debug screenshots, Chrome test profiles (never commit)
+scripts/tmp_*/
+scripts/*_diag/
+
 scripts/diag*.png
 scripts/debug*.png
 scripts/fail*.png
@@ -47,5 +54,11 @@ scripts/_archive/
 tmp/
 output/
 logs/
+
+# Ops: logs de ejecución (alto churn; JSON de checkpoint puede seguir trackeado)
+07_Operaciones/logs/*.log
+
+# Capturas sueltas en raíz de scripts
+scripts/tiktok_before_verify.png
 .sixth/
 .venv/
