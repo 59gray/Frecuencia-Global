@@ -1,0 +1,24 @@
+{
+  "source": "FG_Brand_Kit_Operativo.md — sección 7",
+  "assets": [
+    {
+      "id": "youtube_channel_banner",
+      "priority": 1,
+      "px": [2560, 1440],
+      "safe_area_note": "Zona crítica ~1546×423 px centrada (evitar texto en extremos por recorte en TV/móvil).",
+      "content": "Wordmark FRECUENCIA GLOBAL + línea de frecuencia en cian; fondo #0A0A0F o gradiente permitido por kit.",
+      "suggested_filename": "FG_MK_BNR_YouTube-Header_v1.png"
+    },
+    {
+      "id": "x_twitter_header",
+      "px": [1500, 500],
+      "suggested_filename": "FG_MK_BNR_X-Header_v1.png"
+    },
+    {
+      "id": "linkedin_banner",
+      "note": "Más sobrio que YT; mismo sistema tipográfico con menor saturación de neón.",
+      "px": [1584, 396],
+      "suggested_filename": "FG_MK_BNR_LinkedIn-Header_v1.png"
+    }
+  ]
+}

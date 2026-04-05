@@ -1,5 +1,10 @@
 {
   "P1_001": {
+    "assets_check": {
+      "manifest": "06_Assets/P1_001/EXPORT_MANIFEST_P1_001.json",
+      "instagram_carousel_slides_required": 8,
+      "nota": "PUBLISH_READY refiere copy/automatización; faltan en repo los 8 PNG del carrusel nombrados en el manifiesto."
+    },
     "historial": [
       {
         "estado": "PUBLISH_READY",

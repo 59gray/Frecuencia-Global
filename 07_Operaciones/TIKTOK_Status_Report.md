@@ -1,8 +1,8 @@
 # TIKTOK — Status Report
 
-**Sistema:** Frecuencia Global  
-**Fecha:** 2026-04-01  
-**Jornada:** Hardening técnico TikTok  
+**Sistema:** Frecuencia Global
+**Fecha:** 2026-04-01
+**Jornada:** Hardening técnico TikTok
 **Autor:** Agente técnico (Copilot)
 
 ---
@@ -181,3 +181,23 @@ Al finalizar esa jornada, TikTok estará en estado **LISTO PARA PUBLICACIÓN CON
 ---
 
 *Documento generado durante jornada técnica del 2026-04-01. No se publicó nada. No se realizaron cambios destructivos.*
+
+---
+
+## Update 2026-04-04 — Estado STANDBY
+
+**Decisión:** TikTok puesto en standby temporal.
+
+**Razón:** En espera de autorización de cuenta / domain verification.
+
+**Scripts listos:**
+- `scripts/tk_chrome_login.py` — Login persistente
+- `scripts/tk_publish_post.py` — Publicación browser automation
+
+**Assets P1_001 listos:**
+- `06_Assets/P1_001/P1_001_TK_1080x1920.png` — Cover TikTok generado
+- `06_Assets/P1_001/FG_P1_001_TK_Cover_v1_20260404_0.png` — Cover alternativo
+
+**Bloqueador:** Autorización de cuenta pendiente.
+
+**Próximo paso:** Reactivar cuando se autorice acceso completo a cuenta TikTok @frecuenciaglobal.

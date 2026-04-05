@@ -1,0 +1,18 @@
+{
+  "source": "FG_Brand_Kit_Operativo.md v1.0",
+  "canva_brand_colors": [
+    { "role": "base", "name": "Negro Profundo", "hex": "#0A0A0F" },
+    { "role": "accent_1", "name": "Cian Eléctrico", "hex": "#00E5FF" },
+    { "role": "accent_2", "name": "Magenta Neón", "hex": "#FF00E5" },
+    { "role": "surface", "name": "Grafito Azulado", "hex": "#1A1A2E" },
+    { "role": "accent_3", "name": "Verde Ácido", "hex": "#B8FF00" },
+    { "role": "text_secondary", "name": "Gris Claro", "hex": "#A0A0B8" }
+  ],
+  "canva_document_colors_note": "Blanco #FFFFFF es estándar en Canva; añádelo manualmente si el kit pide un séptimo slot de contraste.",
+  "google_fonts_for_canva": [
+    { "role": "display", "family": "Bebas Neue", "weights": [400] },
+    { "role": "headline_body", "family": "Space Grotesk", "weights": [400, 500, 700] },
+    { "role": "data_mono", "family": "JetBrains Mono", "weights": [400] }
+  ],
+  "jetbrains_mono_note": "Si no aparece en la librería, subir desde https://fonts.google.com/specimen/JetBrains+Mono"
+}

@@ -64,7 +64,14 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "contentType": "json",
-        "body": "={{ JSON.stringify({ message: 'log: ' + ($json.evento || 'event') + ' - ' + ($json.pieza || '-'), content: $json.base64Content, branch: $vars.GITHUB_BRANCH || 'main', ...($json.sha ? { sha: $json.sha } : {}) }) }}",
+        "bodyParameters": {
+          "parameters": [
+            {"name": "message", "value": "=log: ' + ($json.evento || 'event') + ' - ' + ($json.pieza || '-')"},
+            {"name": "content", "value": "={{$json.base64Content}}"},
+            {"name": "branch", "value": "={{$vars.GITHUB_BRANCH || 'main'}}"},
+            {"name": "sha", "value": "={{$json.sha}}"}
+          ]
+        },
         "options": {}
       },
       "credentials": {

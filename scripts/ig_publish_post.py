@@ -78,7 +78,7 @@ def publish_post(page, image_path: Path, caption: str) -> bool:
         print("[ERROR] No hay sesión activa. Ejecuta ig_chrome_login.py primero.")
         return False
 
-    page.screenshot(path=str(DEBUG_DIR / "01_home.png"))
+    # page.screenshot(path=str(DEBUG_DIR / "01_home.png"))
 
     # Click create button (+ icon in side nav)
     print("[INFO] Buscando botón crear...")
@@ -100,12 +100,12 @@ def publish_post(page, image_path: Path, caption: str) -> bool:
 
     if not create_btn:
         print("[ERROR] No se encontró botón crear")
-        page.screenshot(path=str(DEBUG_DIR / "error_no_create.png"))
+        # page.screenshot(path=str(DEBUG_DIR / "error_no_create.png"))
         return False
 
     create_btn.click(force=True)
     time.sleep(2)
-    page.screenshot(path=str(DEBUG_DIR / "02_create_clicked.png"))
+    # page.screenshot(path=str(DEBUG_DIR / "02_create_clicked.png"))
 
     # Handle dropdown: click "Post" option using JS click
     post_clicked = False
@@ -142,7 +142,7 @@ def publish_post(page, image_path: Path, caption: str) -> bool:
         except Exception:
             pass
 
-    page.screenshot(path=str(DEBUG_DIR / "02b_post_selected.png"))
+    # page.screenshot(path=str(DEBUG_DIR / "02b_post_selected.png"))
 
     # Wait for the create dialog/modal to appear
     time.sleep(2)
@@ -158,7 +158,7 @@ def publish_post(page, image_path: Path, caption: str) -> bool:
         if file_inputs.count() > 0:
             file_inputs.first.set_input_files(str(image_path))
             time.sleep(3)
-            page.screenshot(path=str(DEBUG_DIR / "03_image_uploaded.png"))
+            # page.screenshot(path=str(DEBUG_DIR / "03_image_uploaded.png"))
             print("[OK] Imagen subida via input directo")
         else:
             # Click "Select from computer" to trigger the file dialog
@@ -181,10 +181,10 @@ def publish_post(page, image_path: Path, caption: str) -> bool:
                         break
                 except Exception:
                     continue
-            page.screenshot(path=str(DEBUG_DIR / "03_image_uploaded.png"))
+            # page.screenshot(path=str(DEBUG_DIR / "03_image_uploaded.png"))
     except Exception as e:
         print(f"[ERROR] No se pudo subir imagen: {e}")
-        page.screenshot(path=str(DEBUG_DIR / "error_upload.png"))
+        # page.screenshot(path=str(DEBUG_DIR / "error_upload.png"))
         return False
 
     # Click Next (crop screen)
@@ -206,7 +206,7 @@ def publish_post(page, image_path: Path, caption: str) -> bool:
             except Exception:
                 continue
 
-    page.screenshot(path=str(DEBUG_DIR / "04_caption_screen.png"))
+    # page.screenshot(path=str(DEBUG_DIR / "04_caption_screen.png"))
 
     # Enter caption
     print("[INFO] Ingresando caption...")
@@ -246,7 +246,7 @@ def publish_post(page, image_path: Path, caption: str) -> bool:
     page.keyboard.press("Escape")
     time.sleep(1)
 
-    page.screenshot(path=str(DEBUG_DIR / "05_before_share.png"))
+    # page.screenshot(path=str(DEBUG_DIR / "05_before_share.png"))
 
     # Click the blue "Share" in the modal header
     # Strategy: find the header bar of the Create new post modal, then click its rightmost text
@@ -302,19 +302,19 @@ def publish_post(page, image_path: Path, caption: str) -> bool:
         print(f"[DEBUG] Share result: {result}")
         if result and 'clicked' in result:
             time.sleep(12)
-            page.screenshot(path=str(DEBUG_DIR / "06_after_share.png"))
+            # page.screenshot(path=str(DEBUG_DIR / "06_after_share.png"))
             shared = True
     except Exception as e:
         print(f"[WARN] JS share falló: {e}")
 
     if not shared:
         print("[ERROR] No se pudo publicar")
-        page.screenshot(path=str(DEBUG_DIR / "error_no_share.png"))
+        # page.screenshot(path=str(DEBUG_DIR / "error_no_share.png"))
         return False
 
     # Verify: check if we see "Your post has been shared" or similar success
     time.sleep(3)
-    page.screenshot(path=str(DEBUG_DIR / "07_verify.png"))
+    # page.screenshot(path=str(DEBUG_DIR / "07_verify.png"))
     return True
 
 

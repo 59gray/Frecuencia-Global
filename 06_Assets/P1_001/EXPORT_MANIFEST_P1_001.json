@@ -1,0 +1,39 @@
+{
+  "piece_id": "FG-2026-W14-01",
+  "pipeline_key": "P1_001",
+  "brief": "03_Editorial/P1_001_Brief.md",
+  "script": "03_Editorial/P1_001_Script.md",
+  "instagram_carousel": {
+    "slide_px": [1080, 1350],
+    "slide_count": 8,
+    "export_format": "PNG",
+    "naming_convention": "FG_GD_CAR_Submarine-Cables_W14-01_slideNN_ROLE.png",
+    "slides": [
+      { "n": 1, "role": "cover", "script_section": "SLIDE 1 — COVER / HOOK" },
+      { "n": 2, "role": "dato_base", "script_section": "SLIDE 2 — EL DATO BASE" },
+      { "n": 3, "role": "vulnerabilidad", "script_section": "SLIDE 3 — LA VULNERABILIDAD" },
+      { "n": 4, "role": "incidente", "script_section": "SLIDE 4 — EL INCIDENTE" },
+      { "n": 5, "role": "geopolitico", "script_section": "SLIDE 5 — EL TABLERO GEOPOLÍTICO" },
+      { "n": 6, "role": "poder", "script_section": "SLIDE 6 — EL ANTECEDENTE DE PODER" },
+      { "n": 7, "role": "caso_extremo", "script_section": "SLIDE 7 — EL CASO EXTREMO" },
+      { "n": 8, "role": "cta_cierre", "script_section": "SLIDE 8 — CTA / CIERRE" }
+    ],
+    "expected_filenames": [
+      "FG_GD_CAR_Submarine-Cables_W14-01_slide01_cover.png",
+      "FG_GD_CAR_Submarine-Cables_W14-01_slide02_dato_base.png",
+      "FG_GD_CAR_Submarine-Cables_W14-01_slide03_vulnerabilidad.png",
+      "FG_GD_CAR_Submarine-Cables_W14-01_slide04_incidente.png",
+      "FG_GD_CAR_Submarine-Cables_W14-01_slide05_geopolitico.png",
+      "FG_GD_CAR_Submarine-Cables_W14-01_slide06_poder.png",
+      "FG_GD_CAR_Submarine-Cables_W14-01_slide07_caso_extremo.png",
+      "FG_GD_CAR_Submarine-Cables_W14-01_slide08_cta_cierre.png"
+    ]
+  },
+  "repo_status_2026_04_05": {
+    "note": "En carpeta P1_001 hay covers IG/TK y un P1_001_IG_1080x1350.png; faltan en repo los 8 PNG del carrusel con nomenclatura anterior o equivalente documentada."
+  },
+  "derivatives_brief": {
+    "tiktok": { "px": [1080, 1920], "existing_glob": "P1_001_TK_*.png" },
+    "instagram_covers": { "existing_glob": "FG_P1_001_IG_Cover_*.png" }
+  }
+}
