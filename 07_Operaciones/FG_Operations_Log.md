@@ -10,3 +10,4 @@
 | 2026-04-01 | 16:28 | EVENTO | — |  |
 | 2026-04-01 | 22:00 | EVENTO | — |  |
 | 2026-04-01 | 22:00 | EVENTO | — |  |
+| 2026-04-05 | 03:10 | test_manual_wf004 | P1_001 | validacion indirecta WF-004 -> SUB-002 |
