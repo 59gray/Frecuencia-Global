@@ -25,12 +25,11 @@ from playwright.sync_api import sync_playwright
 REPO_ROOT = Path(__file__).parent.parent
 PROMPTS_DIR = REPO_ROOT / "system" / "gemini" / "prompts"
 OUTPUT_DIR = REPO_ROOT / "system" / "gemini" / "outputs" / "visual"
-ASSETS_DIR = REPO_ROOT / "06_Assets" / "P1_001"
 CHROME_PROFILE_DIR = REPO_ROOT / ".chrome-gemini-stable"
 DEBUG_DIR = REPO_ROOT / "scripts" / "tmp_gemini_debug"
 GEMINI_URL = "https://gemini.google.com/app"
 
-for d in [OUTPUT_DIR, ASSETS_DIR, CHROME_PROFILE_DIR, DEBUG_DIR]:
+for d in [OUTPUT_DIR, CHROME_PROFILE_DIR, DEBUG_DIR]:
     d.mkdir(parents=True, exist_ok=True)
 
 
@@ -46,7 +45,8 @@ def find_chrome():
 
 def extract_primary_prompt(prompt_file: Path) -> str:
     content = prompt_file.read_text(encoding="utf-8")
-    pattern = r"## Primary Prompt\s*\n+\s*```text\s*\n(.*?)\n```"
+    # Regex robusto: extrae el contenido del primer bloque de código que encuentre
+    pattern = r"```[^\n]*\n(.*?)```"
     match = re.search(pattern, content, re.DOTALL)
     if match:
         return match.group(1).strip()
@@ -105,16 +105,19 @@ def paste_prompt(page, text):
     time.sleep(0.3)
     page.keyboard.press("Control+v")
     time.sleep(1)
+    # Simular una pulsación extra para despertar el botón de envío en la UI
+    page.keyboard.press("Space")
+    time.sleep(0.5)
 
 
 def click_send(page):
     """Find and click the send button."""
     for sel in [
-        'button[aria-label="Send message"]',
-        'button[aria-label="Enviar mensaje"]',
+        'button[aria-label*="Send"]',
+        'button[aria-label*="Enviar"]',
+        'button[data-testid*="send"]',
+        'button[data-test-id*="send"]',
         'button.send-button',
-        'button[mattooltip="Send"]',
-        'button[mattooltip="Enviar"]',
         '.send-button-container button',
     ]:
         try:
@@ -124,8 +127,8 @@ def click_send(page):
                 return True
         except Exception:
             pass
-    # Fallback: Enter
-    page.keyboard.press("Enter")
+    # Fallback: Ctrl+Enter (envía el mensaje en lugar de agregar una nueva línea)
+    page.keyboard.press("Control+Enter")
     return True
 
 
@@ -184,7 +187,7 @@ def remove_gemini_watermark(filepath: Path):
         print(f"[WARN] No se pudo remover watermark: {e}")
 
 
-def extract_images(page, output_name):
+def extract_images(page, output_name, assets_dir):
     """Extract all large images from the page via canvas conversion."""
     saved = []
     try:
@@ -222,7 +225,8 @@ def extract_images(page, output_name):
                         out.write_bytes(raw)
 
                         # Copy to assets
-                        asset = ASSETS_DIR / fname
+                        assets_dir.mkdir(parents=True, exist_ok=True)
+                        asset = assets_dir / fname
                         asset.write_bytes(raw)
 
                         saved.append(out)
@@ -240,31 +244,84 @@ def extract_images(page, output_name):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generar imágenes via Gemini web")
-    parser.add_argument("--prompt", help="Nombre del prompt en system/gemini/prompts/")
+    parser = argparse.ArgumentParser(description="Generate images via Gemini web")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--prompt", help="Prompt file in system/gemini/prompts/")
+    group.add_argument("--prompt-file", help="Full path to prompt file")
+    group.add_argument("--login-only", action="store_true", help="Only login to Gemini")
+    parser.add_argument("--output-dir", help="Custom output directory")
     parser.add_argument("--text", help="Texto directo del prompt")
-    parser.add_argument("--login-only", action="store_true", help="Solo abrir para login")
+    parser.add_argument("--pieza", help="Fuerza la carpeta destino (ej: P1_002)")
     args = parser.parse_args()
 
     if args.login_only:
-        prompt_text, output_name = None, None
-    elif args.prompt:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(**launch_browser())
+            page = browser.new_page()
+            page.goto(GEMINI_URL)
+            print("Login to Gemini, then close the browser when ready")
+            input("Press Enter when done...")
+            browser.close()
+        return
+
+    # Determine prompt file path
+    if args.prompt:
         prompt_file = PROMPTS_DIR / args.prompt
-        if not prompt_file.exists():
-            print(f"[ERROR] No existe: {prompt_file}")
-            sys.exit(1)
+    else:
+        prompt_file = Path(args.prompt_file)
+
+    # Determine output directory
+    if args.output_dir:
+        output_dir = Path(args.output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+    else:
+        # Extract episode ID from prompt filename and convert to P1_XXX format
+        filename = prompt_file.stem
+        if "PROMPT_" in filename:
+            episode = filename.split("_")[1]
+            if episode.startswith("EP"):
+                piece_id = f"P1_{episode[2:]}"
+            else:
+                piece_id = episode
+            output_dir = REPO_ROOT / "06_Assets" / "production" / piece_id
+            output_dir.mkdir(parents=True, exist_ok=True)
+        else:
+            output_dir = OUTPUT_DIR
+
+    if not prompt_file.exists():
+        print(f"[ERROR] No existe: {prompt_file}")
+        sys.exit(1)
+
+    if args.prompt:
         prompt_text = extract_primary_prompt(prompt_file)
         if not prompt_text:
             print(f"[ERROR] No se encontró prompt en {prompt_file}")
             sys.exit(1)
         output_name = generate_output_name(prompt_file)
+
+        if args.pieza:
+            pieza = args.pieza
+        else:
+            match = re.search(r"(P[0-9]_[0-9]{3})", args.prompt)
+            pieza = match.group(1) if match else "misc"
         print(f"[INFO] Prompt: {args.prompt} ({len(prompt_text)} chars)")
+    elif args.prompt_file:
+        prompt_text = extract_primary_prompt(prompt_file)
+        if not prompt_text:
+            print(f"[ERROR] No se encontró prompt en {prompt_file}")
+            sys.exit(1)
+        output_name = generate_output_name(prompt_file)
+        pieza = args.pieza or "misc"
+        print(f"[INFO] Prompt file: {args.prompt_file} ({len(prompt_text)} chars)")
     elif args.text:
         prompt_text = args.text
         output_name = f"FG_manual_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        pieza = args.pieza or "misc"
     else:
-        print("[ERROR] Usa --prompt, --text, o --login-only")
+        print("[ERROR] Usa --prompt, --prompt-file, --text, o --login-only")
         sys.exit(1)
+
+    assets_dir = REPO_ROOT / "06_Assets" / pieza
 
     with sync_playwright() as p:
         ctx = p.chromium.launch_persistent_context(**launch_browser())
@@ -324,8 +381,8 @@ def main():
 
         page.screenshot(path=str(DEBUG_DIR / f"{output_name}_final.png"))
 
-        # Extract images
-        saved = extract_images(page, output_name)
+        # Save images
+        saved = extract_images(page, output_name, output_dir)
 
         if saved:
             print(f"\n✅ {len(saved)} imagen(es) guardada(s)")

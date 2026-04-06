@@ -1,0 +1,19 @@
+{
+  "episode_id": "EP001",
+  "piece_id": "P1_001",
+  "asset_type": "thumbnail",
+  "generated_at": "2026-04-05T21:14:31.783688",
+  "total_variants": 1,
+  "files": [
+    {
+      "original": "FG_EP001_THB_YT_v1_20260405_0.png",
+      "new": "FG_EP001_THB_v1_20260405.png",
+      "path": "06_Assets\\production\\P1_001\\review\\FG_EP001_THB_v1_20260405.png",
+      "size": 494366,
+      "variant": 1
+    }
+  ],
+  "review_folder": "06_Assets\\production\\P1_001\\review",
+  "final_folder": "06_Assets\\production\\P1_001\\final",
+  "latest_folder": "06_Assets\\latest_stable\\thumbnails"
+}
