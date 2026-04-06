@@ -5,7 +5,7 @@ Uso:
     python scripts/threads_publish_post.py --pieza P1_001 --dry-run
 
 Requisitos:
-    - THREADS_ACCESS_TOKEN en .env o --token
+    - THREADS_ACCESS_TOKEN en .env.local, env, o --token
     - threads_content_publish permission
 """
 
@@ -18,6 +18,10 @@ import requests
 from pathlib import Path
 from dotenv import load_dotenv
 
+# Importar utilidad local para autocargar secretos
+sys.path.insert(0, str(Path(__file__).parent))
+from utils import get_required_secret
+
 REPO_ROOT = Path(__file__).parent.parent
 PRODUCCION_DIR = REPO_ROOT / "04_Produccion"
 ASSETS_DIR = REPO_ROOT / "06_Assets"
@@ -27,12 +31,8 @@ THREADS_API_BASE = "https://graph.threads.net/v1.0"
 def load_token(args_token):
     if args_token:
         return args_token
-    load_dotenv(REPO_ROOT / ".env")
-    token = os.getenv("THREADS_ACCESS_TOKEN")
-    if not token:
-        print("[ERROR] Necesitas --token o env var THREADS_ACCESS_TOKEN")
-        sys.exit(1)
-    return token
+    # Usar utilidad que autocarga desde .env.local si es necesario
+    return get_required_secret("THREADS_ACCESS_TOKEN")
 
 def get_threads_user_id(token, provided_user_id=None):
     """Obtiene el ID del usuario de Threads."""

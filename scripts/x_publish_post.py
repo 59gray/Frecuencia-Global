@@ -19,6 +19,7 @@ import os
 import re
 import sys
 import time
+import json
 import argparse
 from pathlib import Path
 from playwright.sync_api import sync_playwright, TimeoutError as PWTimeoutError
@@ -64,7 +65,8 @@ def extract_x_content(pieza: str) -> str | None:
         return None
 
     content = filepath.read_text(encoding="utf-8")
-    pattern = r"## X \(Twitter\)\s*\n```\s*\n(.*?)\n```"
+    # Regex robusto: ignora el tag de lenguaje (ej. ```text)
+    pattern = r"## X \(Twitter\)\s*\n```[^\n]*\n(.*?)```"
     match = re.search(pattern, content, re.DOTALL)
 
     if match:
@@ -112,7 +114,11 @@ def find_working_selector(page, selectors: list):
     return None
 
 
-def publish_post(page, text: str) -> bool:
+def emit_result(ok: bool, **payload):
+    print(json.dumps({"ok": ok, **payload}, ensure_ascii=False))
+
+
+def publish_post(page, text: str):
     debug_dir = REPO_ROOT / "scripts" / "tmp_x_debug"
     debug_dir.mkdir(exist_ok=True)
 
@@ -124,7 +130,7 @@ def publish_post(page, text: str) -> bool:
     if "/login" in page.url or "/flow" in page.url:
         print("[INFO] Redirigido a login — esperando sesión...")
         if not wait_for_login(page):
-            return False
+            return {"published": False, "error": "login_timeout"}
         page.goto(X_COMPOSE_URL, wait_until="domcontentloaded", timeout=60000)
         time.sleep(5)
         print(f"[DEBUG] URL después de login: {page.url}")
@@ -137,7 +143,7 @@ def publish_post(page, text: str) -> bool:
     textarea = find_working_selector(page, SELECTORS["compose_textarea"])
     if not textarea:
         print("[ERROR] No se encontró el campo de texto")
-        return False
+        return {"published": False, "error": "compose_textarea_not_found"}
 
     try:
         # Use JavaScript to focus the textarea directly
@@ -152,13 +158,13 @@ def publish_post(page, text: str) -> bool:
     except Exception as e:
         print(f"[ERROR] No se pudo escribir: {e}")
         page.screenshot(path=str(debug_dir / "error_write.png"))
-        return False
+        return {"published": False, "error": f"write_failed: {e}"}
 
     post_btn = find_working_selector(page, SELECTORS["post_button"])
     if not post_btn:
         print("[ERROR] No se encontró el botón Post")
         page.screenshot(path=str(debug_dir / "error_no_button.png"))
-        return False
+        return {"published": False, "error": "post_button_not_found"}
 
     try:
         for _ in range(10):
@@ -178,14 +184,25 @@ def publish_post(page, text: str) -> bool:
         print(f"[DEBUG] URL después de post: {current_url}")
         if "/compose" not in current_url:
             print("[OK] Post publicado — redirigido fuera de compose")
-            return True
+            tweet_url = current_url if "/status/" in current_url else None
+            tweet_id = None
+            if tweet_url:
+                match = re.search(r"/status/(\d+)", tweet_url)
+                if match:
+                    tweet_id = match.group(1)
+            return {
+                "published": True,
+                "url": tweet_url,
+                "tweetId": tweet_id,
+                "textLength": len(text),
+            }
         else:
             print("[WARN] Aún en compose — el post podría no haberse enviado")
-            return False
+            return {"published": False, "error": "still_in_compose", "textLength": len(text)}
     except Exception as e:
         print(f"[ERROR] No se pudo hacer click en Post: {e}")
         page.screenshot(path=str(debug_dir / "error_click.png"))
-        return False
+        return {"published": False, "error": f"post_click_failed: {e}"}
 
 
 def main():
@@ -200,23 +217,28 @@ def main():
     elif args.pieza:
         text = extract_x_content(args.pieza)
         if not text:
+            emit_result(False, pieza=args.pieza, error="publish_ready_x_block_not_found")
             sys.exit(1)
     else:
         print("[ERROR] Debes especificar --pieza o --texto")
+        emit_result(False, error="missing_required_argument")
         sys.exit(1)
 
     if not validate_text_length(text):
+        emit_result(False, pieza=args.pieza, error="text_too_long", textLength=len(text))
         sys.exit(1)
 
     print(f"\nContenido:\n{text}\n")
 
     if args.dry_run:
         print("[DRY_RUN] Validación OK")
+        emit_result(True, pieza=args.pieza, dryRun=True, textLength=len(text))
         sys.exit(0)
 
     if not CHROME_PROFILE_DIR.exists():
         print(f"[ERROR] No existe perfil: {CHROME_PROFILE_DIR}")
         print("[INFO] Ejecuta primero: python scripts/x_profile_setup.py")
+        emit_result(False, pieza=args.pieza, error="chrome_profile_missing")
         sys.exit(1)
 
     chrome_exe = chrome_executable()
@@ -243,11 +265,12 @@ def main():
     with sync_playwright() as p:
         context = p.chromium.launch_persistent_context(**launch_args)
         page = context.new_page()
-        success = publish_post(page, text)
+        result = publish_post(page, text)
         time.sleep(2)
         context.close()
 
-    sys.exit(0 if success else 1)
+    emit_result(bool(result.get("published")), pieza=args.pieza, **result)
+    sys.exit(0 if result.get("published") else 1)
 
 
 if __name__ == "__main__":

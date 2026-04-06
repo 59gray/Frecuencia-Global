@@ -18,6 +18,8 @@ import argparse
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
+from fg_debug import debug_log
+
 REPO_ROOT = Path(__file__).parent.parent
 PRODUCCION_DIR = REPO_ROOT / "04_Produccion"
 ASSETS_DIR = REPO_ROOT / "06_Assets"
@@ -300,6 +302,14 @@ def publish_post(page, image_path: Path, caption: str) -> bool:
             return 'no_share_found';
         }""")
         print(f"[DEBUG] Share result: {result}")
+        # region fg_debug_core
+        debug_log(
+            "ig share_js result",
+            location="ig_publish_post.publish_post",
+            hypothesis_id="H_ig_share",
+            data={"result_preview": str(result)[:240] if result is not None else None},
+        )
+        # endregion
         if result and 'clicked' in result:
             time.sleep(12)
             # page.screenshot(path=str(DEBUG_DIR / "06_after_share.png"))
@@ -353,6 +363,20 @@ def main():
     print(f"[OK] Caption: {len(caption)} chars")
     print(f"\n{caption[:200]}{'...' if len(caption) > 200 else ''}\n")
 
+    # region fg_debug_core
+    debug_log(
+        "ig_publish_post main ready",
+        location="ig_publish_post.main",
+        hypothesis_id="H_ig_flow",
+        data={
+            "pieza": args.pieza,
+            "dry_run": args.dry_run,
+            "caption_chars": len(caption),
+            "image_name": image_path.name,
+        },
+    )
+    # endregion
+
     if args.dry_run:
         print("[DRY_RUN] OK")
         sys.exit(0)
@@ -375,6 +399,15 @@ def main():
         success = publish_post(page, image_path, caption)
         time.sleep(2)
         ctx.close()
+
+    # region fg_debug_core
+    debug_log(
+        "ig_publish_post main exit",
+        location="ig_publish_post.main",
+        hypothesis_id="H_ig_flow",
+        data={"success": bool(success)},
+    )
+    # endregion
 
     sys.exit(0 if success else 1)
 
