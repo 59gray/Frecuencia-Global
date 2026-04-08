@@ -39,7 +39,7 @@ export async function GET(context: APIContext) {
       `<atom:link href="${escapeXml(feedUrl)}" rel="self" type="application/rss+xml" />` +
       `<itunes:author>Frecuencia Global</itunes:author>` +
       `<itunes:summary>Podcast semanal con análisis internacional, cultura y tecnología en formato audio-first con videopodcast en YouTube.</itunes:summary>` +
-      `<itunes:owner><itunes:name>Frecuencia Global</itunes:name><itunes:email>contacto@frecuenciaglobal.mx</itunes:email></itunes:owner>` +
+      `<itunes:owner><itunes:name>Frecuencia Global</itunes:name><itunes:email>contact@frecuenciaglobal.org</itunes:email></itunes:owner>` +
       `<itunes:image href="${escapeXml(coverImageUrl)}" />` +
       `<itunes:explicit>false</itunes:explicit>` +
       `<itunes:type>episodic</itunes:type>` +
