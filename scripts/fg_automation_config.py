@@ -19,8 +19,8 @@ REPO_ROOT = SCRIPTS_DIR.parent
 # CONFIGURACIÓN DE PLATAFORMAS Y URLs
 # ============================================================================
 
-WEBSITE_URL = os.environ.get("FG_WEBSITE_URL", "https://frecuencia-global.pages.dev")
-WEBSITE_PREVIEW_URL = os.environ.get("FG_WEBSITE_PREVIEW_URL", "https://preview.frecuencia-global.pages.dev")
+WEBSITE_URL = os.environ.get("FG_WEBSITE_URL", "https://frecuenciaglobal.org")
+WEBSITE_PREVIEW_URL = os.environ.get("FG_WEBSITE_PREVIEW_URL", "https://preview.frecuenciaglobal.org")
 PODCAST_HOST = os.environ.get("FG_PODCAST_HOST", "rss.com")
 PODCAST_SLUG = os.environ.get("FG_PODCAST_SLUG", "frecuencia-global-podcast")
 PODCAST_RSS_URL = os.environ.get("FG_PODCAST_RSS_URL", f"https://media.rss.com/{PODCAST_SLUG}/feed.xml")
