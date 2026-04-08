@@ -13,3 +13,4 @@
 | 2026-04-03 | 11:35 | PUBLISH_READY | EP_002 | Episodio de prueba preparado para validación WF-006 |
 | 2026-04-05 | 03:10 | test_manual_wf004 | P1_001 | validacion indirecta WF-004 -> SUB-002 |
 | 2026-04-05 | 03:10 | test_manual_wf004 | P1_001 | validacion indirecta WF-004 -> SUB-002 |
+| 2026-04-05 | — | CELULA_EDITORIAL | — | Implementada célula editorial AGENT_13–18, `system/editorial/`, specs `03_Editorial/_specs/` |

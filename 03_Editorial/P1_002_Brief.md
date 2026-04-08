@@ -1,48 +1,98 @@
-# BRIEF INMEDIATO — P1_002
+# BRIEF DE CONTENIDO
 
-**Código de pieza:** FG-2026-W15-01 (P1_002)
-**Pilar:** Bass & Borders
-**Formato recomendado:** Carrusel Instagram (8 slides, 1080×1350 px)
-**Tema:** “¿Por qué la música electrónica nació en Detroit y cómo se convirtió en un fenómeno global?”
-**Hipótesis editorial:** La historia de la música electrónica es también una historia de migración, resistencia y globalización cultural.
-**Objetivo:** Mostrar cómo la música electrónica, nacida en contextos de resistencia afroamericana en Detroit, se transformó en un lenguaje global que conecta fronteras y culturas.
-**Audiencia:** Jóvenes 18-35, fans de música electrónica, interesados en cultura global y storytelling visual.
-**Ángulo / Hook:** “El techno no nació en Berlín, sino en Detroit. Y su historia es mucho más política de lo que crees.”
-**Promesa de valor:** Aprenderás en 8 slides cómo un sonido local se volvió global, y por qué la música electrónica es más que fiesta: es identidad, resistencia y red.
-**Mensaje central:** La música electrónica es un fenómeno global con raíces profundas en la historia social y política de Detroit, y su expansión revela cómo la cultura viaja y se transforma.
+**Sistema:** Frecuencia Global
+**Código:** TPL_Brief_Contenido
+**Usado por:** Content Strategy Agent → Research Agent / Scriptwriting Agent
 
-**Estructura sugerida (slides):**
-1. Cover: “El techno nació en Detroit, no en Berlín”
-2. Origen: Detroit, años 80 — contexto social y racial
-3. Primeros pioneros: Belleville Three, clubes, radio
-4. El salto a Europa: cómo llegó a Berlín y Londres
-5. La globalización: festivales, sellos, cultura rave
-6. El impacto social: resistencia, comunidad, identidad
-7. El presente: EDM, mainstream, tensiones y oportunidades
-8. CTA: “¿Sabías esto? Comparte y sigue para más historias que cruzan fronteras”
+---
 
-**Assets necesarios:**
-- Fotos/ilustraciones de Detroit, Belleville Three, flyers originales
-- Mapas de migración cultural (Detroit → Europa)
-- Iconografía de festivales y cultura rave
-- Paleta visual: magenta neón (#FF00E5), negro profundo (#0A0A0F), acentos cian y verde ácido
+## IDENTIFICACIÓN
 
-**Riesgos de ejecución:**
-- No caer en clichés ni glorificar el “mainstream” EDM
-- Verificar derechos de imagen para fotos históricas
-- Mantener rigor factual en la narrativa
+| Campo | Valor |
+|-------|-------|
+| **ID de pieza** | FG-2026-W15-01 |
+| **Fecha del brief** | 2026-04-05 |
+| **Autor del brief** | Farid Assad / Agente Content Strategy |
+| **Deadline final** | 2026-04-12 |
 
-**Complejidad estimada:** Baja-media (puede producirse en 2-3 días con el sistema actual, sin depender de Figma)
-**Prioridad:** Alta — permite diversificar pilares, aprovechar assets existentes y conectar con una audiencia amplia.
+---
 
-**Siguiente paso inmediato:**
-- Redactar research breve (fuentes: Wikipedia, Resident Advisor, Mixmag, documentales BBC/Arte)
-- Definir textos exactos por slide
-- Preparar moodboard visual con assets ya disponibles
+## CONTENIDO
 
-**Justificación:**
-P1_002 es la mejor siguiente pieza porque:
-- Permite activar el pilar “Bass & Borders” (aún sin contenido)
-- Usa assets y paleta ya existentes (no depende de Figma)
-- Es un tema de alto interés, fácil de viralizar y con potencial visual fuerte
-- Diversifica la narrativa de Frecuencia Global y muestra la propuesta de valor de la marca
+| Campo | Valor |
+|-------|-------|
+| **Título de trabajo** | La nueva Guerra Fría comercial: cómo EE.UU. y China están redibujando el mapa económico global |
+| **Pilar** | [x] Geopolitik Drop · [ ] Bass & Borders · [ ] Frecuencia Global · [ ] Behind the Policy |
+| **Ángulo FG** | La tensión comercial EE.UU.-China no es solo sobre aranceles: es una batalla por el control tecnológico, las cadenas de suministro y el futuro del orden global. FG expone las jugadas que nadie está cubriendo. |
+| **Tesis central** | La confrontación comercial entre EE.UU. y China está acelerando una reconfiguración global de alianzas, tecnología y poder económico que definirá la próxima década. |
+
+---
+
+## FORMATO Y DISTRIBUCIÓN
+
+| Campo | Valor |
+|-------|-------|
+| **Formato principal** | [x] Carrusel |
+| **Plataforma(s)** | [x] Instagram |
+| **Duración / Extensión** | 8 slides (1080×1350 cada uno) |
+| **Formatos derivados** | 1 post estático (dato hook para Stories) + caption largo informativo |
+
+---
+
+## AUDIENCIA
+
+| Campo | Valor |
+|-------|-------|
+| **Audiencia target** | Jóvenes 18-35 interesados en geopolítica y economía internacional, que perciben la tensión EE.UU.-China como noticia lejana |
+| **Nivel de conocimiento previo** | [x] Ninguno |
+| **Motivación del viewer** | Entender cómo esta "guerra comercial" afecta su vida diaria (precios, tecnología, futuro laboral). Sentir que acceden a análisis estratégico que medios no explican. |
+
+---
+
+## INVESTIGACIÓN
+
+| Campo | Valor |
+|-------|-------|
+| **¿Requiere investigación nueva?** | [x] Sí |
+| **Preguntas clave a responder** | 1. ¿Qué porcentaje del comercio global está afectado directamente por las sanciones y contra-sanciones? |
+| | 2. ¿Qué tecnologías clave (semiconductores, 5G, IA) son el verdadero campo de batalla? |
+| | 3. ¿Cómo están reaccionando otros países (Europa, América Latina, Sudeste Asiático) a esta tensión? |
+| **Fuentes sugeridas** | Bloomberg Economics, Financial Times, Council on Foreign Relations, Peterson Institute, World Bank, WTO |
+| **Restricciones de sourcing** | Datos post-2020. Enfocar en impactos concretos而非 discursos políticos. |
+
+---
+
+## OBJETIVOS
+
+| Campo | Valor |
+|-------|-------|
+| **Objetivo principal** | [x] Awareness |
+| **CTA deseado** | "¿Te afecta? Comparte si te preocupa el futuro económico." → compartir + guardar |
+| **KPI de éxito** | >300 alcance, >50 saves, >15 shares (métricas de consolidación — segundo contenido geopolítico) |
+
+---
+
+## CONTEXTO ADICIONAL
+
+| Campo | Valor |
+|-------|-------|
+| **Relación con contenido previo** | Segunda pieza geopolítica después de P1_001 (cables submarinos). Refuerza posicionamiento de FG en análisis internacional. |
+| **Competencia / referencia** | Economía política tradicional es densa y académica. FG diferencia con visual EDM-aesthetic + datos concretos + impacto directo en la vida cotidiana. |
+| **Urgencia** | [x] Alta (tema de actualidad con desarrollo diario) |
+| **Notas especiales** | Evitar posturas partidistas. Enfocar en datos y consecuencias estructurales. Conectar lo abstracto (comercio) con lo concreto (precios, empleo, tecnología). |
+
+---
+
+## TIMELINE
+
+| Fase | Responsable | Deadline |
+|------|-------------|----------|
+| Research | Research Agent | 2026-04-05 |
+| Script | Scriptwriting Agent | 2026-04-06 |
+| Diseño | Design Production Agent (Farid en Canva) | 2026-04-09 |
+| QA | QA/Consistency Agent | 2026-04-10 |
+| Publicación | PM Agent | 2026-04-12 |
+
+---
+
+*Brief aprobado por: Farid Assad — Fecha: 2026-04-05*

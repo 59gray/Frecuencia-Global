@@ -1,5 +1,12 @@
-# Core browser automation
+# Core browser automation (legacy - being phased out)
 playwright>=1.50
+
+# API-first architecture
+fastapi>=0.115
+uvicorn[standard]>=0.32
+pydantic>=2.9
+aiohttp>=3.11
+python-multipart>=0.0.20
 
 # Image generation / validation
 Pillow>=10.0
@@ -13,3 +20,6 @@ google-api-python-client>=2.0
 google-auth>=2.0
 google-auth-oauthlib>=1.0
 google-auth-httplib2>=0.2
+
+# Environment management
+python-dotenv>=1.0

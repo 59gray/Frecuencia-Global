@@ -107,19 +107,22 @@ def upload_image_to_temp(image_path: Path) -> str | None:
         print(f"[ERROR] Excepción: {e}")
         return None
 
-def create_media_container(token, user_id, text, image_url):
-    """Crea un container de media para publicar."""
+def create_media_container(token, user_id, text, image_url=None):
+    """Crea un container de media para publicar (IMAGE o TEXT)."""
     url = f"{THREADS_API_BASE}/{user_id}/threads"
     params = {
         "access_token": token,
-        "media_type": "IMAGE",
-        "image_url": image_url,
         "text": text[:500]  # Threads limita texto
     }
+    if image_url:
+        params["media_type"] = "IMAGE"
+        params["image_url"] = image_url
+    else:
+        params["media_type"] = "TEXT"
     resp = requests.post(url, params=params)
     if resp.status_code in (200, 201):
         data = resp.json()
-        print(f"[OK] Media container creado: {data.get('id')}")
+        print(f"[OK] Media container creado ({params['media_type']}): {data.get('id')}")
         return data.get("id")
     else:
         print(f"[ERROR] No se pudo crear container: {resp.text}")
@@ -156,18 +159,19 @@ def main():
     if not text:
         sys.exit(1)
 
-    # Encontrar imagen
+    # Encontrar imagen (opcional — Threads soporta text-only)
     image_path = find_image(args.pieza)
-    if not image_path:
-        print(f"[ERROR] No se encontró imagen para {args.pieza}")
-        sys.exit(1)
+    if image_path:
+        print(f"[OK] Imagen: {image_path}")
+    else:
+        print(f"[INFO] Sin imagen para {args.pieza} — se publicará como TEXT")
 
-    print(f"[OK] Imagen: {image_path}")
     print(f"[OK] Texto: {len(text)} chars")
     print(f"\n{text[:200]}{'...' if len(text) > 200 else ''}\n")
 
     if args.dry_run:
-        print("[DRY_RUN] OK - Simulación completada")
+        mode = "IMAGE" if image_path else "TEXT"
+        print(f"[DRY_RUN] OK - Simulación completada (modo: {mode})")
         sys.exit(0)
 
     # Obtener user ID
@@ -175,10 +179,12 @@ def main():
     if not user_id:
         sys.exit(1)
 
-    # Subir imagen temporal
-    image_url = upload_image_to_temp(image_path)
-    if not image_url:
-        sys.exit(1)
+    # Subir imagen temporal (si existe)
+    image_url = None
+    if image_path:
+        image_url = upload_image_to_temp(image_path)
+        if not image_url:
+            print("[WARN] Upload de imagen falló — continuando como TEXT")
 
     # Crear media container
     container_id = create_media_container(token, user_id, text, image_url)

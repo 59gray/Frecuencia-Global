@@ -19,12 +19,16 @@ import argparse
 import requests
 from pathlib import Path
 
+# Autoload de secretos desde .env.local
+sys.path.insert(0, str(Path(__file__).parent))
+from utils import get_optional_secret
+
 REPO_ROOT = Path(__file__).parent.parent
 PRODUCCION_DIR = REPO_ROOT / "04_Produccion"
 ASSETS_DIR = REPO_ROOT / "06_Assets"
 
-IG_ACCESS_TOKEN = os.environ.get("IG_ACCESS_TOKEN", "")
-IG_USER_ID = os.environ.get("IG_USER_ID", "")
+IG_ACCESS_TOKEN = get_optional_secret("IG_ACCESS_TOKEN", "")
+IG_USER_ID = get_optional_secret("IG_USER_ID", "")
 GRAPH_API = "https://graph.instagram.com/v22.0"
 
 

@@ -3,7 +3,7 @@
 **Sistema:** Frecuencia Global  
 **Código:** RULE_Source_Quality  
 **Severidad:** BLOQUEANTE — Contenido sin fuentes verificables no se publica  
-**Aplica a:** Research Agent, QA/Consistency Agent, Scriptwriting Agent
+**Aplica a:** AGENT_03 Research, AGENT_04 Scriptwriting, AGENT_06 QA, AGENT_14 Research + Fact-Check RI, AGENT_15 Script Shortform, AGENT_13 Editorial Lead (veto por riesgo de fuente)
 
 ---
 
@@ -20,7 +20,7 @@ Frecuencia Global construye credibilidad a través de rigor. Toda afirmación fa
 | **T1** | Documentos primarios | Tratados, resoluciones ONU, leyes, datos oficiales (BM, FMI, OMS), registros corporativos | **Máxima** | Citar directamente. Fuente preferida |
 | **T2** | Agencias de noticias | Reuters, AP, AFP, EFE | **Alta** | Base factual. Verbatim confiable |
 | **T3** | Think tanks / Academia | CFR, IISS, Chatham House, Brookings, Carnegie, Foreign Affairs, papers peer-reviewed | **Alta** | Análisis y contexto. Citar autoría |
-| **T4** | Medios de referencia | NYT, BBC, The Guardian, Le Monde, El País, The Economist, FT | **Media-alta** | Reportajes y análisis. Verificar con T1/T2 |
+| **T4** | Medios de referencia | NYT, BBC, The Guardian, Le Monde, The Economist, FT | **Media-alta** | Reportajes y análisis. Verificar con T1/T2. **No** citar *El País* ni *Infobae* (lista FG bloqueada abajo) |
 | **T5** | Medios especializados | The Diplomat, War on the Rocks, Lawfare, Rest of World, Bellingcat | **Media** | Ángulos y contexto específico |
 | **T6** | Redes sociales / OSINT | X, Telegram, imágenes satélite, geolocalización | **Baja** | Solo con verificación T1-T4 |
 
@@ -45,11 +45,25 @@ Frecuencia Global construye credibilidad a través de rigor. Toda afirmación fa
 
 ---
 
+## LISTA FG — NO CITAR EN PIEZAS PUBLICADAS (BLOQUEANTE)
+
+Los siguientes nombres **no pueden aparecer** como fuente trazable en ClaimSheet, guiones, captions, carruseles ni PublishReady. Si un dato solo aparece ahí, hay que **sustituir** por T1–T3 o por T2/T4 permitidos.
+
+| Fuente / tipo | Uso permitido | Uso prohibido |
+|---------------|---------------|---------------|
+| **Wikipedia** | Solo como **mapa** interno para localizar primarios (ONU, papers, datos oficiales) | Citar Wikipedia en pantalla, descripción o lista de fuentes |
+| **Infobae** | Ninguno en pipeline editorial | Cualquier cita o atribución |
+| **El País** | Ninguno en pipeline editorial | Cualquier cita o atribución |
+
+**Sustitutos (español / multilingüe):** Reuters, AP, AFP, EFE; documentos y datos de organismos internacionales (T1); think tanks listados en T3; medios T4 de la tabla (excepto los bloqueados); T5 cuando aplique.
+
+---
+
 ## FUENTES NO ACEPTABLES
 
 | Tipo | Razón |
 |------|-------|
-| Wikipedia como fuente final | Es agregador, no fuente primaria. Aceptable como punto de partida |
+| Wikipedia como fuente citada | Es agregador; en FG **prohibido** citar en pieza. Solo orientación hacia primarios |
 | Blogs sin autoría identificable | Sin accountability |
 | Medios con historial documentado de desinformación | Riesgo reputacional |
 | Fuentes anónimas sin corroboración | No verificable |

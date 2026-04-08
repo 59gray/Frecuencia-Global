@@ -4,6 +4,8 @@ import os
 from pathlib import Path
 from typing import Optional, Dict
 
+from fg_debug import debug_log
+
 try:
     from playwright.sync_api import sync_playwright
     PLAYWRIGHT_AVAILABLE = True
@@ -157,6 +159,20 @@ def launch_persistent_browser(platform: str, headless: bool = False):
     profile_dir = ensure_profile_exists(platform)
     chrome_exe = str(chrome_executable())
 
+    # region fg_debug_core
+    debug_log(
+        "launch_persistent_browser start",
+        location="fg_automation_config.launch_persistent_browser",
+        hypothesis_id="H_playwright_launch",
+        data={
+            "platform": platform,
+            "headless": headless,
+            "profile_dir": str(profile_dir),
+            "chrome_exe_set": bool(chrome_exe),
+        },
+    )
+    # endregion
+
     p = sync_playwright().start()
 
     browser = p.chromium.launch_persistent_context(
@@ -171,6 +187,15 @@ def launch_persistent_browser(platform: str, headless: bool = False):
         ],
     )
 
+    # region fg_debug_core
+    debug_log(
+        "launch_persistent_browser ok",
+        location="fg_automation_config.launch_persistent_browser",
+        hypothesis_id="H_playwright_launch",
+        data={"platform": platform},
+    )
+    # endregion
+
     return browser, p
 
 def check_session_valid(platform: str, timeout_sec: int = 10) -> bool:
@@ -178,9 +203,26 @@ def check_session_valid(platform: str, timeout_sec: int = 10) -> bool:
     Verifica rápidamente si la sesión de una plataforma sigue válida.
     """
     if not PLAYWRIGHT_AVAILABLE:
+        # region fg_debug_core
+        debug_log(
+            "check_session_valid skipped",
+            location="fg_automation_config.check_session_valid",
+            hypothesis_id="H_session_playwright",
+            data={"platform": platform, "reason": "playwright_unavailable"},
+        )
+        # endregion
         return False
 
     import time
+
+    # region fg_debug_core
+    debug_log(
+        "check_session_valid start",
+        location="fg_automation_config.check_session_valid",
+        hypothesis_id="H_session_login",
+        data={"platform": platform, "timeout_sec": timeout_sec},
+    )
+    # endregion
 
     try:
         with sync_playwright() as p:
@@ -203,12 +245,36 @@ def check_session_valid(platform: str, timeout_sec: int = 10) -> bool:
 
             # Si estamos en página de login, la sesión expiró
             if "/login" in current_url or "/auth" in current_url or "login" in current_url:
+                # region fg_debug_core
+                debug_log(
+                    "check_session_valid login_redirect",
+                    location="fg_automation_config.check_session_valid",
+                    hypothesis_id="H_session_login",
+                    data={"platform": platform, "url_hint": current_url[:120]},
+                )
+                # endregion
                 return False
 
+            # region fg_debug_core
+            debug_log(
+                "check_session_valid ok",
+                location="fg_automation_config.check_session_valid",
+                hypothesis_id="H_session_login",
+                data={"platform": platform},
+            )
+            # endregion
             return True
 
     except Exception as e:
         print(f"⚠️ Error verificando sesión de {platform}: {e}")
+        # region fg_debug_core
+        debug_log(
+            "check_session_valid exception",
+            location="fg_automation_config.check_session_valid",
+            hypothesis_id="H_session_playwright",
+            data={"platform": platform, "exc_type": type(e).__name__},
+        )
+        # endregion
         return False
 
 def client_secret_path() -> Path:

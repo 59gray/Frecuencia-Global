@@ -1,6 +1,6 @@
 # Frecuencia Global — Checkpoint del Proyecto
 
-**Fecha:** 2026-03-24
+**Fecha:** 2026-04-04
 **Propósito:** Documento de orientación para cualquier asistente (humano o IA) que se incorpore al proyecto. Resume qué es, dónde estamos, qué existe, qué falta y cuál es el siguiente paso.
 
 ---

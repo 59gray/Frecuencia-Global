@@ -36,11 +36,6 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Saltar test de bridge",
     )
-    parser.add_argument(
-        "--skip-telegram",
-        action="store_true",
-        help="Saltar notificación Telegram",
-    )
     return parser.parse_args()
 
 
@@ -104,25 +99,6 @@ def test_telegram_direct() -> dict:
         return {"ok": False, "error": str(e)}
 
 
-def trigger_telegram_via_n8n(n8n_base: str, message: str) -> dict:
-    """Disparar notificación Telegram vía n8n Cloud (SUB-002)."""
-    try:
-        # Ejecutar SUB-002 (Notificar Telegram) vía n8n Cloud
-        url = f"{n8n_base}/webhook/exec-workflow"
-        payload = {
-            "workflowId": "oeydfg22aym5l0",  # SUB-002
-            "data": {"mensaje": message},
-        }
-        response = requests.post(url, json=payload, timeout=30)
-        return {
-            "ok": response.status_code in (200, 201),
-            "status_code": response.status_code,
-            "response_snippet": response.text[:500] if response.text else None,
-        }
-    except requests.exceptions.RequestException as e:
-        return {"ok": False, "error": str(e)}
-
-
 def main() -> int:
     args = parse_args()
     LOGS_DIR.mkdir(exist_ok=True)
@@ -146,7 +122,7 @@ def main() -> int:
         print("\n⚠️  Bridge: SKIPPED (--skip-bridge)")
         report["tests"]["bridge"] = {"ok": None, "skipped": True}
     else:
-        print("\n🔍 Test 1/4: Bridge local...")
+        print("\n🔍 Test 1/3: Bridge local...")
         bridge_result = test_bridge(args.bridge_url)
         report["tests"]["bridge"] = bridge_result
         if bridge_result["ok"]:
@@ -156,7 +132,7 @@ def main() -> int:
             report["overall_ok"] = False
 
     # 2. Test n8n Cloud
-    print("\n🔍 Test 2/4: n8n Cloud...")
+    print("\n🔍 Test 2/3: n8n Cloud...")
     n8n_result = test_n8n_cloud(args.n8n_base)
     report["tests"]["n8n_cloud"] = n8n_result
     if n8n_result["ok"]:
@@ -165,8 +141,8 @@ def main() -> int:
         print(f"   ❌ FAIL: {n8n_result.get('error', f'HTTP {n8n_result.get('status_code')}')}")
         report["overall_ok"] = False
 
-    # 3. Test Telegram Directo
-    print("\n🔍 Test 3/4: Telegram API directo...")
+    # 3. Test Telegram Directo (n8n Cloud Telegram no testeable desde fuera - SUB-002 usa executeWorkflowTrigger)
+    print("\n🔍 Test 3/3: Telegram API directo...")
     tg_result = test_telegram_direct()
     report["tests"]["telegram_direct"] = tg_result
     if tg_result["ok"]:
@@ -175,23 +151,17 @@ def main() -> int:
         print(f"   ❌ FAIL: {tg_result.get('error', 'Unknown error')}")
         report["overall_ok"] = False
 
-    # 4. Test Telegram vía n8n Cloud (opcional)
-    if args.skip_telegram:
-        print("\n⚠️  Test 4/4: Telegram vía n8n Cloud: SKIPPED (--skip-telegram)")
-        report["tests"]["telegram_via_n8n"] = {"ok": None, "skipped": True}
-    elif not report["tests"].get("n8n_cloud", {}).get("ok"):
-        print("\n⚠️  Test 4/4: Telegram vía n8n Cloud: SKIPPED (n8n Cloud no disponible)")
-        report["tests"]["telegram_via_n8n"] = {"ok": None, "skipped": True, "reason": "n8n_cloud failed"}
-    else:
-        print("\n🔍 Test 4/4: Telegram vía n8n Cloud...")
-        msg = f"🧪 Test E2E {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-        tg_n8n_result = trigger_telegram_via_n8n(args.n8n_base, msg)
-        report["tests"]["telegram_via_n8n"] = tg_n8n_result
-        if tg_n8n_result["ok"]:
-            print("   ✅ PASS: Notificación enviada vía n8n Cloud")
-        else:
-            print(f"   ❌ FAIL: {tg_n8n_result.get('error', f'HTTP {tg_n8n_result.get('status_code')}')}")
-            # No marcamos overall_ok=False porque esto puede depender de config de Telegram en n8n
+    # Nota: Telegram vía n8n (SUB-002) no se testea directamente porque usa executeWorkflowTrigger
+    # (solo ejecutable desde otros workflows internos, no desde HTTP externo)
+    # SUB-002 se valida indirectamente cuando WF-004 lo llama durante logging
+    print("\n⚠️  SUB-002 (Telegram vía n8n): SKIPPED (internal subworkflow)")
+    print("   ℹ️  Nota: SUB-002 usa executeWorkflowTrigger - no expone endpoint HTTP")
+    print("   ℹ️  Validación indirecta: se ejecuta cuando WF-004 lo invoca para notificaciones")
+    report["tests"]["telegram_via_n8n"] = {
+        "ok": None,
+        "skipped": True,
+        "reason": "SUB-002 uses executeWorkflowTrigger - internal subworkflow, not externally callable. Validate indirectly via WF-004"
+    }
 
     # Report final
     report["finished_at"] = datetime.now().isoformat()

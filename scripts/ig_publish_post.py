@@ -356,6 +356,11 @@ def main():
         image_path = None
 
     if not image_path or not image_path.exists():
+        if args.dry_run:
+            print(f"[WARN] Imagen no encontrada para {args.pieza or 'input'} — no se puede publicar en IG")
+            print(f"[OK] Caption: {len(caption)} chars")
+            print(f"[DRY_RUN] SKIPPED — imagen requerida para Instagram")
+            sys.exit(0)
         print(f"[ERROR] Imagen no encontrada: {image_path}")
         sys.exit(1)
 

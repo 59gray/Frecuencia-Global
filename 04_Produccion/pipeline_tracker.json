@@ -13,10 +13,28 @@
       {
         "estado": "PUBLISH_READY",
         "timestamp": "2026-04-01T22:00:06.326Z"
+      },
+      {
+        "estado": "PUBLISHED_X",
+        "timestamp": "2026-04-05T20:00:00.000Z",
+        "nota": "Publicado vía script x_publish_post.py (browser automation). TweetId no capturado por limitaciones técnicas."
+      },
+      {
+        "estado": "PUBLISHED_THREADS",
+        "timestamp": "2026-04-05T21:00:00.000Z",
+        "nota": "Publicado vía threads_publish_post.py (Graph API). Post ID: 18216358396316291"
       }
     ],
-    "estado_actual": "PUBLISH_READY",
-    "ultima_actualizacion": "2026-04-01T22:00:06.326Z"
+    "estado_actual": "PUBLISHED_MULTI",
+    "ultima_actualizacion": "2026-04-06T20:30:00.000Z",
+    "plataformas_publicadas": ["x", "threads"],
+    "dry_run_status": {
+      "threads": "PASS",
+      "x": "PASS",
+      "instagram": "PASS",
+      "preflight": "PASS",
+      "last_check": "2026-04-06T20:25:00.000Z"
+    }
   },
   "P1_002": {
     "historial": [
@@ -24,10 +42,22 @@
         "estado": "BRIEF_READY",
         "timestamp": "2026-04-01T23:00:00.000Z",
         "nota": "Sincronizado manualmente — Brief existente detectado"
+      },
+      {
+        "estado": "APPROVAL_PENDING",
+        "timestamp": "2026-04-05T00:00:00.000Z",
+        "nota": "PublishReady creado con copy para X/IG/LinkedIn/TikTok. Assets generados en 06_Assets/P1_002/."
       }
     ],
-    "estado_actual": "BRIEF_READY",
-    "ultima_actualizacion": "2026-04-01T23:00:00.000Z"
+    "estado_actual": "APPROVAL_PENDING",
+    "ultima_actualizacion": "2026-04-06T20:30:00.000Z",
+    "dry_run_status": {
+      "threads": "PASS",
+      "x": "PASS",
+      "instagram": "PASS",
+      "preflight": "PASS",
+      "last_check": "2026-04-06T20:25:00.000Z"
+    }
   },
   "P1_003": {
     "historial": [
@@ -65,7 +95,23 @@
       }
     ],
     "estado_actual": "PUBLISH_READY",
-    "ultima_actualizacion": "2026-04-02T18:30:00.000Z"
+    "ultima_actualizacion": "2026-04-06T20:30:00.000Z",
+    "dry_run_status": {
+      "threads": "PASS (text-only)",
+      "x": "PASS",
+      "instagram": "SKIPPED (no image)",
+      "preflight": "PASS",
+      "last_check": "2026-04-06T20:30:00.000Z"
+    },
+    "bloqueantes": ["Falta audio master", "Falta thumbnail", "Falta imagen para IG/Threads"],
+    "youtube_status": {
+      "metadata_ready": true,
+      "video_master": false,
+      "thumbnail_ready": false,
+      "uploaded": false,
+      "published": false,
+      "metadata_file": "04_Produccion/EP_001/EP_001_YT_Metadata.md"
+    }
   },
   "EP_002": {
     "tipo": "podcast",
@@ -82,7 +128,23 @@
       }
     ],
     "estado_actual": "PUBLISH_READY",
-    "ultima_actualizacion": "2026-04-03T11:35:00.000Z",
+    "ultima_actualizacion": "2026-04-06T20:30:00.000Z",
+    "dry_run_status": {
+      "threads": "PASS (text-only)",
+      "x": "PASS",
+      "instagram": "SKIPPED (no image)",
+      "preflight": "PASS",
+      "last_check": "2026-04-06T20:30:00.000Z"
+    },
+    "bloqueantes": ["Falta audio master", "Falta thumbnail", "Falta imagen para IG/Threads"],
+    "youtube_status": {
+      "metadata_ready": true,
+      "video_master": false,
+      "thumbnail_ready": false,
+      "uploaded": false,
+      "published": false,
+      "metadata_file": "04_Produccion/EP_002/EP_002_YT_Metadata.md"
+    },
     "salidas": [
       "rss",
       "web",

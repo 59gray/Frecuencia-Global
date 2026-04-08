@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://frecuenciaglobal.vercel.app/sitemap-index.xml
+Sitemap: https://frecuenciaglobal.org/sitemap-index.xml

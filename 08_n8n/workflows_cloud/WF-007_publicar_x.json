@@ -65,7 +65,7 @@
         "options": {}
       },
       "credentials": {
-        "httpHeaderAuth": {"id": "V0SuupEfkzLlD5iJ", "name": "FG GitHub Auth"}
+        "httpHeaderAuth": {"id": "__PLACEHOLDER_GH_AUTH__", "name": "FG GitHub Auth"}
       }
     },
     {
@@ -81,16 +81,21 @@
     {
       "id": "wf007c_publish_x",
       "name": "Publicar en X",
-      "type": "n8n-nodes-base.twitter",
-      "typeVersion": 2,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
       "position": [880, 180],
       "parameters": {
-        "resource": "tweet",
-        "operation": "create",
-        "text": "={{ $json.xCopy }}"
+        "method": "POST",
+        "url": "={{ $vars.BRIDGE_URL ? ($vars.BRIDGE_URL + '/api/publish/x') : $vars.X_PUBLISH_WEBHOOK_URL }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={{ JSON.stringify({ pieza: $json.pieza, texto: $json.xCopy }) }}",
+        "options": {}
       },
       "credentials": {
-        "twitterOAuth2Api": {"id": "__PLACEHOLDER_TWITTER_AUTH__", "name": "FG X (Twitter)"}
+        "httpHeaderAuth": {"id": "__PLACEHOLDER_BRIDGE_AUTH__", "name": "FG Bridge Auth"}
       }
     },
     {
@@ -111,7 +116,7 @@
         "options": {"response": {"response": {"neverError": true}}}
       },
       "credentials": {
-        "httpHeaderAuth": {"id": "V0SuupEfkzLlD5iJ", "name": "FG GitHub Auth"}
+        "httpHeaderAuth": {"id": "__PLACEHOLDER_GH_AUTH__", "name": "FG GitHub Auth"}
       },
       "onError": "continueRegularOutput"
     },
@@ -122,7 +127,7 @@
       "typeVersion": 2,
       "position": [1320, 180],
       "parameters": {
-        "jsCode": "const trackerRes = $input.first().json;\nconst tweetData = $('Publicar en X').first().json;\nconst copyData = $('Extraer X Copy').first().json;\nconst pieza = copyData.pieza;\nconst tweetId = tweetData.id || tweetData.data?.id || 'unknown';\n\nlet tracker = {};\nif (trackerRes.content) {\n  try { tracker = JSON.parse(Buffer.from(trackerRes.content, 'base64').toString('utf8')); } catch(e) {}\n}\nconst sha = trackerRes.sha || null;\n\nconst ahora = new Date().toISOString();\nif (!tracker[pieza]) tracker[pieza] = { historial: [], publicaciones: [] };\ntracker[pieza].historial = tracker[pieza].historial || [];\ntracker[pieza].publicaciones = tracker[pieza].publicaciones || [];\ntracker[pieza].historial.push({ estado: 'PUBLISHED', timestamp: ahora });\ntracker[pieza].publicaciones.push({ plataforma: 'X', timestamp: ahora, tweetId });\ntracker[pieza].estado_actual = 'PUBLISHED';\ntracker[pieza].ultima_actualizacion = ahora;\n\nconst base64Content = Buffer.from(JSON.stringify(tracker, null, 2)).toString('base64');\nreturn [{ json: { pieza, tweetId, base64Content, ...(sha ? { sha } : {}) } }];"
+        "jsCode": "const trackerRes = $input.first().json;\nconst bridgeRes = $('Publicar en X').first().json;\nconst copyData = $('Extraer X Copy').first().json;\nconst pieza = copyData.pieza;\nconst tweetId = bridgeRes.tweetId || bridgeRes.postId || null;\nconst tweetUrl = bridgeRes.url || (tweetId ? 'https://x.com/i/web/status/' + tweetId : null);\n\nlet tracker = {};\nif (trackerRes.content) {\n  try { tracker = JSON.parse(Buffer.from(trackerRes.content, 'base64').toString('utf8')); } catch(e) {}\n}\nconst sha = trackerRes.sha || null;\n\nconst ahora = new Date().toISOString();\nif (!tracker[pieza]) tracker[pieza] = { historial: [], publicaciones: [] };\ntracker[pieza].historial = tracker[pieza].historial || [];\ntracker[pieza].publicaciones = tracker[pieza].publicaciones || [];\ntracker[pieza].historial.push({ estado: 'PUBLISHED', timestamp: ahora });\ntracker[pieza].publicaciones.push({ plataforma: 'X', timestamp: ahora, ...(tweetId ? { tweetId } : {}), ...(tweetUrl ? { url: tweetUrl } : {}) });\ntracker[pieza].estado_actual = 'PUBLISHED';\ntracker[pieza].ultima_actualizacion = ahora;\n\nconst base64Content = Buffer.from(JSON.stringify(tracker, null, 2)).toString('base64');\nreturn [{ json: { pieza, tweetId, tweetUrl, base64Content, ...(sha ? { sha } : {}) } }];"
       }
     },
     {
@@ -142,7 +147,7 @@
         "options": {}
       },
       "credentials": {
-        "httpHeaderAuth": {"id": "V0SuupEfkzLlD5iJ", "name": "FG GitHub Auth"}
+        "httpHeaderAuth": {"id": "__PLACEHOLDER_GH_AUTH__", "name": "FG GitHub Auth"}
       }
     },
     {
@@ -152,11 +157,11 @@
       "typeVersion": 1,
       "position": [1760, 180],
       "parameters": {
-        "workflowId": "a1b2c3d4-0002-4000-8000-000000000002",
+        "workflowId": "__LINK_SUB_002__",
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
-            "mensaje": "={{ '\\uD83D\\uDCC8 Publicado en X: ' + $('Actualizar Tracker').first().json.pieza + '\\nTweet ID: ' + $('Actualizar Tracker').first().json.tweetId }}"
+            "mensaje": "={{ '\uD83D\uDCC8 Publicado en X: ' + $('Actualizar Tracker').first().json.pieza + ($('Actualizar Tracker').first().json.tweetId ? '\nTweet ID: ' + $('Actualizar Tracker').first().json.tweetId : '') + ($('Actualizar Tracker').first().json.tweetUrl ? '\nURL: ' + $('Actualizar Tracker').first().json.tweetUrl : '') }}"
           }
         }
       }
@@ -168,13 +173,13 @@
       "typeVersion": 1,
       "position": [1980, 180],
       "parameters": {
-        "workflowId": "a1b2c3d4-0004-4000-8000-000000000004",
+        "workflowId": "__LINK_SUB_004__",
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
             "evento": "PUBLISHED_X",
             "pieza": "={{ $('Actualizar Tracker').first().json.pieza }}",
-            "detalles": "={{ 'Tweet ID: ' + $('Actualizar Tracker').first().json.tweetId }}",
+            "detalles": "={{ $('Actualizar Tracker').first().json.tweetId ? ('Tweet ID: ' + $('Actualizar Tracker').first().json.tweetId) : ($('Actualizar Tracker').first().json.tweetUrl ? ('URL: ' + $('Actualizar Tracker').first().json.tweetUrl) : 'Publicado vía bridge; tweetId no disponible') }}",
             "timestamp": "={{ new Date().toISOString() }}"
           }
         }
@@ -188,7 +193,7 @@
       "position": [2200, 180],
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({ ok: true, pieza: $('Actualizar Tracker').first().json.pieza, tweetId: $('Actualizar Tracker').first().json.tweetId, url: 'https://x.com/i/web/status/' + $('Actualizar Tracker').first().json.tweetId }) }}"
+        "responseBody": "={{ JSON.stringify({ ok: true, pieza: $('Actualizar Tracker').first().json.pieza, tweetId: $('Actualizar Tracker').first().json.tweetId || null, url: $('Actualizar Tracker').first().json.tweetUrl || null }) }}"
       }
     }
   ],

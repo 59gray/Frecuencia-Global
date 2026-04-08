@@ -65,6 +65,8 @@ const N8N_VARIABLES = [
   'GITHUB_BRANCH',
   'TELEGRAM_BOT_TOKEN',
   'TELEGRAM_CHAT_ID',
+  'BRIDGE_URL',
+  'X_PUBLISH_WEBHOOK_URL',
   'IG_PUBLISH_WEBHOOK_URL',
   'TIKTOK_PUBLISH_WEBHOOK_URL',
   'LINKEDIN_AUTHOR_URN',
@@ -121,6 +123,8 @@ const API_KEY  = cfg.N8N_API_KEY;
 const LEGACY_GH_CREDENTIAL_ID = 'V0SuupEfkzLlD5iJ';
 const LEGACY_SUB_002_ID = 'a1b2c3d4-0002-4000-8000-000000000002';
 const LEGACY_SUB_004_ID = 'a1b2c3d4-0004-4000-8000-000000000004';
+const CURRENT_SUB_002_ID = 'oeydfg22aym5l0';
+const CURRENT_SUB_004_ID = 'gU1WpHnU2Jmf3Wgj';
 
 // ─── HTTP helper ───────────────────────────────────────────────────────────────
 
@@ -195,6 +199,16 @@ function warn(msg) { console.log(`  ⚠️   ${msg}`); }
 function info(msg) { console.log(`  ℹ️   ${msg}`); }
 function fail(msg) { console.log(`  ❌  ${msg}`); }
 
+function variableValueForKey(key) {
+  if (cfg[key]) return cfg[key];
+
+  if (key === 'X_PUBLISH_WEBHOOK_URL' && cfg.BRIDGE_URL) {
+    return `${cfg.BRIDGE_URL.replace(/\/$/, '')}/api/publish/x`;
+  }
+
+  return '';
+}
+
 // ─── Steps ─────────────────────────────────────────────────────────────────────
 
 async function stepVariables() {
@@ -204,7 +218,7 @@ async function stepVariables() {
   let skipped = 0;
 
   for (const key of N8N_VARIABLES) {
-    const value = cfg[key] || '';
+    const value = variableValueForKey(key);
     const res = await apiRequest('POST', '/api/v1/variables', { key, value });
 
     if (res.status === 200 || res.status === 201) {
@@ -314,7 +328,7 @@ async function stepImport(ghCredId) {
   return importMap;
 }
 
-async function stepLink() {
+async function stepLink(importMap) {
   header('STEP 4 — Link SUB Placeholders');
 
   // Fetch live workflow list
@@ -342,6 +356,8 @@ async function stepLink() {
     '__LINK_SUB_004__': sub004.id,
     [LEGACY_SUB_002_ID]: sub002.id,
     [LEGACY_SUB_004_ID]: sub004.id,
+    [CURRENT_SUB_002_ID]: sub002.id,
+    [CURRENT_SUB_004_ID]: sub004.id,
   };
 
   const targets = workflows.filter(w =>
@@ -429,7 +445,7 @@ async function stepActivate() {
   console.log('  - WF-001 / WF-002 / WF-003 / WF-005 / WF-006');
   console.log('\n  Imported but left inactive:');
   console.log('  - WF-004 → optional wrapper log workflow');
-  console.log('  - WF-007 → requires X/Twitter OAuth credential');
+  console.log('  - WF-007 → requires FG Bridge Auth + BRIDGE_URL (or X_PUBLISH_WEBHOOK_URL fallback)');
   console.log('  - WF-008 → requires Instagram auth + IG_PUBLISH_WEBHOOK_URL');
   console.log('  - WF-009 → requires LinkedIn auth + LINKEDIN_AUTHOR_URN');
   console.log('  - WF-010 → requires TikTok auth + TIKTOK_PUBLISH_WEBHOOK_URL');
@@ -502,8 +518,9 @@ async function main() {
     summary.credential = 'ERROR';
   }
 
+  let importMap;
   try {
-    const importMap = await stepImport(ghCredId);
+    importMap = await stepImport(ghCredId);
     summary.imported = `${Object.keys(importMap).length}/${IMPORT_ORDER.length}`;
   } catch (e) {
     fail(`Import step error: ${e.message}`);
@@ -511,7 +528,7 @@ async function main() {
   }
 
   try {
-    await stepLink();
+    await stepLink(importMap);
     summary.linked = 'done';
   } catch (e) {
     fail(`Link step error: ${e.message}`);
@@ -549,9 +566,10 @@ async function main() {
   console.log('╚══════════════════════════════════════════════════════════╝');
 
   console.log('\n  Next steps:');
-  console.log('  1. Bind social credentials/variables for WF-007..010');
-  console.log('  2. Activate WF-007..010 after each platform is ready');
-  console.log(`  3. Open n8n cloud: ${BASE_URL}\n`);
+  console.log('  1. Set BRIDGE_URL once in n8n Cloud for all bridge-based workflows');
+  console.log('  2. Bind FG Bridge Auth to WF-007 and activate it when the bridge is reachable');
+  console.log('  3. Bind remaining social credentials/variables for WF-008..010 as needed');
+  console.log(`  4. Open n8n cloud: ${BASE_URL}\n`);
 }
 
 main().catch(e => {

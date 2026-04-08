@@ -1,3 +1,9 @@
+# === Local secrets (nunca commitear) ===
+.env.local
+*.local.env
+secrets.local.ps1
+.env.local.*
+
 # === n8n ===
 08_n8n/.env
 08_n8n/.env.cloud

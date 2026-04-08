@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
  * link_cloud_workflows.js
- * 
+ *
  * Post-import script for n8n cloud. After importing all cloud workflow JSONs,
  * this script resolves both portable placeholders and legacy fixed IDs for
  * SUB-002 / SUB-004 to the actual workflow UUIDs assigned by n8n.
- * 
+ *
  * Usage:
  *   node link_cloud_workflows.js --base-url https://frecuenciaglobal.app.n8n.cloud --api-key n8n_xxx
- * 
+ *
  * Prerequisites:
  *   - All SUB and WF workflows already imported into n8n cloud
  *   - n8n cloud API key with full access
@@ -27,6 +27,8 @@ const BASE_URL = args['base-url'] || process.env.N8N_BASE_URL;
 const API_KEY  = args['api-key']  || process.env.N8N_API_KEY;
 const LEGACY_SUB_002_ID = 'a1b2c3d4-0002-4000-8000-000000000002';
 const LEGACY_SUB_004_ID = 'a1b2c3d4-0004-4000-8000-000000000004';
+const CURRENT_SUB_002_ID = 'oeydfg22aym5l0';
+const CURRENT_SUB_004_ID = 'gU1WpHnU2Jmf3Wgj';
 
 if (!BASE_URL || !API_KEY) {
   console.error('ERROR: --base-url and --api-key are required.');
@@ -105,6 +107,8 @@ async function main() {
     '__LINK_SUB_004__': sub004.id,
     [LEGACY_SUB_002_ID]: sub002.id,
     [LEGACY_SUB_004_ID]: sub004.id,
+    [CURRENT_SUB_002_ID]: sub002.id,
+    [CURRENT_SUB_004_ID]: sub004.id,
   };
 
   // 3. Patch all WF-001 through WF-010 (and optionally SUB-001, SUB-003)

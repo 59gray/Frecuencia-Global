@@ -2,60 +2,154 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Política de Privacidad" description="Política de privacidad de Frecuencia Global.">
+<BaseLayout title="Política de Privacidad" description="Política de privacidad de Frecuencia Global. Información sobre datos, integraciones y derechos de los usuarios.">
   <section class="max-w-3xl mx-auto px-6 py-20">
     <h1 class="text-4xl font-bold mb-8 text-fg-cyan font-display">Política de Privacidad</h1>
-    <p class="text-fg-gray-400 text-sm mb-8">Última actualización: 4 de abril de 2026</p>
+    <p class="text-fg-gray-400 text-sm mb-8">Última actualización: 7 de abril de 2026</p>
 
     <div class="space-y-6 text-fg-gray-300 leading-relaxed">
-      <h2 class="text-xl font-semibold text-fg-white mt-8">1. Introducción</h2>
-      <p>Frecuencia Global se compromete a proteger la privacidad de sus visitantes y usuarios. Esta política describe cómo recopilamos, usamos y protegemos la información personal.</p>
+      <h2 class="text-xl font-semibold text-fg-white mt-8">1. Responsable del tratamiento</h2>
+      <div class="border-l-2 border-fg-cyan pl-6 py-2 bg-white/2">
+        <p class="text-fg-white font-semibold">Frecuencia Global</p>
+        <p>Proyecto editorial independiente dedicado al análisis internacional.</p>
+        <p class="mt-2">
+          <span class="text-fg-gray">Correo de contacto:</span><br>
+          <a href="mailto:contact@frecuenciaglobal.org" class="text-fg-cyan hover:underline">contact@frecuenciaglobal.org</a>
+        </p>
+      </div>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">2. Información que Recopilamos</h2>
-      <p>Recopilamos información mínima necesaria para el funcionamiento de nuestros servicios:</p>
+      <h2 class="text-xl font-semibold text-fg-white mt-8">2. Qué datos recopilamos</h2>
+      <p>Frecuencia Global recopila datos mínimos y necesarios para su operación editorial:</p>
+
+      <h3 class="text-lg font-semibold text-fg-white mt-6">2.1 Datos de navegación (automáticos)</h3>
       <ul class="list-disc list-inside space-y-2 ml-4">
-        <li>Datos de navegación anónimos (cookies esenciales)</li>
-        <li>Información de contacto cuando voluntariamente nos contactas</li>
-        <li>Tokens de API de redes sociales (únicamente para nuestras cuentas propias)</li>
+        <li>Dirección IP (anonimizada)</li>
+        <li>Tipo de navegador y dispositivo</li>
+        <li>Páginas visitadas y tiempo de permanencia</li>
+        <li>Origen del tráfico (referente)</li>
+      </ul>
+      <p class="text-sm text-fg-gray-400 mt-2">Estos datos son procesados por nuestro proveedor de hosting (Vercel) para operación técnica del sitio.</p>
+
+      <h3 class="text-lg font-semibold text-fg-white mt-6">2.2 Datos proporcionados voluntariamente</h3>
+      <ul class="list-disc list-inside space-y-2 ml-4">
+        <li>Nombre y correo electrónico (al usar el formulario de contacto)</li>
+        <li>Contenido del mensaje enviado</li>
       </ul>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">3. Uso de la Información</h2>
-      <p>Utilizamos la información recopilada para:</p>
+      <h3 class="text-lg font-semibold text-fg-white mt-6">2.3 Datos de integraciones con plataformas sociales</h3>
+      <p>Para publicar contenido en nuestras cuentas oficiales de redes sociales, utilizamos APIs oficiales que requieren tokens de autenticación. Estos tokens:</p>
       <ul class="list-disc list-inside space-y-2 ml-4">
-        <li>Operar y mantener nuestro sitio web</li>
-        <li>Publicar contenido en nuestras cuentas oficiales de redes sociales</li>
-        <li>Responder a consultas de contacto</li>
-        <li>Analizar tendencias de uso anónimas para mejorar nuestros servicios</li>
+        <li>Son exclusivos para nuestras cuentas oficiales de Frecuencia Global</li>
+        <li>No acceden a datos de usuarios de esas plataformas</li>
+        <li>Se almacenan de forma segura en variables de entorno</li>
+        <li>Nunca se incluyen en código público ni repositorios</li>
       </ul>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">4. Compartir Información</h2>
-      <p>No vendemos, alquilamos ni compartimos información personal con terceros. Utilizamos servicios de terceros únicamente para:</p>
+      <h2 class="text-xl font-semibold text-fg-white mt-8">3. Cómo usamos la información</h2>
       <ul class="list-disc list-inside space-y-2 ml-4">
-        <li>Hosting (Vercel)</li>
-        <li>Distribución de contenido en redes sociales (TikTok, Instagram, X/Twitter, LinkedIn)</li>
-        <li>Generación de imágenes (Google Gemini)</li>
+        <li><strong>Operación del sitio:</strong> Mantener el servicio web disponible y funcional</li>
+        <li><strong>Distribución editorial:</strong> Publicar contenido en nuestras cuentas oficiales de redes sociales (X/Twitter, Instagram, LinkedIn, TikTok, Threads)</li>
+        <li><strong>Atención a usuarios:</strong> Responder consultas enviadas a través del formulario de contacto</li>
+        <li><strong>Análisis anónimo:</strong> Comprender tendencias de uso agregadas para mejorar el contenido</li>
       </ul>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">5. Seguridad</h2>
-      <p>Implementamos medidas de seguridad razonables para proteger la información contra acceso no autorizado, alteración o divulgación. Los tokens de API se almacenan en variables de entorno seguras y nunca en código público.</p>
+      <h2 class="text-xl font-semibold text-fg-white mt-8">4. Integraciones con plataformas de terceros</h2>
+      <p>Frecuencia Global opera cuentas oficiales en las siguientes plataformas y utiliza sus APIs para publicar contenido editorial:</p>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">6. Cookies</h2>
-      <p>Utilizamos cookies esenciales para el funcionamiento del sitio. No utilizamos cookies de seguimiento de terceros ni publicidad comportamental.</p>
+      <div class="grid gap-4 sm:grid-cols-2 mt-4">
+        <div class="border border-white/10 p-4">
+          <p class="font-semibold text-fg-white">X (Twitter)</p>
+          <p class="text-sm text-fg-gray-400">@frec_global</p>
+          <p class="text-xs text-fg-gray-500 mt-1">Publicación de contenido editorial</p>
+        </div>
+        <div class="border border-white/10 p-4">
+          <p class="font-semibold text-fg-white">Instagram</p>
+          <p class="text-sm text-fg-gray-400">@globalfrequency.es</p>
+          <p class="text-xs text-fg-gray-500 mt-1">Publicación de contenido visual</p>
+        </div>
+        <div class="border border-white/10 p-4">
+          <p class="font-semibold text-fg-white">LinkedIn</p>
+          <p class="text-sm text-fg-gray-400">Frecuencia Global (Company Page)</p>
+          <p class="text-xs text-fg-gray-500 mt-1">Publicación de análisis profesional</p>
+        </div>
+        <div class="border border-white/10 p-4">
+          <p class="font-semibold text-fg-white">TikTok</p>
+          <p class="text-sm text-fg-gray-400">@frecuenciaglobal</p>
+          <p class="text-xs text-fg-gray-500 mt-1">Contenido audiovisual corto</p>
+        </div>
+        <div class="border border-white/10 p-4">
+          <p class="font-semibold text-fg-white">Threads</p>
+          <p class="text-sm text-fg-gray-400">@globalfrequency.es</p>
+          <p class="text-xs text-fg-gray-500 mt-1">Publicaciones de texto</p>
+        </div>
+        <div class="border border-white/10 p-4">
+          <p class="font-semibold text-fg-white">YouTube</p>
+          <p class="text-sm text-fg-gray-400">@FrecuenciaGlobal</p>
+          <p class="text-xs text-fg-gray-500 mt-1">Videopodcast</p>
+        </div>
+      </div>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">7. Derechos del Usuario</h2>
-      <p>Los usuarios tienen derecho a:</p>
+      <p class="mt-4 text-sm">
+        <strong>Nota importante:</strong> Estas integraciones son unidireccionales. Publicamos contenido desde nuestra plataforma hacia estas redes, pero no recopilamos ni almacenamos datos personales de los usuarios de dichas plataformas. Cada plataforma tiene su propia política de privacidad que rige los datos de sus usuarios.
+      </p>
+
+      <h2 class="text-xl font-semibold text-fg-white mt-8">5. Servicios de terceros</h2>
+      <p>Utilizamos los siguientes servicios para operar nuestro sitio:</p>
       <ul class="list-disc list-inside space-y-2 ml-4">
-        <li>Solicitar acceso a su información personal</li>
-        <li>Solicitar corrección de información inexacta</li>
-        <li>Solicitar eliminación de su información</li>
-        <li>Optar por no recibir comunicaciones</li>
+        <li><strong>Vercel:</strong> Hosting y distribución del sitio web</li>
+        <li><strong>Formspree:</strong> Procesamiento de formularios de contacto (cuando esté configurado)</li>
+        <li><strong>Plataformas sociales:</strong> X, Instagram, LinkedIn, TikTok, Threads, YouTube (para distribución de contenido)</li>
       </ul>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">8. Cambios en esta Política</h2>
-      <p>Podemos actualizar esta política de privacidad ocasionalmente. Los cambios se publicarán en esta página con la fecha de actualización.</p>
+      <h2 class="text-xl font-semibold text-fg-white mt-8">6. Seguridad de la información</h2>
+      <p>Implementamos las siguientes medidas de seguridad:</p>
+      <ul class="list-disc list-inside space-y-2 ml-4">
+        <li>Conexión HTTPS encriptada para todo el sitio</li>
+        <li>Tokens de API almacenados en variables de entorno seguras</li>
+        <li>Acceso restringido a credenciales (únicamente administradores del proyecto)</li>
+        <li>Sin almacenamiento de contraseñas de usuarios (no tenemos sistema de login público)</li>
+        <li>Revisión regular de integraciones y permisos de APIs</li>
+      </ul>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">9. Contacto</h2>
-      <p>Para preguntas sobre esta política de privacidad, contáctanos a través de nuestra <a href="/contacto" class="text-fg-cyan hover:underline">página de contacto</a>.</p>
+      <h2 class="text-xl font-semibold text-fg-white mt-8">7. Cookies y tecnologías similares</h2>
+      <p>Utilizamos únicamente cookies esenciales para el funcionamiento técnico del sitio. No utilizamos:</p>
+      <ul class="list-disc list-inside space-y-2 ml-4">
+        <li>Cookies de seguimiento de terceros</li>
+        <li>Publicidad comportamental</li>
+        <li>Análisis invasivos de navegación</li>
+        <li>Trackers de redes sociales embebidos</li>
+      </ul>
+
+      <h2 class="text-xl font-semibold text-fg-white mt-8">8. Tus derechos</h2>
+      <p>Como usuario, tienes derecho a:</p>
+      <ul class="list-disc list-inside space-y-2 ml-4">
+        <li><strong>Acceso:</strong> Solicitar qué información tenemos sobre ti</li>
+        <li><strong>Rectificación:</strong> Corregir información inexacta</li>
+        <li><strong>Eliminación:</strong> Solicitar la eliminación de tus datos</li>
+        <li><strong>Portabilidad:</strong> Recibir tus datos en formato legible</li>
+        <li><strong>Oposición:</strong> Oponerte al tratamiento de tus datos</li>
+      </ul>
+      <p class="mt-4">
+        Para ejercer cualquiera de estos derechos, contáctanos en <a href="mailto:contacto@frecuenciaglobal.org" class="text-fg-cyan hover:underline">contacto@frecuenciaglobal.org</a>.
+        También puedes consultar nuestra página específica de <a href="/data-deletion" class="text-fg-cyan hover:underline">Eliminación de Datos</a>.
+      </p>
+
+      <h2 class="text-xl font-semibold text-fg-white mt-8">9. Retención de datos</h2>
+      <ul class="list-disc list-inside space-y-2 ml-4">
+        <li><strong>Correos de contacto:</strong> Conservamos los mensajes durante el tiempo necesario para responder y dar seguimiento, típicamente 12 meses.</li>
+        <li><strong>Datos de navegación:</strong> Los logs de servidor se conservan según las políticas de Vercel (generalmente hasta 90 días).</li>
+        <li><strong>Tokens de API:</strong> Se mantienen activos mientras sean necesarios para la operación editorial y se rotan periódicamente.</li>
+      </ul>
+
+      <h2 class="text-xl font-semibold text-fg-white mt-8">10. Cambios en esta política</h2>
+      <p>Podemos actualizar esta política ocasionalmente para reflejar cambios en nuestros servicios o requisitos legales. Los cambios se publicarán en esta página con fecha de actualización visible.</p>
+
+      <h2 class="text-xl font-semibold text-fg-white mt-8">11. Contacto</h2>
+      <p>Para preguntas sobre esta política de privacidad o el tratamiento de tus datos:</p>
+      <div class="border border-fg-cyan/30 p-4 mt-4 bg-fg-cyan/5">
+        <p class="font-data text-xs uppercase tracking-widest text-fg-gray mb-1">Correo oficial</p>
+        <a href="mailto:contacto@frecuenciaglobal.org" class="text-fg-cyan font-semibold hover:underline">contacto@frecuenciaglobal.org</a>
+      </div>
     </div>
   </section>
 </BaseLayout>

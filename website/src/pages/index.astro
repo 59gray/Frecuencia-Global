@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import PillarSection from '../components/PillarSection.astro';
 import EpisodeCard from '../components/EpisodeCard.astro';
+import SignalNode from '../components/SignalNode.astro';
 import { getCollection } from 'astro:content';
 
 const allArticles = await getCollection('articles', ({ data }) => !data.draft);
@@ -37,50 +38,50 @@ const featuredArticle = latestArticle
   : undefined;
 
 const signalStats = [
-  { label: 'piezas publicadas', value: String(sorted.length).padStart(2, '0'), tone: 'cyan' as const },
-  { label: 'episodios activos', value: String(sortedEpisodes.length).padStart(2, '0'), tone: 'blue' as const },
-  { label: 'pilares activos', value: String(activePillars).padStart(2, '0'), tone: 'magenta' as const },
-  { label: 'base editorial', value: 'CDMX', tone: 'green' as const },
+  { label: 'artículos publicados', value: String(sorted.length).padStart(2, '0'), tone: 'cyan' as const },
+  { label: 'episodios de podcast', value: String(sortedEpisodes.length).padStart(2, '0'), tone: 'blue' as const },
+  { label: 'pilares editoriales', value: '04', tone: 'magenta' as const },
+  { label: 'plataformas activas', value: '06', tone: 'green' as const },
 ];
 
 const tickerItems = [
-  'geopolítica',
-  'cultura club',
-  'tecnología',
-  'podcast',
-  'videopodcast',
-  'política pública',
-  'narrativa visual',
   'análisis internacional',
+  'geopolítica contemporánea',
+  'cultura global',
+  'música y fronteras',
+  'política explicada',
+  'perspectiva latinoamericana',
+  'contenido editorial riguroso',
+  'distribución multiplataforma',
 ];
 
 const manifestoPoints = [
   {
-    label: 'Poder',
-    title: 'Leemos actores, incentivos y conflicto sin jerga de think tank.',
-    body: 'Cada pieza prioriza contexto útil, relaciones entre actores y una lectura clara de lo que está en juego.',
+    label: 'Análisis',
+    title: 'Geopolítica con perspectiva contemporánea.',
+    body: 'Cada pieza editorial combina rigor periodístico con lenguaje actual. Sin jargon innecesario, sin simplificaciones perezosas.',
   },
   {
-    label: 'Pulso',
-    title: 'La estética no adorna el análisis: lo vuelve magnético.',
-    body: 'Tomamos códigos del club, la radio y la cultura visual para que la información entre con más ritmo y permanezca más tiempo.',
+    label: 'Distribución',
+    title: 'El mismo contenido, optimizado para cada plataforma.',
+    body: 'Adaptamos nuestro análisis para X, Instagram, LinkedIn, TikTok, Threads y YouTube — respetando el formato y la audiencia de cada una.',
   },
   {
-    label: 'Traducción',
-    title: 'No simplificamos el mundo. Lo traducimos.',
-    body: 'El objetivo es bajar complejidad sin perder rigor, para que el sitio se sienta contemporáneo y serio a la vez.',
+    label: 'Presencia',
+    title: '6 plataformas. Una voz coherente.',
+    body: 'Estamos donde está la conversación global: desde el hilo técnico en X hasta el videopodcast en YouTube, pasando por el formato corto en TikTok.',
   },
 ];
 ---
 
-<BaseLayout title="Frecuencia Global — Análisis internacional a otro ritmo" description="Geopolítica, cultura y tecnología con estética de club nocturno. Análisis internacional para una nueva generación." image="/images/og/fg_website_hero_20260402_v1.webp">
+<BaseLayout title="Frecuencia Global — Análisis internacional con pulso electrónico" description="Proyecto editorial independiente dedicado al análisis internacional: geopolítica, cultura global y tecnología contados con rigor y energía contemporánea." image="/images/og/fg_website_hero_20260402_v1.webp">
   <Hero
     title="FRECUENCIA GLOBAL"
-    subtitle="Geopolítica, cultura y tecnología con pulso editorial de club nocturno. Un sitio para entender el mundo sin que parezca un informe gris."
-    ctaLabel="Explorar contenido"
-    ctaHref="/contenido"
-    secondaryLabel="Leer el manifiesto"
-    secondaryHref="/sobre"
+    subtitle="Análisis internacional que respeta tu inteligencia y tu tiempo. Cuatro pilares, un lenguaje visual de frecuencia grave."
+    ctaLabel="Explorar pilares"
+    ctaHref="/pilares"
+    secondaryLabel="Último drop"
+    secondaryHref="/contenido"
     backgroundImage="/images/og/fg_website_hero_20260402_v1.webp"
     featuredArticle={featuredArticle}
     stats={signalStats}
@@ -93,7 +94,7 @@ const manifestoPoints = [
         <div class="grid gap-8 border border-white/10 bg-[linear-gradient(135deg,rgba(0,229,255,0.08),rgba(255,255,255,0.02))] p-6 lg:grid-cols-[minmax(0,1.1fr)_340px] lg:p-8">
           <div>
             <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">podcast + videopodcast</p>
-            <h2 class="mt-4 max-w-[12ch] font-display text-4xl leading-[0.86] tracking-[0.08em] text-fg-white sm:text-5xl">
+            <h2 class="mt-4 font-display text-4xl leading-[0.86] tracking-[0.08em] text-fg-white sm:text-5xl">
               La señal ahora también sale en audio RSS y YouTube largo.
             </h2>
             <p class="mt-4 max-w-2xl text-base leading-relaxed text-fg-gray">
@@ -133,12 +134,62 @@ const manifestoPoints = [
     </section>
   )}
 
+  <!-- Content Distribution Section -->
+  <section class="relative py-16 lg:py-24 border-b border-white/10">
+    <div class="mx-auto max-w-[1500px] px-md lg:px-xl">
+      <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">distribución editorial</p>
+      <h2 class="mt-4 font-display text-4xl leading-[0.86] tracking-[0.08em] text-fg-white sm:text-5xl">
+        MULTIPLATAFORMA
+      </h2>
+      <p class="mt-4 max-w-2xl text-fg-gray">
+        Adaptamos cada pieza editorial para su mejor formato en cada plataforma.
+        El mismo análisis, optimizado para X, Instagram, LinkedIn, TikTok, Threads y YouTube.
+      </p>
+      <div class="mt-8 grid gap-6 lg:grid-cols-3">
+        <div class="border border-white/10 bg-white/[0.02] p-6">
+          <div class="flex items-center gap-3">
+            <SignalNode size="sm" color="var(--color-fg-cyan)" />
+            <p class="font-data text-xs uppercase tracking-wider text-fg-cyan">Texto y análisis</p>
+          </div>
+          <p class="mt-3 text-sm leading-relaxed text-fg-gray">
+            Hilos argumentativos en X y LinkedIn. Publicaciones de texto en Threads.
+            Análisis estructurados para lectores que buscan profundidad.
+          </p>
+        </div>
+        <div class="border border-white/10 bg-white/[0.02] p-6">
+          <div class="flex items-center gap-3">
+            <SignalNode size="sm" color="var(--color-pilar-p3)" />
+            <p class="font-data text-xs uppercase tracking-wider text-pilar-p3">Visual y audio</p>
+          </div>
+          <p class="mt-3 text-sm leading-relaxed text-fg-gray">
+            Covers editoriales para Instagram. Videopodcast en YouTube.
+            Formatos cortos para TikTok. Cada pieza en su medio ideal.
+          </p>
+        </div>
+        <div class="border border-white/10 bg-white/[0.02] p-6">
+          <div class="flex items-center gap-3">
+            <SignalNode size="sm" color="var(--color-pilar-p2)" />
+            <p class="font-data text-xs uppercase tracking-wider text-pilar-p2">Presencia coherente</p>
+          </div>
+          <p class="mt-3 text-sm leading-relaxed text-fg-gray">
+            Una misma voz editorial en 6 plataformas. Sin fragmentación de mensaje,
+            sin perder la identidad de Frecuencia Global en ningún canal.
+          </p>
+        </div>
+      </div>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a href="/pilares" class="inline-flex items-center justify-center border border-fg-cyan bg-fg-cyan px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-black transition-transform duration-300 hover:-translate-y-0.5">ver pilares editoriales</a>
+        <a href="/contenido" class="inline-flex items-center justify-center border border-white/15 px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-white transition-colors duration-300 hover:border-white/35 hover:bg-white/5">explorar archivo</a>
+      </div>
+    </div>
+  </section>
+
   <section class="relative py-16 lg:py-24">
     <div class="mx-auto grid max-w-[1500px] gap-10 px-md lg:grid-cols-[minmax(0,0.95fr)_1.05fr] lg:gap-14 lg:px-xl">
       <div>
-        <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">modo de lectura</p>
+        <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">filosofía editorial</p>
         <h2 class="mt-4 max-w-[12ch] font-display text-4xl leading-[0.86] tracking-[0.08em] text-fg-white sm:text-5xl lg:text-6xl">
-          No contamos el mundo como noticiero. Lo pinchamos como set.
+          El rigor no está reñido con el pulso.
         </h2>
       </div>
 
@@ -190,16 +241,17 @@ const manifestoPoints = [
           Si la señal te sirve, sigamos construyéndola.
         </h2>
         <p class="mt-4 max-w-2xl text-base leading-relaxed text-fg-gray">
-          El siguiente paso es llenar cada pilar con más drops, consolidar la línea de podcast semanal y conectar un dominio propio para dejar atrás el `vercel.app`.
+          El siguiente paso es consolidar cada pilar editorial, expandir la línea de podcast semanal
+          y profundizar el análisis internacional desde nuestra perspectiva.
         </p>
       </div>
 
       <div class="mt-8 flex flex-wrap gap-4 lg:mt-0">
         <a
-          href="/contenido"
+          href="/contacto"
           class="inline-flex items-center justify-center border border-fg-cyan bg-fg-cyan px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-black transition-transform duration-300 hover:-translate-y-0.5"
         >
-          ver archivo
+          contactar
         </a>
         <a
           href="/podcast"

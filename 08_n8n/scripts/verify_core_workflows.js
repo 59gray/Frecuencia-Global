@@ -33,6 +33,7 @@ const PLACEHOLDERS = [
   '__LINK_SUB_002__',
   '__LINK_SUB_004__',
   '__PLACEHOLDER_GH_AUTH__',
+  '__PLACEHOLDER_BRIDGE_AUTH__',
   'a1b2c3d4-0002-4000-8000-000000000002',
   'a1b2c3d4-0004-4000-8000-000000000004',
   'V0SuupEfkzLlD5iJ',
@@ -250,6 +251,17 @@ async function fetchWorkflowMap() {
   return workflows;
 }
 
+async function fetchVariableMap() {
+  const listRes = await n8nRequest('GET', '/api/v1/variables?limit=100');
+  ensure(listRes.status === 200, `Cannot fetch variables (${listRes.status})`);
+  const variables = listRes.body.data || listRes.body || [];
+  const map = {};
+  for (const item of variables) {
+    if (item && item.key) map[item.key] = item.value;
+  }
+  return map;
+}
+
 async function verifyActiveTargets() {
   logSection('Workflow Activation');
   const workflows = await fetchWorkflowMap();
@@ -264,6 +276,14 @@ async function verifyActiveTargets() {
   }
 
   return results;
+}
+
+function deriveBridgeHealthUrl(bridgeUrl, xPublishWebhookUrl) {
+  if (bridgeUrl) return `${String(bridgeUrl).replace(/\/$/, '')}/api/health`;
+  if (xPublishWebhookUrl && String(xPublishWebhookUrl).includes('/api/publish/x')) {
+    return String(xPublishWebhookUrl).replace(/\/api\/publish\/x\/?$/, '/api/health');
+  }
+  return '';
 }
 
 async function verifyDefinitions(workflowMap) {
@@ -288,6 +308,67 @@ async function verifyDefinitions(workflowMap) {
     }
 
     ok(`${wf.name} linked with live workflow IDs/credentials`);
+  }
+}
+
+async function verifyXPilotReadiness() {
+  logSection('WF-007 X Pilot Readiness');
+
+  const workflows = await fetchWorkflowMap();
+  const wf = workflows.find((item) => item.name && item.name.includes('WF-007'));
+  ensure(wf, 'WF-007 not found in n8n Cloud');
+
+  if (wf.active) ok(`${wf.name} active`);
+  else warn(`${wf.name} is present but inactive`);
+
+  const detailRes = await n8nRequest('GET', `/api/v1/workflows/${wf.id}`);
+  ensure(detailRes.status === 200, `Cannot fetch workflow detail for ${wf.name} (${detailRes.status})`);
+
+  const raw = JSON.stringify(detailRes.body);
+  const leftovers = PLACEHOLDERS.filter((token) => raw.includes(token));
+  ensure(leftovers.length === 0, `${wf.name} still contains placeholders/legacy refs: ${leftovers.join(', ')}`);
+
+  const nodes = detailRes.body.nodes || [];
+  const publishNode = nodes.find((node) => node.name === 'Publicar en X');
+  ensure(publishNode, 'WF-007 missing node "Publicar en X"');
+  ensure(publishNode.type === 'n8n-nodes-base.httpRequest', 'WF-007 "Publicar en X" is not an HTTP Request node');
+
+  const publishUrl = String(publishNode.parameters?.url || '');
+  ensure(
+    publishUrl.includes('BRIDGE_URL') || publishUrl.includes('X_PUBLISH_WEBHOOK_URL'),
+    'WF-007 publish node does not reference BRIDGE_URL or X_PUBLISH_WEBHOOK_URL'
+  );
+  ensure(publishNode.credentials?.httpHeaderAuth, 'WF-007 publish node has no Header Auth credential bound');
+  ok('WF-007 publish node points to bridge-based URL expression');
+
+  const variables = await fetchVariableMap();
+  const bridgeUrl = String(variables.BRIDGE_URL || '').trim();
+  const xPublishWebhookUrl = String(variables.X_PUBLISH_WEBHOOK_URL || '').trim();
+
+  if (bridgeUrl) ok(`BRIDGE_URL present: ${bridgeUrl}`);
+  else warn('BRIDGE_URL missing in n8n Cloud variables');
+
+  if (xPublishWebhookUrl) info(`X_PUBLISH_WEBHOOK_URL present: ${xPublishWebhookUrl}`);
+
+  if (bridgeUrl && xPublishWebhookUrl) {
+    const expected = `${bridgeUrl.replace(/\/$/, '')}/api/publish/x`;
+    if (xPublishWebhookUrl === expected) ok('X_PUBLISH_WEBHOOK_URL matches BRIDGE_URL');
+    else warn(`X_PUBLISH_WEBHOOK_URL mismatch. Expected ${expected} but found ${xPublishWebhookUrl}`);
+  }
+
+  const healthUrl = deriveBridgeHealthUrl(bridgeUrl, xPublishWebhookUrl);
+  if (!healthUrl) {
+    warn('No bridge health URL could be derived from BRIDGE_URL/X_PUBLISH_WEBHOOK_URL');
+    return;
+  }
+
+  try {
+    const healthRes = await requestJson(healthUrl);
+    ensure(healthRes.status === 200, `Bridge healthcheck failed (${healthRes.status})`);
+    ensure(healthRes.body && healthRes.body.ok === true, 'Bridge healthcheck returned ok=false');
+    ok(`Bridge healthcheck OK (${healthUrl})`);
+  } catch (error) {
+    warn(`Bridge healthcheck unavailable: ${error.message || error}`);
   }
 }
 
@@ -418,12 +499,13 @@ async function runFullCoreVerification() {
 }
 
 async function main() {
-  console.log('Frecuencia Global - Core Workflow Verification');
+  console.log('Frecuencia Global - Cloud Workflow Verification');
   console.log(`Target: ${BASE_URL}`);
   console.log(`Env: ${envPath}`);
 
   const startedAt = Date.now();
   await verifyActiveTargets().then(verifyDefinitions);
+  await verifyXPilotReadiness();
   await verifyTelegramHealth();
   await runFullCoreVerification();
 

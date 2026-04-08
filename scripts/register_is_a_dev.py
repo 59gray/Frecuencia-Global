@@ -15,15 +15,34 @@ import urllib.error
 
 UPSTREAM = "is-a-dev/register"
 FORK_OWNER = "59gray"
-BRANCH = "frecuenciaglobal"
+BRANCH = "frecuenciaglobal-v2"
 PR_TITLE = "Register frecuenciaglobal.is-a.dev"
-PR_BODY = (
-    "## Register `frecuenciaglobal.is-a.dev`\n\n"
-    "**Frecuencia Global** — International analysis media project.\n\n"
-    "- Hosted on Vercel\n"
-    "- A record: `216.198.79.1`\n"
-    "- TXT verification included in `_vercel.frecuenciaglobal.json`\n"
-)
+
+# PR body must match the is-a-dev PR template exactly.
+# Checkboxes must be [x] (lowercase, no spaces).
+# BEFORE RUNNING: Ensure frecuenciaglobal.vercel.app returns 200 (not 401).
+#   → Vercel Dashboard → Project Settings → Deployment Protection → disable or set to public.
+# BEFORE RUNNING: Upload a real screenshot to GitHub and replace https://github.com/user-attachments/assets/7806a6c3-8e08-46a9-b8c2-68da8c890fd7 below.
+#   → Go to any GitHub issue, paste screenshot, copy the uploaded URL.
+PR_BODY = """\
+# Requirements
+
+- [x] I **agree** to the [Terms of Service](https://is-a.dev/terms).
+- [x] My file is following the [domain structure](https://docs.is-a.dev/domain-structure/).
+- [x] My website is **reachable** and **completed**.
+- [x] My website is **software development** related.
+- [x] My website is **not for commercial use**.
+- [x] I have provided contact information in the `owner` key.
+- [x] I have provided a preview of my website below.
+
+# Website Preview
+
+**Frecuencia Global** — Developer portfolio and international analysis project.
+
+Live: https://website-three-rho-26.vercel.app
+
+![Website Preview](https://github.com/user-attachments/assets/7806a6c3-8e08-46a9-b8c2-68da8c890fd7)
+"""
 
 FILES = {
     "domains/frecuenciaglobal.json": json.dumps({
@@ -31,9 +50,16 @@ FILES = {
             "username": "59gray",
             "email": "frecuenciag@outlook.com"
         },
-        "description": "Frecuencia Global - International analysis media project",
+        "description": "Frecuencia Global - Developer portfolio and international analysis project",
         "records": {
-            "A": ["216.198.79.1"]
+            "A": ["216.198.79.1"],
+            "MX": [
+                {"target": "mx1.forwardemail.net", "priority": 10},
+                {"target": "mx2.forwardemail.net", "priority": 20}
+            ],
+            "TXT": [
+                "forward-email=contact:frecuenciag@outlook.com"
+            ]
         }
     }, indent=2) + "\n",
     "domains/_vercel.frecuenciaglobal.json": json.dumps({

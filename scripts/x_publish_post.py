@@ -65,12 +65,22 @@ def extract_x_content(pieza: str) -> str | None:
         return None
 
     content = filepath.read_text(encoding="utf-8")
-    # Regex robusto: ignora el tag de lenguaje (ej. ```text)
-    pattern = r"## X \(Twitter\)\s*\n```[^\n]*\n(.*?)```"
-    match = re.search(pattern, content, re.DOTALL)
-
+    # Formato 1: contenido en code fences (``` ... ```)
+    pattern_fenced = r"## X \(Twitter\)\s*\n```[^\n]*\n(.*?)```"
+    match = re.search(pattern_fenced, content, re.DOTALL)
     if match:
         return match.group(1).strip()
+
+    # Formato 2: texto plano entre heading y siguiente delimitador (--- o ##)
+    pattern_plain = r"## X \(Twitter\)\s*\n(.*?)(?=\n---|\n## |\Z)"
+    match = re.search(pattern_plain, content, re.DOTALL)
+    if match:
+        text = match.group(1).strip()
+        # Limpiar líneas de metadata como _Longitud: ..._
+        lines = [l for l in text.split("\n") if not l.strip().startswith("_Longitud:")]
+        text = "\n".join(lines).strip()
+        if text:
+            return text
 
     print(f"[WARN] No se encontró sección X (Twitter) en {filepath}")
     return None

@@ -3,7 +3,7 @@
 **Sistema:** Frecuencia Global  
 **Código:** RULE_Tone_of_Voice  
 **Severidad:** BLOQUEANTE — Tono incorrecto para el pilar = rechazo en QA  
-**Aplica a:** Scriptwriting Agent, QA/Consistency Agent
+**Aplica a:** Scriptwriting Agent, AGENT_15 Script Shortform, QA/Consistency Agent, AGENT_17 Electronic Culture Curator (solo capa cultural), AGENT_06 QA
 
 ---
 

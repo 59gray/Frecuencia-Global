@@ -19,16 +19,18 @@ import argparse
 from pathlib import Path
 from datetime import datetime
 
+# Autoload de secretos desde .env.local
+sys.path.insert(0, str(Path(__file__).parent))
+from utils import get_required_secret
+
 from google import genai
 from google.genai import types
 
 REPO_ROOT = Path(__file__).parent.parent
 PROMPTS_DIR = REPO_ROOT / "system" / "gemini" / "prompts"
 OUTPUT_DIR = REPO_ROOT / "system" / "gemini" / "outputs" / "visual"
-ASSETS_DIR = REPO_ROOT / "06_Assets" / "P1_001"
 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-ASSETS_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def extract_primary_prompt(prompt_file: Path) -> str:
@@ -58,12 +60,10 @@ def main():
     parser.add_argument("--model", default="imagen-4.0-generate-001", help="Modelo a usar")
     parser.add_argument("--aspect", default="4:5", help="Aspect ratio (3:4, 4:5, 9:16, 1:1, 16:9)")
     parser.add_argument("--count", type=int, default=2, help="Número de imágenes a generar")
+    parser.add_argument("--pieza", help="Fuerza la carpeta destino (ej: P1_002)")
     args = parser.parse_args()
 
-    api_key = args.api_key or os.environ.get("GEMINI_API_KEY")
-    if not api_key:
-        print("[ERROR] Necesitas --api-key o env var GEMINI_API_KEY")
-        sys.exit(1)
+    api_key = args.api_key or get_required_secret("GEMINI_API_KEY")
 
     # Get prompt
     if args.prompt:
@@ -76,13 +76,23 @@ def main():
             print(f"[ERROR] No se encontró prompt en {prompt_file}")
             sys.exit(1)
         output_name = generate_output_name(prompt_file)
+
+        if args.pieza:
+            pieza = args.pieza
+        else:
+            match = re.search(r"(P[0-9]_[0-9]{3})", args.prompt)
+            pieza = match.group(1) if match else "misc"
         print(f"[INFO] Prompt: {args.prompt} ({len(prompt_text)} chars)")
     elif args.text:
         prompt_text = args.text
         output_name = f"FG_manual_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        pieza = args.pieza or "misc"
     else:
         print("[ERROR] Especifica --prompt o --text")
         sys.exit(1)
+
+    assets_dir = REPO_ROOT / "06_Assets" / pieza
+    assets_dir.mkdir(parents=True, exist_ok=True)
 
     client = genai.Client(api_key=api_key)
     is_imagen = "imagen" in args.model.lower()
@@ -108,7 +118,7 @@ def main():
                 saved.append(out_path)
                 print(f"[OK] Guardado: {out_path}")
 
-                asset_path = ASSETS_DIR / filename
+                asset_path = assets_dir / filename
                 img.image.save(str(asset_path))
                 print(f"[OK] Copiado a: {asset_path}")
 
@@ -132,7 +142,7 @@ def main():
                     saved.append(out_path)
                     print(f"[OK] Guardado: {out_path}")
 
-                    asset_path = ASSETS_DIR / filename
+                    asset_path = assets_dir / filename
                     with open(asset_path, "wb") as f:
                         f.write(part.inline_data.data)
                     print(f"[OK] Copiado a: {asset_path}")

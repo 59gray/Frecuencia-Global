@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: process.env.FG_WEBSITE_URL ?? 'https://frecuenciaglobal.vercel.app',
+  site: 'https://frecuenciaglobal.org',
   vite: {
     plugins: [tailwindcss()]
   },

@@ -131,3 +131,119 @@ def env_file_exists(env_file=".env.local"):
 def repo_root():
     """Retorna la raíz del repositorio."""
     return _REPO_ROOT
+
+
+# ── Configuración Centralizada del Proyecto ─────────────────────────────
+class FGConfig:
+    """Configuración centralizada del proyecto Frecuencia Global.
+
+    Todas las rutas y URLs hardcodeadas se centralizan aquí para
+    mantenibilidad. Cualquier script puede importar:
+
+        from utils import FGConfig
+        print(FGConfig.WEBSITE_URL)
+    """
+    # URLs
+    WEBSITE_URL = "https://59gray.github.io"
+    DOMAIN = "frecuenciaglobal.is-a.dev"
+    BRIDGE_URL = "http://localhost:3001"
+    BRIDGE_HOST = "0.0.0.0"
+    BRIDGE_PORT = 3001
+
+    # Rutas
+    @classmethod
+    def deploy_repo(cls):
+        """Ruta al repo de despliegue (59gray.github.io)."""
+        return Path.home() / "Documents" / "59gray.github.io"
+
+    @classmethod
+    def repo_root(cls):
+        """Raíz del repositorio Frecuencia Global."""
+        return _REPO_ROOT
+
+    @classmethod
+    def operations_dir(cls):
+        """Directorio 07_Operaciones."""
+        return _REPO_ROOT / "07_Operaciones"
+
+    @classmethod
+    def produccion_dir(cls):
+        """Directorio 04_Produccion."""
+        return _REPO_ROOT / "04_Produccion"
+
+    @classmethod
+    def assets_dir(cls):
+        """Directorio 06_Assets."""
+        return _REPO_ROOT / "06_Assets"
+
+    @classmethod
+    def website_dir(cls):
+        """Directorio website/."""
+        return _REPO_ROOT / "website"
+
+
+# ── Utilidades DNS Robustas ────────────────────────────────────────────
+import socket
+
+
+def dns_lookup_a(domain: str) -> list:
+    """Resuelve registros A usando socket (robusto, no depende de nslookup).
+
+    Retorna lista de IPs o lista vacía si falla.
+    """
+    try:
+        result = socket.getaddrinfo(domain, None, socket.AF_INET)
+        ips = list(set(r[4][0] for r in result))
+        return sorted(ips)
+    except socket.gaierror:
+        return []
+    except Exception:
+        return []
+
+
+def dns_lookup_mx(domain: str) -> list:
+    """Resuelve registros MX usando nslookup pero con parsing robusto.
+
+    Retorna lista de tuplas (prioridad, server) o lista vacía si falla.
+    """
+    try:
+        import subprocess
+        result = subprocess.run(
+            ["nslookup", "-type=mx", domain],
+            capture_output=True, text=True, timeout=10
+        )
+        mxs = []
+        for line in result.stdout.splitlines():
+            line = line.lower().strip()
+            # Buscar líneas como: "frecuenciaglobal.is-a.dev    MX preference = 10, mail exchanger = mx1.forwardemail.net"
+            if "mx preference" in line and "mail exchanger" in line:
+                try:
+                    # Extraer preference y exchanger
+                    pref_start = line.find("=", line.find("mx preference")) + 1
+                    pref_end = line.find(",", pref_start)
+                    priority = int(line[pref_start:pref_end].strip())
+
+                    exchanger_start = line.find("=", line.find("mail exchanger")) + 1
+                    exchanger = line[exchanger_start:].strip()
+                    mxs.append((priority, exchanger))
+                except (ValueError, IndexError):
+                    continue
+            # Fallback: líneas con "mail exchanger" sin preference explícita
+            elif "mail exchanger" in line and "=" in line:
+                parts = line.split("=")
+                if len(parts) >= 2:
+                    exchanger = parts[-1].strip()
+                    if exchanger and exchanger != domain:
+                        mxs.append((0, exchanger))
+        return sorted(mxs)
+    except Exception:
+        return []
+
+
+def is_forwardemail_mx_active(domain: str) -> bool:
+    """Verifica si ForwardEmail MX records están activos para el dominio."""
+    mxs = dns_lookup_mx(domain)
+    for _, server in mxs:
+        if "forwardemail.net" in server.lower():
+            return True
+    return False

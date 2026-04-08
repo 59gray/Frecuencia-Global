@@ -11,6 +11,7 @@ Marca multiplataforma que traduce geopolítica, relaciones internacionales y cul
 ```text
 system/                          -> Sistema operativo de agentes
 |-- SISTEMA_MAESTRO.md           -> Documento central (empieza aqui)
+|-- editorial/                   -> Célula editorial 13-18, flujo E2E, matriz, schema JSON
 |-- agents/                      -> Agentes core, soporte y especialidad
 |-- playbooks/                   -> Procedimientos operativos
 |-- templates/                   -> Plantillas base + paquete formal de video

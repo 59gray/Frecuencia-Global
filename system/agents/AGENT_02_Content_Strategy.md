@@ -195,9 +195,21 @@ Definir qué contenido se produce, cuándo, para quién y en qué formato. Es el
 
 ---
 
+## Relación con AGENT_13 (Editorial Lead)
+
+- **Mandato:** La línea editorial prioritaria (qué temas entran, veto, riesgo, ángulo FG obligatorio) la define **AGENT_13**. Content Strategy **ejecuta** calendario, briefs y repurposing **alineado** a ese mandato.
+- **No puede:** redefinir pilares del [`SISTEMA_MAESTRO`](../SISTEMA_MAESTRO.md) ni sortear un veto de Lead sin escalamiento a Farid.
+- **Flujo:** IdeaCard o tema candidato → **AGENT_13** decide o condiciona → este agente completa [`TPL_Brief_Contenido`](../templates/TPL_Brief_Contenido.md) incorporando el **mandato de línea** (párrafo explícito en el brief).
+- **Handoff:** Brief listo → **AGENT_14** (ResearchPack + ClaimSheet) cuando haya investigación; en piezas express, Lead puede autorizar atajo documentado.
+
+---
+
 ## DOCUMENTOS DE REFERENCIA
 
 - [`01_Estrategia/FG_Blueprint_Maestro.md`](../../01_Estrategia/FG_Blueprint_Maestro.md) — Estrategia fundacional
+- [`system/agents/AGENT_13_Editorial_Lead.md`](AGENT_13_Editorial_Lead.md) — Editorial Lead
+- [`system/editorial/MATRIZ_DECISION_EDITORIAL.md`](../editorial/MATRIZ_DECISION_EDITORIAL.md) — Matriz de temas y formatos
+
 - [`system/SISTEMA_MAESTRO.md`](../SISTEMA_MAESTRO.md) — Documento maestro del sistema
 - [`system/playbooks/PB_06_Produccion_Semanal.md`](../playbooks/PB_06_Produccion_Semanal.md) — Playbook de producción semanal
 

@@ -49,6 +49,14 @@ These are still useful as references, but they should not be treated as the defa
 - `FG_CHROME_EXE`
 - `FG_CHROME_USER_DATA_DIR`
 
+## Depuración estructurada (`FG_DEBUG`)
+
+- Módulo: `scripts/fg_debug.py` — escribe líneas **NDJSON** (una por evento) en `logs/fg_debug.ndjson` (carpeta `logs/` ignorada por git).
+- Activar: `FG_DEBUG=1` (también `true` / `yes` / `on`).
+- Opcional: `FG_DEBUG_LOG` (ruta relativa al repo o absoluta), `FG_DEBUG_INGEST=1` + `FG_DEBUG_INGEST_URL` para POST al ingest de una sesión de depuración, `FG_DEBUG_SESSION_ID` para la cabecera `X-Debug-Session-Id`.
+- Integración de referencia: `fg_automation_config.py` (lanzamiento de Chrome y `check_session_valid`) e `ig_publish_post.py` (flujo principal y resultado JS de share).
+- Los campos de datos se **sanitizan** (p. ej. claves que contienen `token`, `secret`, `password`) para no volcar secretos.
+
 ## Suggested install
 
 ```powershell

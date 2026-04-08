@@ -41,7 +41,7 @@ Fuente: ICPC, 2024
 150-200 FALLOS CADA AÑO
 
 **Explicación (Space Grotesk, máx. 40 palabras):**  
-Anclas de barcos, redes de pesca, terremotos y hasta mordidas de tiburones dañan cables cada semana. Solo hay ~60 barcos de reparación en el mundo. Una rotura puede tardar semanas en arreglarse.
+Anclas de barcos, redes de pesca, terremotos y hasta mordidas de tiburones dañan cables cada semana. La flota mundial de reparación es pequeña frente a la extensión de la red. Una rotura puede tardar semanas en arreglarse.
 
 **Fuente (JetBrains Mono):**  
 Fuente: ICPC, 2024
@@ -123,3 +123,20 @@ Guarda este post → Sigue @frecuenciaglobal para más.
 - **Frases características usadas:** "Nadie está hablando de esto" (slide 8) — directamente del tono GD.
 - **Max 40 palabras por explicación:** Cumplido en todos los slides.
 - **Sin opiniones en primera persona:** Cumplido. Solo datos y citas textuales.
+
+---
+
+## Mapeo ClaimSheet (AGENT_15 / AGENT_14)
+
+Referencia: [`_specs/ClaimSheet_P1_001_v1.md`](_specs/ClaimSheet_P1_001_v1.md)
+
+| Slide | IDs |
+|-------|-----|
+| 1 | C1 |
+| 2 | C2 |
+| 3 | C3 |
+| 4 | C4a, C4b |
+| 5 | C5 |
+| 6 | C6 (+ C6b Ivy Bells: verificar fuente en ClaimSheet o retirar nombre en diseño) |
+| 7 | C7 |
+| 8 | C8 (posicionamiento marca) |
