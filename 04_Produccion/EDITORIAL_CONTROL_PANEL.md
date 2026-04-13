@@ -11,7 +11,7 @@
 
 | Área | Estado |
 |------|--------|
-| Piloto Swarm (ejecución de temas) | **EN EJECUCIÓN** — MVP_01 en PACKAGE_READY (Día 1); tracker en [`swarm_mvp_tracker.json`](swarm_mvp_tracker.json) |
+| Piloto Swarm (ejecución de temas) | **EN EJECUCIÓN** — MVP_01 PUBLISH_READY (pendiente gate humano); MVP_02 es siguiente; tracker en [`swarm_mvp_tracker.json`](swarm_mvp_tracker.json) |
 | P1_002 | **COMPLETED** — publicado y cerrado 2026-04-13; sin incidencias post-publicación |
 | Política SANDBOX → oficial | **ADOPTADA** — [`07_Operaciones/SANDBOX_TO_OFFICIAL_POLICY_DERIVED.md`](../07_Operaciones/SANDBOX_TO_OFFICIAL_POLICY_DERIVED.md) (EDIT-002 cerrado) |
 | EP_001 / EP_002 (POC) | **Default documental** — `SANDBOX_FROZEN`; conformidad operador 2026-04-13 |
@@ -85,10 +85,10 @@ El frente editorial opera en **dos capas**: (a) **piloto Swarm MVP** — tracker
 
 ## 7. Siguiente foco recomendado
 
-1. **Ejecución Swarm:** MVP_01 en PACKAGE_READY; siguiente: QA final (SLA ≤60min) → producción de assets visuales.  
+1. **Ejecución Swarm:** MVP_01 PUBLISH_READY (gate humano pendiente). Siguiente ejecución: MVP_02 (Día 2).  
 2. **Nuevas piezas:** [`BRIEF_TO_PUBLISHREADY_CHECKLIST.md`](BRIEF_TO_PUBLISHREADY_CHECKLIST.md).  
 3. **Matriz:** [`PIECE_STATUS_MATRIX.md`](PIECE_STATUS_MATRIX.md) — P1_002 COMPLETED.
 
 ---
 
-*Última actualización: 2026-04-13 — P1_002 COMPLETED; Swarm MVP Día 1: MVP_01 PACKAGE_READY; cola vacía.*
+*Última actualización: 2026-04-13 — P1_002 COMPLETED; MVP_01 PUBLISH_READY (pendiente gate humano); cola vacía.*

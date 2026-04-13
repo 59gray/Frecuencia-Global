@@ -24,7 +24,8 @@
 
 | ID tracker | Formato (plan) | Pilar | Research | Copy / script | Asset visual | QA | Publish-ready | Notas |
 |------------|----------------|-------|----------|---------------|--------------|-----|---------------|--------|
-| MVP_01 … MVP_10 | Ver [`SWARM_MVP_PILOTO_2_SEMANAS.md`](SWARM_MVP_PILOTO_2_SEMANAS.md) §6 | Asignado en JSON (`pilar`) | — | — | — | — | — | **Títulos** rellenados 2026-04-13 (sesión IA); ejecución según gates — [`SWARM_EXECUTION_BACKLOG.md`](SWARM_EXECUTION_BACKLOG.md) |
+| **MVP_01** | Carrusel 5 slides | Geopolitik Drop | ✓ [`MVP_01_ResearchPack.md`](../03_Editorial/MVP_01_ResearchPack.md) | ✓ [`MVP_01_Script.md`](MVP_01_Script.md) | ✓ (5 PNG) `06_Assets/MVP_01/` | ✓ QA aprobada | **PUBLISH_READY** | [`MVP_01_PublishReady.md`](MVP_01_PublishReady.md) — pendiente gate humano para fecha | — |
+| MVP_02 … MVP_10 | Ver [`SWARM_MVP_PILOTO_2_SEMANAS.md`](SWARM_MVP_PILOTO_2_SEMANAS.md) §6 | Asignado en JSON (`pilar`) | — | — | — | — | — | Ejecución según gates — [`SWARM_EXECUTION_BACKLOG.md`](SWARM_EXECUTION_BACKLOG.md) |
 
 ---
 
@@ -34,4 +35,4 @@ Las piezas `TEST_*` y `TEST_ECO_001` son **SANDBOX_INFRA**; no entran en matriz 
 
 ---
 
-*Última actualización: 2026-04-13 — P1_002 COMPLETED; MVP_01 en ejecución (Swarm Día 1); cola humana vacía.*
+*Última actualización: 2026-04-13 — P1_002 COMPLETED; MVP_01 PUBLISH_READY (pendiente gate humano); cola humana vacía.*
