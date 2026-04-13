@@ -37,7 +37,7 @@
       "day": 1,
       "title": "Cápsula: cables submarinos y rutas de datos (Geopolitik Drop)",
       "pilar": "P1",
-      "status": "BRIEF_READY",
+      "status": "RESEARCH_DONE",
       "edm_score": 60.8,
       "line_decision": "PASS_INDIRECTO",
       "risk_level": "LOW",
@@ -47,7 +47,8 @@
       "published": false,
       "postmortem_note": "",
       "idea_card": "03_Editorial/MVP_01_IdeaCard.md",
-      "advanced_at": "2026-04-13T22:00:00Z"
+      "research_pack": "03_Editorial/MVP_01_ResearchPack.md",
+      "advanced_at": "2026-04-13T23:30:00Z"
     },
     {
       "id": "MVP_02",

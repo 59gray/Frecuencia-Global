@@ -6,7 +6,7 @@
 
 ## Tesis en una frase
 
-El 97% del tráfico intercontinental de internet depende de cables submarinos cuya geografía física reproduce y amplifica las tensiones geopolíticas entre potencias.
+Más del 95% del tráfico intercontinental de internet (estimación industria: ~99%) depende de cables submarinos cuya geografía física reproduce y amplifica las tensiones geopolíticas entre potencias.
 
 ## Pilar sugerido
 
@@ -70,4 +70,4 @@ Audiencia EDM/tech-curious (18-35) que consume streaming, gaming y sets en vivo 
 
 ---
 
-*Estado: BRIEF_READY — pasar a ResearchPack según SLA (≤4h).*
+*Estado: RESEARCH_DONE — ResearchPack completado (`03_Editorial/MVP_01_ResearchPack.md`). Siguiente: Claim Ledger + Evidence Pack.*

@@ -11,7 +11,7 @@
 
 | Día | ID tracker | Tipo esperado (plan piloto) | Estado en JSON | Título (repo) |
 |-----|------------|----------------------------|----------------|---------------|
-| 1 | MVP_01 | Cápsula rápida | **BRIEF_READY** | Cápsula: cables submarinos y rutas de datos (Geopolitik Drop) |
+| 1 | MVP_01 | Cápsula rápida | **RESEARCH_DONE** | Cápsula: cables submarinos y rutas de datos (Geopolitik Drop) |
 | 2 | MVP_02 | Cápsula rápida | IDEA | Cápsula: foundry concentrado — el mapa TSMC (Geopolitik Drop) |
 | 3 | MVP_03 | Hilo/brief | IDEA | Hilo/brief: tres lecturas sobre la cadena de semiconductores |
 | 4 | MVP_04 | Explicador | IDEA | Explicador: qué es un foundry y por qué importa el 64% de TSMC |
@@ -28,7 +28,7 @@
 
 | ID | Pieza / proyecto | Pilar | Estado tracker | Estado ejecución | Prioridad | Siguiente acción | Responsable sugerido | Criterio de cierre |
 |----|------------------|-------|----------------|------------------|-----------|------------------|------------------------|-------------------|
-| SW-01 | MVP Día 1 | P1 | **BRIEF_READY** | **EN CURSO** | P0 | ResearchPack + Claim Ledger (SLA ≤4h) | F6 + F5 | Gate fuentes + evidencia |
+| SW-01 | MVP Día 1 | P1 | **RESEARCH_DONE** | **EN CURSO** | P0 | Claim Ledger + Evidence Pack (SLA ≤90min) | F6 + F8 | Gate evidencia completa |
 | SW-02 | MVP Día 2 | P1 | IDEA | **LISTO** | P0 | Research + claim | F1 + F5 | Gate EDM + research |
 | SW-03 | MVP Día 3 | P1 | IDEA | **LISTO** | P1 | Hilo/brief | F5 + F6 | Claim + evidence |
 | SW-04 | MVP Día 4 | P1 | IDEA | **LISTO** | P1 | Explicador | F6 + F7 | Script + visual brief |
@@ -49,4 +49,4 @@
 
 ---
 
-*Última actualización: 2026-04-13 — MVP_01 avanzado a BRIEF_READY (IdeaCard + EDM score 60.8 PASS_INDIRECTO). P1_002 COMPLETED.*
+*Última actualización: 2026-04-13 — MVP_01 avanzado a RESEARCH_DONE (ResearchPack verificado: 14 fuentes, 3 incidentes, Azure confirmó latencia). P1_002 COMPLETED.*
