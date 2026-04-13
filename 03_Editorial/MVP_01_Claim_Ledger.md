@@ -18,7 +18,7 @@
 | C-06 | BCS East-West: ~1/3 de la capacidad de internet de Lituania | DEGRADADO → PARTIALLY_CONFIRMED | BBC dice "about a fifth of Lithuania's internet capacity has been reduced". Discrepancia con fuente original |
 | C-07 | C-Lion1 reparado 28 nov 2024 | CONFIRMED | Cinia Oy comunicado (29 nov 2024) |
 | C-08 | Eagle S dañó Estlink 2 + 4 cables telecom, 25 dic 2024 | CONFIRMED | Reuters (28 dic 2024); NPR (31 dic 2024); Business Standard (27 dic 2024) |
-| C-09 | 4 cables dañados en Mar Rojo, feb–mar 2024 | CONFIRMED | AP News (mar 2024); TeleGeography blog; HGC Global Communications |
+| C-09 | Al menos 3 cables dañados en Mar Rojo, feb–mar 2024 | CONFIRMED | AP News (mar 2024); TeleGeography blog; HGC Global Communications |
 | C-10 | 25% del tráfico Europa–Asia afectado por cortes Mar Rojo | CONFIRMED | HGC Global Communications vía AP News; GeoCables (2026) |
 | C-11 | Microsoft Azure confirmó latencia elevada desde 26 feb 2024 | CONFIRMED | Azure Status History (tracking ID VT60-RPZ); GeoCables citando comunicado Azure |
 | C-12 | Latencia +20–40 ms (SEA-ME-WE 5) / +~60 ms (ruta Cabo) | CONFIRMED | GeoCables, mediciones RIPE Atlas (2024–2026) |
@@ -151,7 +151,7 @@
 
 ---
 
-### C-09 — Cuatro cables dañados en Mar Rojo, feb–mar 2024
+### C-09 — Al menos tres cables dañados en Mar Rojo, feb–mar 2024
 
 **Claim exacto:** "En febrero–marzo de 2024, múltiples cables submarinos fueron dañados simultáneamente en el Mar Rojo."
 

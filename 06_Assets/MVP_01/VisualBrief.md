@@ -41,7 +41,7 @@
 
 - **Hero:** "25%" en Bebas Neue, 96px, `#00E5FF` + "DEL TRÁFICO EUROPA–ASIA AFECTADO" en Space Grotesk Bold, 24px, `#FFFFFF`.
 - **Secundario:** "Microsoft Azure confirmó latencia elevada" en Space Grotesk Regular, 18px, `#A0A0B8`.
-- **Data badge:** "+60 MS DE RETRASO / RUTA ALTERNATIVA" en JetBrains Mono, 14px, `#B8FF00` (Verde Ácido para contraste).
+- **Data badge:** "HASTA +60 MS DE RETRASO / RUTA ALTERNATIVA" en JetBrains Mono, 14px, `#B8FF00` (Verde Ácido para contraste).
 - **Acento (hex):** `#00E5FF` principal + `#B8FF00` puntual en el dato de latencia.
 - **Componente marca:** Grid pattern al 8% opacidad en fondo.
 - **Fondo:** `#0A0A0F`.
