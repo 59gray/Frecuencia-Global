@@ -1,0 +1,11 @@
+date,piece_id,edm_score,sla_total_hours,in_sla,qa_result,published,post_correction,correction_type,notes
+2026-04-13,MVP_01,60.8,5.0,Y,PASS,Y,N,,Publicado 2026-04-13 IG/Threads/FB/LinkedIn via orquestador
+2026-04-13,MVP_02,61.3,4.0,Y,PASS,Y,N,,Publicado 2026-04-13 21:30 CST Threads/IG/FB/LinkedIn via orquestador
+2026-04-14,MVP_03,60.2,5.0,Y,PASS,Y,N,,Publicado 2026-04-14 Threads/IG/FB/LinkedIn via orquestador
+2026-04-16,MVP_04,,,,,,,,
+2026-04-17,MVP_05,,,,,,,,
+2026-04-20,MVP_06,,,,,,,,
+2026-04-21,MVP_07,,,,,,,,
+2026-04-22,MVP_08,,,,,,,,
+2026-04-23,MVP_09,,,,,,,,
+2026-04-24,MVP_10,,,,,,,,
