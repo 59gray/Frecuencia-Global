@@ -14,3 +14,4 @@
 | 2026-04-05 | 03:10 | test_manual_wf004 | P1_001 | validacion indirecta WF-004 -> SUB-002 |
 | 2026-04-05 | 03:10 | test_manual_wf004 | P1_001 | validacion indirecta WF-004 -> SUB-002 |
 | 2026-04-05 | — | CELULA_EDITORIAL | — | Implementada célula editorial AGENT_13–18, `system/editorial/`, specs `03_Editorial/_specs/` |
+| 2026-04-17 | 20:38 | EVENTO | ├óΓé¼ΓÇ¥ |  |
