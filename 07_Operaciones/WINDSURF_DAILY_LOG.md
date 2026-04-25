@@ -581,5 +581,69 @@ Revisar artículo `techno-detroit-historia-musica-electronica.md` contra checkli
 
 ---
 
+---
+
+## DÍA 5 — 2026-04-25 — QA Editorial Detroit (D05)
+
+**Tarea Notion:** D05 — `34cf773b-f4a7-8175-8b74-cec9a6121250`
+
+### Hecho
+
+- ✅ **Notion D05** marcada `In progress` al inicio
+- ✅ **Artículo Detroit leído** completo: 46 líneas, `draft:false`, pilar p2, 5 secciones
+- ✅ **Inventario de assets Detroit:** 34 archivos en raíz + 16 lotes ComfyUI brutos
+- ✅ **Hero roto detectado:** `techno-detroit.jpg` declarado en frontmatter, no existe localmente
+- ✅ **Backup creado:** `04_Produccion/Detroit/backups/techno-detroit-historia-musica-electronica_backup_20260425.md`
+- ✅ **Frontmatter corregido:** `image: "/images/articles/techno-detroit.jpg"` → `"/images/articles/techno-detroit.png"`
+- ✅ **4 archivos QA creados** en `04_Produccion/Detroit/`
+- ✅ **npm run build:** PASS — 16 páginas, Detroit compilado correctamente
+- ✅ **Git commit + push** ejecutados
+- ✅ **Notion D05** → `Done` con notas y comentario de cierre
+- ✅ **Página Notion Detroit** anotada con resultado D05
+
+### Archivos leídos
+
+1. `website/src/content/articles/techno-detroit-historia-musica-electronica.md`
+2. `07_Operaciones/DAY04_EDITORIAL_BACKLOG_20260425.md`
+3. `website/public/images/articles/` — inventario de assets Detroit
+
+### Archivos modificados/creados
+
+- `04_Produccion/Detroit/backups/techno-detroit-historia-musica-electronica_backup_20260425.md` (backup)
+- `04_Produccion/Detroit/DETROIT_QA_REPORT_20260425.md` (creado)
+- `04_Produccion/Detroit/DETROIT_SOURCE_PACK_20260425.md` (creado)
+- `04_Produccion/Detroit/DETROIT_VISUAL_QA_20260425.md` (creado)
+- `04_Produccion/Detroit/DETROIT_DISTRIBUTION_MANUAL_20260425.md` (creado)
+- `website/src/content/articles/techno-detroit-historia-musica-electronica.md` (corregido: hero path `.jpg` → `.png`)
+- `07_Operaciones/WINDSURF_DAILY_LOG.md` (actualizado — esta entrada)
+
+### Decisión QA
+
+```
+QA_PASS_WITH_MINOR_EDITS
+```
+
+Hero corregido. 3 claims requieren fuente externa en revisión posterior (no bloquean piloto).
+
+### Build local
+
+```
+npm run build → ✅ PASS
+16 páginas generadas en 4.51s
+/contenido/techno-detroit-historia-musica-electronica/index.html — OK
+```
+
+### Correcciones aplicadas al artículo
+
+| Campo | Antes | Después | Razón |
+|-------|-------|---------|-------|
+| `image` | `/images/articles/techno-detroit.jpg` | `/images/articles/techno-detroit.png` | `.jpg` no existe localmente; `.png` sí existe |
+
+### Próxima Acción Día 6
+
+**D06 — Curaduría visual Detroit:** seleccionar hero canónico entre candidatos identificados (especialmente `techno-detroit-hero.png/.webp`), curar outputs ComfyUI, definir thumbnail vertical para IG. Sin publicación, sin deploy.
+
+---
+
 **Última actualización:** 2026-04-25  
 **Actualizado por:** Windsurf Agent
