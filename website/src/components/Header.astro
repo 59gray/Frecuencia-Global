@@ -1,21 +1,29 @@
 ---
+import { PILLARS, pillarPath, type PillarId } from '../lib/pillars';
+
 const currentPath = Astro.url.pathname;
+
+const pilarNavColor: Record<PillarId, string> = {
+  p1: 'text-pilar-p1',
+  p2: 'text-pilar-p2',
+  p3: 'text-pilar-p3',
+  p4: 'text-pilar-p4',
+};
 
 const navItems = [
   { label: 'Inicio', href: '/' },
   {
-    label: 'Pilares',
+    label: 'Frecuencias',
     href: '/pilares',
-    children: [
-      { label: 'Geopolitik Drop', href: '/pilares/geopolitik-drop', color: 'text-pilar-p1' },
-      { label: 'Bass & Borders', href: '/pilares/bass-and-borders', color: 'text-pilar-p2' },
-      { label: 'Frecuencia Global', href: '/pilares/frecuencia-global', color: 'text-pilar-p3' },
-      { label: 'Behind the Policy', href: '/pilares/behind-the-policy', color: 'text-pilar-p4' },
-    ],
+    children: PILLARS.map((p) => ({
+      label: p.titleEs,
+      href: pillarPath(p.slug),
+      color: pilarNavColor[p.id],
+    })),
   },
-  { label: 'Contenido', href: '/contenido' },
+  { label: 'Archivo', href: '/contenido' },
   { label: 'Podcast', href: '/podcast' },
-  { label: 'Sobre', href: '/sobre' },
+  { label: 'About', href: '/sobre' },
   { label: 'Contacto', href: '/contacto' },
 ];
 
@@ -25,109 +33,138 @@ function isActive(href: string): boolean {
 }
 ---
 
-<header class="sticky top-0 z-50 border-b border-white/10 bg-fg-black/75 backdrop-blur-xl">
-  <nav class="mx-auto flex h-16 max-w-[1500px] items-center justify-between px-md lg:px-xl">
-    <a href="/" class="flex items-center gap-3">
-      <span class="relative flex h-10 w-10 items-center justify-center border border-white/10 bg-white/5">
-        <img src="/images/logo/fg_isotipo.svg" alt="Frecuencia Global" class="h-6 w-6" />
-        <span class="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-fg-cyan shadow-[0_0_12px_rgba(0,229,255,0.9)]"></span>
-      </span>
-      <span class="hidden sm:block">
-        <span class="block font-display text-[1.15rem] tracking-[0.18em] text-fg-white">FRECUENCIA GLOBAL</span>
-        <span class="hidden font-data text-[10px] uppercase tracking-[0.28em] text-fg-gray lg:block">
-          análisis internacional / club signal
+<header class="sticky top-0 z-[90] px-2 pt-2 sm:px-3 sm:pt-3">
+  <div class="fg-tactical-panel fg-tactical-panel--nav fg-nav-shell fg-divider-hairline border-cyan-500/20">
+    <div
+      class="pointer-events-none absolute inset-x-0 top-0 h-10 bg-[linear-gradient(180deg,rgba(121,175,191,0.06),transparent)]"
+      aria-hidden="true"
+    ></div>
+
+    <nav class="relative mx-auto flex h-[4.25rem] max-w-[1500px] items-center justify-between px-fg-md lg:px-fg-xl">
+      <a href="/" class="flex min-w-0 items-center gap-3">
+        <span class="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-cyan-500/35 bg-[rgba(10,10,15,0.96)] shadow-[0_0_18px_-8px_rgba(0,229,255,0.7)]">
+          <img src="/images/logo/fg_isotipo_512.png" alt="Frecuencia Global" class="h-full w-full object-cover" />
         </span>
-      </span>
-    </a>
 
-    <ul class="hidden items-center gap-2 md:flex">
-      {navItems.map((item) => (
-        <li class="relative group">
-          <a
-            href={item.href}
-            class:list={[
-              'inline-flex items-center gap-1 px-3 py-2 font-data text-[11px] uppercase tracking-[0.22em] transition-colors duration-300',
-              item.label === 'Contacto'
-                ? isActive(item.href)
-                  ? 'border border-fg-cyan bg-fg-cyan text-fg-black'
-                  : 'border border-white/15 text-fg-white hover:border-white/35 hover:bg-white/5'
-                : isActive(item.href)
-                  ? 'text-fg-cyan'
-                  : 'text-fg-gray hover:text-fg-white',
-            ]}
-          >
-            {item.label}
-            {item.children && (
-              <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            )}
-          </a>
+        <span class="hidden min-w-0 sm:block">
+          <span class="inline-flex items-center gap-2 border border-fg-cyan/35 bg-black/25 px-2.5 py-1 font-data text-[10px] uppercase tracking-[0.22em] text-fg-cyan">
+            <span class="h-1.5 w-1.5 rounded-full bg-fg-cyan animate-pulse"></span>
+            frecuencia global
+          </span>
+          <span class="mt-0.5 hidden items-center gap-2 font-data text-[10px] uppercase tracking-[0.28em] text-fg-gray lg:flex">
+            <span class="text-fg-cyan">analisis internacional</span>
+            <span class="text-fg-phosphor">pulso editorial</span>
+          </span>
+        </span>
+      </a>
 
-          {item.children && (
-            <ul class="absolute left-0 top-full mt-2 min-w-[230px] border border-white/10 bg-fg-black/95 p-2 invisible opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
-              {item.children.map((child) => (
-                <li>
-                  <a
-                    href={child.href}
-                    class:list={[
-                      'block px-3 py-2 font-data text-[11px] uppercase tracking-[0.22em] transition-colors duration-300 hover:bg-white/5',
-                      child.color,
-                    ]}
-                  >
-                    {child.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
-        </li>
-      ))}
-    </ul>
-
-    <button
-      id="mobile-menu-btn"
-      class="border border-white/10 p-2 text-fg-gray transition-colors duration-300 hover:text-fg-white md:hidden"
-      aria-label="Menú"
-      aria-expanded="false"
-    >
-      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
-  </nav>
-
-  <div id="mobile-menu" class="hidden border-t border-white/10 bg-fg-black/95 md:hidden">
-    <ul class="space-y-1 px-md py-lg">
-      {navItems.map((item) => (
-        <>
-          <li>
+      <ul class="hidden items-center gap-1 md:flex">
+        {navItems.map((item) => (
+          <li class="group relative z-20 after:absolute after:left-0 after:right-0 after:top-full after:h-2 after:content-[''] hover:z-40 focus-within:z-40">
             <a
               href={item.href}
+              title={item.label === 'Frecuencias' ? 'Descubre los pilares editoriales' : undefined}
               class:list={[
-                'block py-2 font-data text-xs uppercase tracking-[0.24em] transition-colors duration-300',
-                isActive(item.href) ? 'text-fg-cyan' : 'text-fg-gray hover:text-fg-white',
+                'relative inline-flex items-center gap-1 px-3 py-2 font-data text-[11px] uppercase tracking-[0.22em] transition-colors duration-200',
+                'after:absolute after:bottom-1 after:left-3 after:h-px after:w-[calc(100%-1.5rem)] after:origin-left after:scale-x-0 after:bg-fg-cyan after:transition-transform after:duration-200',
+                item.label === 'Contacto'
+                  ? isActive(item.href)
+                    ? 'fg-corner-cut border border-fg-cyan bg-fg-cyan text-fg-black hover:text-fg-black'
+                    : 'fg-corner-cut border border-white/20 text-fg-white hover:border-fg-cyan/60 hover:text-fg-cyan'
+                  : item.label === 'Frecuencias'
+                    ? isActive(item.href)
+                      ? 'fg-corner-cut border border-fg-cyan/70 bg-fg-cyan/10 text-fg-cyan after:scale-x-100'
+                      : 'fg-corner-cut border border-fg-cyan/45 bg-fg-cyan/6 text-fg-white after:scale-x-100 hover:border-fg-cyan/75 hover:text-fg-cyan'
+                  : isActive(item.href)
+                    ? 'text-fg-cyan after:scale-x-100'
+                    : 'text-fg-gray hover:text-fg-white group-hover:after:scale-x-100',
               ]}
             >
               {item.label}
+              {item.label === 'Frecuencias' && (
+                <span class="hidden items-center gap-1 rounded-sm border border-fg-cyan/45 bg-fg-cyan/14 px-1.5 py-0.5 font-data text-[9px] tracking-[0.22em] text-fg-cyan md:inline-flex">
+                  <span class="h-1.5 w-1.5 rounded-full bg-fg-cyan animate-pulse"></span>
+                  4 SEÑALES
+                </span>
+              )}
+              {item.children && (
+                <svg class="h-3 w-3 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              )}
             </a>
+
+            {item.children && (
+              <ul class="fg-dropdown-panel invisible absolute left-1/2 top-[calc(100%-1px)] z-[140] min-w-[340px] -translate-x-1/2 p-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                {item.children.map((child) => (
+                  <li>
+                    <a
+                      href={child.href}
+                      class:list={[
+                        'block whitespace-nowrap px-3 py-2 font-data text-[11px] uppercase tracking-[0.22em] transition-colors duration-200 hover:bg-white/5',
+                        child.color,
+                      ]}
+                    >
+                      {child.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
-          {item.children?.map((child) => (
+        ))}
+      </ul>
+
+      <button
+        id="mobile-menu-btn"
+        class="fg-corner-cut border border-fg-cyan/45 bg-fg-cyan/10 p-2.5 text-fg-cyan shadow-[0_0_20px_-10px_rgba(0,229,255,0.65)] transition-colors duration-200 hover:border-fg-cyan hover:bg-fg-cyan/16 hover:text-fg-white md:hidden"
+        aria-label="Menu"
+        aria-expanded="false"
+      >
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </nav>
+
+    <div id="mobile-menu" class="hidden border-t border-white/12 bg-fg-black/92 md:hidden">
+      <ul class="max-w-full space-y-1 px-fg-md py-fg-lg">
+        {navItems.map((item) => (
+          <>
             <li>
               <a
-                href={child.href}
+                href={item.href}
                 class:list={[
-                  'block py-2 pl-4 font-data text-[11px] uppercase tracking-[0.22em] transition-colors duration-300',
-                  child.color,
+                  'block max-w-full py-2 break-words font-data text-xs uppercase tracking-[0.24em] leading-snug transition-colors duration-200',
+                  isActive(item.href) ? 'text-fg-cyan' : 'text-fg-gray hover:text-fg-white',
                 ]}
               >
-                {child.label}
+                {item.label}
               </a>
             </li>
-          ))}
-        </>
-      ))}
-    </ul>
+            {item.children?.map((child) => (
+              <li>
+                <a
+                  href={child.href}
+                  class:list={[
+                    'block max-w-full py-2 pl-4 pr-2 break-words font-data text-[10px] uppercase tracking-[0.2em] leading-snug transition-colors duration-200 sm:text-[11px] sm:tracking-[0.22em]',
+                    child.color,
+                  ]}
+                >
+                  {child.label}
+                </a>
+              </li>
+            ))}
+          </>
+        ))}
+      </ul>
+    </div>
+
+    <div class="hidden items-center justify-between border-t border-white/10 px-fg-md py-2 font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray lg:flex lg:px-fg-xl">
+      <span>edicion en curso</span>
+      <span class="text-fg-phosphor">geopolitica, cultura y politica publica</span>
+      <span class="text-fg-cyan">actualizado</span>
+    </div>
   </div>
 </header>
 
