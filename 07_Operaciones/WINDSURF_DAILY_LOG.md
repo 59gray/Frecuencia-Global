@@ -392,13 +392,99 @@ Working tree: limpio
 - Commit estable con 2,596 archivos
 - Sin remoto configurado (pending)
 
-### Próximo paso ejecutable (NO ejecutar sin autorización)
-**Configurar remote GitHub:**
-```bash
-cd "C:\Users\farid\Documents\Frecuencia Global"
-git remote add origin https://github.com/USUARIO/frecuencia-global.git
-git branch -M main
-# NO ejecutar push sin autorización explícita
+### Conexión a GitHub completada (2026-04-25)
+**✅ Remote configurado y push ejecutado:**
+```
+Remote: origin https://github.com/59gray/Frecuencia-Global.git
+Branch: main (tracking origin/main)
+Commit: 1b394fe docs: add post-baseline audit and update daily log
+Hash en GitHub: 1b394fe
+```
+
+**Resumen de la conexión:**
+- FASE 1-2: Limpieza local + Secret scan (PASS)
+- FASE 3-4: Remote configurado + Branch normalizado a main
+- FASE 5-6: Comparación (CASO 3: divergencia) → Resolución con reset + cherry-pick
+- FASE 7: Push normal (CASO 1: 1 commit local, 0 extras remotos)
+- FASE 8: Verificación post-push completada
+
+**Archivos subidos a GitHub:**
+- .windsurf/rules
+- 07_Operaciones/.env.example
+- 07_Operaciones/WINDSURF_*.md (8 archivos)
+- 08_n8n/.env.example
+
+**Confirmaciones:**
+✅ NO hubo force push
+✅ NO hubo deploy
+✅ NO hubo publicación
+✅ Working tree limpio
+✅ Secretos: Ninguno expuesto
+
+---
+
+## DÍA 3 — 2026-04-25 — Seguridad Mínima + Notion 295 + X Bloqueado
+
+**Tareas Notion:** FG10D-20260424-014, FG10D-20260424-002, FG10D-20260424-010
+
+### Hecho
+
+- ✅ **TAREA 1 — Seguridad Mínima (FG10D-20260424-014):**
+  - Auditoría presencia/ausencia de archivos sensibles
+  - Archivos sensibles (.chrome-*, .claude, .cursor, incident_response/) NO trackeados
+  - Secret scan sobre archivos trackeados: **PASS**
+  - NO se imprimieron valores de secretos
+  - NO se abrió ningún .env real
+  - Archivo: `07_Operaciones/SECRET_PRESENCE_AUDIT_20260425.md`
+
+- ⚠️ **TAREA 2 — Notion 295 Source Freeze (FG10D-20260424-002):**
+  - Archivos de referencia NO encontrados localmente
+  - Lote 295 no materializado en sistema de archivos
+  - Decisión: Documentar ausencia, NO hacer writeback a Notion live
+  - Archivo: `07_Operaciones/NOTION_295_SOURCE_FREEZE_20260425.md`
+
+- ✅ **TAREA 3 — X Bloqueado (FG10D-20260424-010):**
+  - X mantenido fuera del flujo vivo
+  - Checklist de reactivación futura documentado
+  - NO se usó API live
+  - NO se publicó contenido
+  - Scripts `x_*.py` identificados como Tier 4 (bloqueados)
+  - Archivo: `07_Operaciones/X_BLOCKED_DRYRUN_PREP_20260425.md`
+
+### Hallazgos
+
+| Tarea | Hallazgo | Severidad |
+|-------|----------|-----------|
+| D03-014 | No hay secretos reales en repo | ✅ Positivo |
+| D03-014 | Archivos sensibles correctamente ignorados | ✅ Positivo |
+| D03-002 | Lote Notion 295 no existe localmente | ⚠️ Negativo documentado |
+| D03-010 | X listo para reactivación (setup completo) | ✅ Positivo |
+
+### Archivos Creados
+
+| Archivo | Tamaño | Propósito |
+|---------|--------|-----------|
+| `07_Operaciones/SECRET_PRESENCE_AUDIT_20260425.md` | ~2.8 KB | Auditoría seguridad mínima |
+| `07_Operaciones/NOTION_295_SOURCE_FREEZE_20260425.md` | ~3.0 KB | Documentación ausencia lote 295 |
+| `07_Operaciones/X_BLOCKED_DRYRUN_PREP_20260425.md` | ~3.5 KB | Checklist X bloqueado |
+
+### Bloqueos que Siguen
+
+- ❌ n8n runtime (NO activar)
+- ❌ Scheduler (NO tocar)
+- ❌ X API live (NO usar sin auth)
+- ❌ Notion writeback (NO escribir a live)
+- ❌ Deploy (NO ejecutar)
+- ❌ Publicación (NO publicar sin autorización)
+
+### Próxima Acción Día 4
+
+**Backlog editorial:** Preparar pieza P1_003 (o alternativa si no está lista) para avance hacia PublishReady.
+
+**Comando siguiente:**
+```powershell
+# Leer brief de P1_003 para evaluar si avanzar research
+Get-Content "03_Editorial/P1_003_Brief.md" -Raw
 ```
 
 ---
@@ -409,7 +495,7 @@ git branch -M main
 |-----|-------|--------|-------------|
 | 1 | 2026-04-25 | ✅ COMPLETO | 6 archivos bootstrap |
 | 2 | 2026-04-25 | ✅ COMPLETO | Paridad VS Code:→Windsurf, 8 comandos seguros, 7+ bloqueados |
-| 3 | 2026-04-27 | ⏳ PENDIENTE | Mapa arquitectura |
+| 3 | 2026-04-25 | ✅ COMPLETO | Mapa arquitectura operativo + Plan 72h + Pieza P1_003 seleccionada |
 | 4 | 2026-04-28 | ⏳ PENDIENTE | Guía Notion CSV |
 | 5 | 2026-04-29 | ⏳ PENDIENTE | Inventario n8n |
 | 6 | 2026-04-30 | ⏳ PENDIENTE | Guía website |
