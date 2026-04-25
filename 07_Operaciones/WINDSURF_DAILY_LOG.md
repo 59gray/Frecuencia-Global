@@ -489,6 +489,76 @@ Get-Content "03_Editorial/P1_003_Brief.md" -Raw
 
 ---
 
+## DÍA 4 — 2026-04-25 — Consolidar Backlog Editorial · Detroit como Piloto Oficial
+
+**Tarea Notion:** FG10D-20260424-015 · D04 — Consolidar backlog editorial de 10 días
+
+### Hecho
+
+- ✅ **Notion D04** marcada `In progress` al inicio
+- ✅ **Exploración local completa:**
+  - `04_Produccion/pipeline_tracker.json` — leído (6 piezas: P1_001–004, EP_001–002)
+  - `04_Produccion/PIECE_STATUS_MATRIX.md` — leído (corte 2026-04-14)
+  - `04_Produccion/EDITORIAL_CONTROL_PANEL.md` — leído (CAPA 4 activa)
+  - `04_Produccion/EP_001_PublishReady.md` y `EP_002_PublishReady.md` — leídos
+  - `04_Produccion/P1_001_PublishReady.md` y `P1_002_PublishReady.md` — leídos
+  - `website/src/content/articles/techno-detroit-historia-musica-electronica.md` — artículo completo
+  - `website/public/images/articles/*detroit*` — ~20 assets visuales encontrados
+- ✅ **Búsqueda Detroit en Notion:** FG — PIEZAS, FG — Tasks, FG — Workspace, docs — **0 resultados**: no existe página canónica
+- ✅ **D05 confirmada en Notion:** `34cf773b-f4a7-8175-8b74-cec9a6121250` — Cerrar QA editorial Detroit — status TODO
+- ✅ **Decisión editorial:** Detroit = pieza piloto activa/canónica. P1_001 = referencia. P1_002 = referencia con estado vivo dudoso. EP_001/EP_002 = backlog episódico.
+- ✅ **Archivo creado:** `07_Operaciones/DAY04_EDITORIAL_BACKLOG_20260425.md`
+- ✅ **Notion D04** → `Done` con notas y comentario de cierre
+- ✅ **Notion D05** anotada sin cerrar
+- ✅ **Página Detroit creada** en Notion bajo `07_Operaciones`
+- ✅ **Git commit + push** ejecutados
+
+### Archivos leídos
+
+1. `04_Produccion/pipeline_tracker.json`
+2. `04_Produccion/PIECE_STATUS_MATRIX.md`
+3. `04_Produccion/EDITORIAL_CONTROL_PANEL.md`
+4. `04_Produccion/EP_001_PublishReady.md`
+5. `04_Produccion/EP_002_PublishReady.md`
+6. `04_Produccion/P1_001_PublishReady.md`
+7. `04_Produccion/P1_002_PublishReady.md`
+8. `website/src/content/articles/techno-detroit-historia-musica-electronica.md`
+
+### Archivos modificados/creados
+
+- `07_Operaciones/DAY04_EDITORIAL_BACKLOG_20260425.md` (creado)
+- `07_Operaciones/WINDSURF_DAILY_LOG.md` (actualizado — esta entrada)
+
+### Decisiones editoriales
+
+| Pieza | Rol | Acción |
+|-------|-----|--------|
+| Detroit | Piloto activo/canónico | Avanzar flujo → D05 QA |
+| P1_001 | Referencia histórica publicada | No activar |
+| P1_002 | Referencia histórica con estado operativo vivo dudoso | No activar — drift GOV-005 |
+| EP_001 | Backlog episódico / SANDBOX_FROZEN | No activar hoy |
+| EP_002 | Backlog episódico / SANDBOX_FROZEN | No activar hoy |
+
+### Archivos no encontrados
+
+- `04_Produccion/W17_TEST_PREP_2026-04-20_2026-04-24/` — ausente
+- `docs/editorial/pilots/detroit_stack_pilot/DETROIT_X_RUN_V1_1_PLAN.md` — ausente localmente (solo en Notion D05)
+- `06_Assets/ASSETS_MANIFEST.md` (raíz) — ausente
+
+### Bloqueos que siguen
+
+- ❌ No publicar Detroit ni ninguna pieza
+- ❌ No deploy
+- ❌ No n8n / Scheduler
+- ❌ No credenciales
+
+### Próxima Acción Día 5
+
+**D05 — Cerrar QA editorial Detroit** (`34cf773b-f4a7-8175-8b74-cec9a6121250`)  
+Revisar artículo `techno-detroit-historia-musica-electronica.md` contra checklist editorial mínimo: estructura, claims, fuentes, frontmatter, tono. Sin publicación ni deploy.
+
+---
+
 ## RESUMEN ACUMULATIVO
 
 | Día | Fecha | Estado | Entregables |
@@ -496,7 +566,8 @@ Get-Content "03_Editorial/P1_003_Brief.md" -Raw
 | 1 | 2026-04-25 | ✅ COMPLETO | 6 archivos bootstrap |
 | 2 | 2026-04-25 | ✅ COMPLETO | Paridad VS Code:→Windsurf, 8 comandos seguros, 7+ bloqueados |
 | 3 | 2026-04-25 | ✅ COMPLETO | Seguridad mínima + Notion 295 + X bloqueado |
-| 4 | 2026-04-28 | ⏳ PENDIENTE | Guía Notion CSV |
+| 4 | 2026-04-25 | ✅ COMPLETO | Backlog editorial consolidado · Detroit = piloto activo |
+| (antiguo 4) | 2026-04-28 | ⏳ PENDIENTE | Guía Notion CSV |
 | 5 | 2026-04-29 | ⏳ PENDIENTE | Inventario n8n |
 | 6 | 2026-04-30 | ⏳ PENDIENTE | Guía website |
 | 7 | 2026-05-01 | ⏳ PENDIENTE | Mapa ComfyUI |
