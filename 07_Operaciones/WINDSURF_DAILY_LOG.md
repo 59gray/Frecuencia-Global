@@ -645,5 +645,55 @@ npm run build → ✅ PASS
 
 ---
 
+---
+
+## DÍA 6 — 2026-04-25 — Curaduría visual Detroit (D06)
+
+**Tarea Notion:** D06 — `34cf773b-f4a7-813c-9423-c6276c05fa73`
+
+### Hecho
+
+- ✅ **Notion D06** marcada `In progress` al inicio
+- ✅ **Serena:** No disponible — confirmado, búsqueda ejecutada con herramientas locales
+- ✅ **Inventario de 34 assets** en raíz con tamaños reales (PowerShell)
+- ✅ **16 lotes ComfyUI** identificados como RAW_OUTPUT_ONLY
+- ✅ **4 assets descartados** por resolución insuficiente (v8/v9, <20 KB)
+- ✅ **Shortlist por rol** creada con candidatos recomendados
+- ✅ **Naming proposal FG** documentado (sin ejecutar renombres)
+- ✅ **4 archivos D06** creados en `04_Produccion/Detroit/visual_curation/`
+- ✅ **npm run build:** PASS — registrado en cierre D06
+- ✅ **Git commit + push** ejecutados
+- ✅ **Notion D06** → `Done` con notas y comentario de cierre
+
+### Archivos creados
+
+- `04_Produccion/Detroit/visual_curation/DETROIT_ASSET_SHORTLIST_20260425.md`
+- `04_Produccion/Detroit/visual_curation/DETROIT_VISUAL_DECISION_MATRIX_20260425.md`
+- `04_Produccion/Detroit/visual_curation/DETROIT_ASSET_NAMING_PROPOSAL_20260425.md`
+- `04_Produccion/Detroit/visual_curation/DETROIT_D06_CLOSURE_20260425.md`
+
+### Shortlist final D06
+
+| Rol | Recomendado | Estado |
+|-----|-------------|--------|
+| Hero web | `techno-detroit-hero.webp` (327 KB) | APPROVED_FOR_HUMAN_REVIEW |
+| Card | `techno-detroit-card.png` (1.5 MB) | APPROVED_FOR_HUMAN_REVIEW |
+| OG | `techno-detroit-og.png` (1.1 MB) | APPROVED_FOR_HUMAN_REVIEW |
+| Billboard/manga | `techno-detroit-billboard-manga-v1-rebuilt.webp` (215 KB) | APPROVED_FOR_HUMAN_REVIEW |
+| Manga editorial HD | `techno-detroit-manga-02-master-v2.png` (2.1 MB) | APPROVED_FOR_HUMAN_REVIEW |
+| Thumb vertical/IG | faltante real | — |
+
+### Decisión D06
+
+```
+D06_READY_FOR_HUMAN_VISUAL_REVIEW
+```
+
+### Próxima Acción Día 7
+
+**D07 — Revisión humana visual Detroit:** Farid inspecciona visualmente candidatos APPROVED_FOR_HUMAN_REVIEW, selecciona hero canónico, explora lotes ComfyUI para thumbnail vertical, aprueba naming proposal para ejecutar renombres.
+
+---
+
 **Última actualización:** 2026-04-25  
 **Actualizado por:** Windsurf Agent
