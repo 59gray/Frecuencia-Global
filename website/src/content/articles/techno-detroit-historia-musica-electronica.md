@@ -4,7 +4,7 @@ description: "La historia de la música electrónica es también una historia de
 date: 2026-04-06
 pilar: p2
 tags: ["música electrónica", "Detroit", "techno", "cultura", "migración", "globalización"]
-image: "/images/articles/techno-detroit.png"
+image: "/images/articles/FG_DETROIT_HERO_WEB_v1.png"
 draft: false
 ---
 

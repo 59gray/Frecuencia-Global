@@ -695,5 +695,43 @@ D06_READY_FOR_HUMAN_VISUAL_REVIEW
 
 ---
 
+## DÍA 7 — 2026-04-25 — Generación ComfyUI faltantes Detroit (D07)
+
+**Tarea Notion:** D07 — Generación controlada assets faltantes Detroit
+
+### Hecho
+
+- ✅ ComfyUI verificado — puerto 8000, v0.19.5, RTX 5060, 7.3 GB VRAM libres
+- ✅ Modelo SDXL — `sdxl\sd_xl_base_1.0.safetensors`
+- ✅ 3 candidatos hero web (768x432) generados con SDXL via API
+- ✅ 3 candidatos thumb vertical (512x896) generados con SDXL via API
+- ✅ Canónicos copiados a `website/public/images/articles/`
+- ✅ Frontmatter actualizado: `image: "/images/articles/FG_DETROIT_HERO_WEB_v1.png"`
+- ✅ npm run build — PASS (16 páginas, 14.87s)
+- ✅ 4 archivos D07 creados en `04_Produccion/Detroit/visual_curation/`
+- ✅ Git commit + push ejecutados
+- ✅ Notion página Detroit comentada
+
+### Assets generados
+
+| Canónico | Origen | Tamaño |
+|----------|--------|--------|
+| `FG_DETROIT_HERO_WEB_v1.png` | SDXL seed=137 | 440 KB |
+| `FG_DETROIT_THUMB_VERTICAL_v1.png` | SDXL seed=88 | 703 KB |
+
+### Faltante post-D07
+
+- `FG_DETROIT_CARD_SOCIAL_v1.png` — pendiente D08
+
+### Build
+
+✅ PASS — 16 páginas en 14.87s
+
+### Próxima Acción Día 8
+
+**Revisión visual humana D07 + post package Detroit:** Farid confirma visualmente hero y thumb; si aprueba → preparar paquete distribución y publicar cuando pipeline esté listo.
+
+---
+
 **Última actualización:** 2026-04-25  
 **Actualizado por:** Windsurf Agent
