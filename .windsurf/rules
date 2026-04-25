@@ -1,0 +1,209 @@
+# Windsurf Rules - Frecuencia Global
+# Fecha: 2026-04-25
+# Propósito: Contexto operativo y reglas de seguridad para agente Windsurf
+
+# =============================================================================
+# DENYLIST DE SECRETOS Y ZONAS PROHIBIDAS
+# =============================================================================
+
+# Archivos y patrones NUNCA a los que NUNCA acceder, leer, copiar ni modificar:
+denylist:
+  files:
+    - "08_n8n/.env"
+    - "**/.env"
+    - "**/secrets.json"
+    - "**/credentials.json"
+    - "**/*token*"
+    - "**/*key*"
+    - "**/cookies.txt"
+    - "**/session*"
+  
+  directories:
+    - ".chrome-gemini-stable"
+    - ".chrome-ig-stable"
+    - ".chrome-linkedin-stable"
+    - ".chrome-n8n-cdp"
+    - ".chrome-n8n-cloud"
+    - ".chrome-n8n-cloud-copy"
+    - ".chrome-probe"
+    - ".chrome-probe-2"
+    - ".chrome-rsscom"
+    - ".chrome-tiktok-manual"
+    - ".chrome-tiktok-stable"
+    - ".chrome-tk-stable"
+    - ".chrome-x-stable"
+    - ".chrome-youtube-profile"
+    - ".chrome-youtube-stable"
+    - ".claude"
+    - ".cursor"
+  
+  patterns:
+    - "NOTION_TOKEN"
+    - "API_KEY"
+    - "API_SECRET"
+    - "ACCESS_TOKEN"
+    - "PASSWORD"
+    - "secret_"
+    - "sk-"
+    - "Bearer "
+
+# =============================================================================
+# COMANDOS PROHIBIDOS
+# =============================================================================
+
+# Comandos que NUNCA deben ejecutarse:
+forbidden_commands:
+  - pattern: "cat.*\\.env"
+    reason: "Exposición de credenciales"
+  - pattern: "type.*\\.env"
+    reason: "Exposición de credenciales en Windows"
+  - pattern: "Get-Content.*\\.env"
+    reason: "Exposición de credenciales en PowerShell"
+  - pattern: "docker.*up.*n8n"
+    reason: "Inicio de servicios requiere autorización explícita"
+  - pattern: "wrangler deploy"
+    reason: "Deploy a producción requiere autorización explícita"
+  - pattern: "npm run deploy"
+    reason: "Deploy a producción requiere autorización explícita"
+  - pattern: "python.*publish"
+    reason: "Publicación automatizada prohibida"
+  - pattern: "publish_dispatch"
+    reason: "Scripts de publicación requieren autorización"
+  - pattern: "notion.*import.*token"
+    reason: "Importación con tokens requiere autorización"
+
+# =============================================================================
+# COMANDOS READ-ONLY PERMITIDOS
+# =============================================================================
+
+# Comandos seguros para exploración SIN modificación:
+allowed_readonly_commands:
+  - pattern: "Get-ChildItem.*-Force"
+    purpose: "Listar archivos ocultos y directorios"
+  - pattern: "Test-Path"
+    purpose: "Verificar existencia de archivos"
+  - pattern: "Select-Object.*Name.*LastWriteTime"
+    purpose: "Obtener metadata sin contenido"
+  - pattern: "Get-FileHash.*SHA256"
+    purpose: "Calcular hashes para verificación"
+  - pattern: "git status"
+    purpose: "Verificar estado de repositorio"
+  - pattern: "git log.*-n"
+    purpose: "Ver historial limitado"
+  - pattern: "findstr /s /i"
+    purpose: "Búsqueda de strings en múltiples archivos"
+  - pattern: "Get-Content.*\.json"
+    condition: "SIN contener secretos en el path"
+  - pattern: "Get-Content.*\.md"
+    condition: "Documentación pública"
+  - pattern: "Get-Content.*\.mjs"
+    condition: "Configuración build"
+  - pattern: "Get-Content.*\.toml"
+    condition: "Configuración build"
+
+# =============================================================================
+# REGLA DE BACKUP ANTES DE EDITAR
+# =============================================================================
+
+# Obligatorio para archivos en carpetas NO versionadas (no hay .git):
+backup_rule:
+  condition: "NOT git_repo AND file_modified_by_agent"
+  required_actions:
+    - "Verificar existencia de .backups/ en directorio padre"
+    - "Copiar archivo original a .backups/{filename}_{timestamp}.bak"
+    - "Registrar en BACKUP_MANIFEST_{fecha}.txt: fecha, archivo, hash SHA256"
+    - "Solo entonces proceder con edición"
+  
+  git_repo_check: |
+    # PowerShell
+    Test-Path "C:\Users\farid\Documents\Frecuencia Global\.git" -PathType Container
+    # Resultado: False (NO es repo Git)
+    # Por tanto: SIEMPRE backup antes de editar
+
+# =============================================================================
+# CONTEXTO DEL PROYECTO
+# =============================================================================
+
+project_context:
+  name: "Frecuencia Global"
+  root: "C:\\Users\\farid\\Documents\\Frecuencia Global"
+  is_git_repo: false
+  
+  structure:
+    operations: "07_Operaciones/"           # Documentación operativa
+    production: "04_Produccion/"            # Piezas de contenido
+    website: "website/"                   # Astro 6.1.2 + Cloudflare
+    assets: "06_Assets/"                    # Recursos creativos
+    n8n: "08_n8n/"                         # Automatización (bloqueado)
+    tools: "tools/editorial/"               # Scripts Python/PowerShell
+  
+  canonical_docs:
+    snapshot: "07_Operaciones/WINDSURF_BOOTSTRAP_SNAPSHOT_20260425.md"
+    context: "07_Operaciones/WINDSURF_CONTEXT_FG.md"
+    tooling: "07_Operaciones/WINDSURF_TOOLING_PARITY.md"
+    sprint: "07_Operaciones/WINDSURF_14_DAY_SPRINT.md"
+    daily_log: "07_Operaciones/WINDSURF_DAILY_LOG.md"
+    handoff: "07_Operaciones/WINDSURF_HANDOFF_TO_USER.md"
+    secure_zones: "07_Operaciones/WINDSURF_SECURE_ZONE_INVENTORY.md"
+  
+  single_sources_of_truth:
+    pieces: "04_Produccion/pipeline_tracker.json"
+    notion_map: "07_Operaciones/NOTION_FIELD_MAP.json"
+    ops_log: "07_Operaciones/FG_Operations_Log.md"
+
+# =============================================================================
+# LIMITES DE AUTORIZACION
+# =============================================================================
+
+authorization_tiers:
+  tier_0_readonly:
+    description: "Lectura de documentación y configs build"
+    approved: true
+    examples:
+      - "Leer .md, .json de configuración"
+      - "Ejecutar scripts de research (Crossref, Openverse)"
+      - "Build local npm run build (sin deploy)"
+  
+  tier_1_documentation:
+    description: "Creación de documentación operativa"
+    approved: true
+    examples:
+      - "Crear specs de piezas nuevas"
+      - "Generar reportes de research"
+      - "Actualizar matrices de estado"
+  
+  tier_2_modification:
+    description: "Modificación de archivos de producción"
+    requires_approval: true
+    examples:
+      - "Modificar pipeline_tracker.json"
+      - "Actualizar estados de piezas"
+      - "Crear archivos en 04_Produccion/"
+  
+  tier_3_secrets:
+    description: "Acceso a credenciales o secretos"
+    approved: false
+    permanent_block: true
+  
+  tier_4_production:
+    description: "Deploy, publish, runtime execution"
+    approved: false
+    requires_explicit_user_command: true
+
+# =============================================================================
+# MENSAJE DE ERROR ESTANDAR PARA BLOQUEOS
+# =============================================================================
+
+block_message_template: |
+  ❌ OPERACIÓN BLOQUEADA - Regla de seguridad activa
+  
+  Zona/Comando: {zone_or_command}
+  Razón: {reason}
+  
+  Acciones permitidas:
+  - ✅ Documentar existencia en WINDSURF_SECURE_ZONE_INVENTORY.md
+  - ✅ Crear plantilla .env.example sin valores reales
+  - ✅ Solicitar a usuario que ejecute manualmente
+  - ❌ NO leer, copiar, ni transferir contenido sensible
+  
+  Para desbloqueo: Solicitar autorización explícita de Farid
