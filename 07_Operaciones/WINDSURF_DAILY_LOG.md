@@ -495,7 +495,7 @@ Get-Content "03_Editorial/P1_003_Brief.md" -Raw
 |-----|-------|--------|-------------|
 | 1 | 2026-04-25 | ✅ COMPLETO | 6 archivos bootstrap |
 | 2 | 2026-04-25 | ✅ COMPLETO | Paridad VS Code:→Windsurf, 8 comandos seguros, 7+ bloqueados |
-| 3 | 2026-04-25 | ✅ COMPLETO | Mapa arquitectura operativo + Plan 72h + Pieza P1_003 seleccionada |
+| 3 | 2026-04-25 | ✅ COMPLETO | Seguridad mínima + Notion 295 + X bloqueado |
 | 4 | 2026-04-28 | ⏳ PENDIENTE | Guía Notion CSV |
 | 5 | 2026-04-29 | ⏳ PENDIENTE | Inventario n8n |
 | 6 | 2026-04-30 | ⏳ PENDIENTE | Guía website |
