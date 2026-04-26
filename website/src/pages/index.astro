@@ -34,10 +34,10 @@ const recentArticles = latestArticle
 >
   <!-- 1. HOME FOLD -->
   <HomeFold
-    kicker="Análisis"
-    tagline="Geopolítica, cultura y tecnología bajo una sola señal."
+    kicker="Radar Global"
+    tagline="Geopolítica, cultura electrónica y tecnología en la misma frecuencia."
     title="Frecuencia Global"
-    subtitle="Plataforma editorial independiente con cuatro frecuencias de lectura: geopolítica, escena electrónica, tecnología y política global."
+    subtitle="Leemos conflictos, plataformas, escenas musicales y decisiones de poder como señales conectadas: análisis internacional con estética electrónica y criterio propio."
     featured={latestArticle ? {
       title: latestArticle.data.title,
       pilar: latestArticle.data.pilar,
@@ -46,7 +46,7 @@ const recentArticles = latestArticle
       description: latestArticle.data.description
     } : undefined}
     ctas={{
-      primary: { label: 'Explorar frecuencias', href: '/pilares' },
+      primary: { label: 'Leer señales', href: '/pilares' },
       secondary: { label: 'Ver archivo', href: '/contenido' }
     }}
   />
