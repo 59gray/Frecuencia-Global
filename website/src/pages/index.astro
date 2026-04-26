@@ -42,7 +42,8 @@ const recentArticles = latestArticle
       title: latestArticle.data.title,
       pilar: latestArticle.data.pilar,
       href: `/contenido/${latestArticle.id}`,
-      image: '/images/articles/techno-detroit-featured-card.png'
+      image: '/images/articles/techno-detroit-featured-card.png',
+      description: latestArticle.data.description
     } : undefined}
     ctas={{
       primary: { label: 'Explorar frecuencias', href: '/pilares' },
