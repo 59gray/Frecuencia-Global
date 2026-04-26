@@ -40,21 +40,15 @@ function isActive(href: string): boolean {
       aria-hidden="true"
     ></div>
 
-    <nav class="relative mx-auto flex h-[4.25rem] max-w-[1500px] items-center justify-between px-fg-md lg:px-fg-xl">
+    <nav class="relative mx-auto flex h-14 max-w-[1500px] items-center justify-between px-fg-md lg:px-fg-xl">
       <a href="/" class="flex min-w-0 items-center gap-3">
         <span class="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-cyan-500/35 bg-[rgba(10,10,15,0.96)] shadow-[0_0_18px_-8px_rgba(0,229,255,0.7)]">
           <img src="/images/logo/fg_isotipo_512.png" alt="Frecuencia Global" class="h-full w-full object-cover" />
         </span>
 
-        <span class="hidden min-w-0 sm:block">
-          <span class="inline-flex items-center gap-2 border border-fg-cyan/35 bg-black/25 px-2.5 py-1 font-data text-[10px] uppercase tracking-[0.22em] text-fg-cyan">
-            <span class="h-1.5 w-1.5 rounded-full bg-fg-cyan animate-pulse"></span>
-            señal central
-          </span>
-          <span class="mt-0.5 hidden items-center gap-2 font-data text-[10px] uppercase tracking-[0.28em] text-fg-gray lg:flex">
-            <span class="text-fg-cyan">analisis internacional</span>
-            <span class="text-fg-phosphor">pulso crítico</span>
-          </span>
+        <span class="hidden min-w-0 sm:flex sm:flex-col sm:gap-0.5">
+          <span class="font-data text-[11px] uppercase tracking-[0.22em] text-fg-cyan">Señal Central</span>
+          <span class="hidden font-data text-[9px] uppercase tracking-[0.24em] text-fg-gray/70 lg:block">Análisis Internacional</span>
         </span>
       </a>
 
@@ -82,10 +76,7 @@ function isActive(href: string): boolean {
             >
               {item.label}
               {item.label === 'Frecuencias' && (
-                <span class="hidden items-center gap-1 rounded-sm border border-fg-cyan/45 bg-fg-cyan/14 px-1.5 py-0.5 font-data text-[9px] tracking-[0.22em] text-fg-cyan md:inline-flex">
-                  <span class="h-1 w-1 rounded-full bg-fg-cyan"></span>
-                  04
-                </span>
+                <span class="hidden font-data text-[9px] tracking-[0.18em] text-fg-cyan/60 md:inline">4</span>
               )}
               {item.children && (
                 <svg class="h-3 w-3 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -160,10 +151,10 @@ function isActive(href: string): boolean {
       </ul>
     </div>
 
-    <div class="hidden items-center justify-between border-t border-white/10 px-fg-md py-2 font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray lg:flex lg:px-fg-xl">
-      <span>edicion en curso</span>
-      <span class="text-fg-phosphor">geopolitica, cultura y política global</span>
-      <span class="text-fg-cyan">actualizado</span>
+    <div class="hidden items-center justify-between border-t border-white/8 px-fg-md py-1 font-data text-[9px] uppercase tracking-[0.22em] text-fg-gray/60 lg:flex lg:px-fg-xl">
+      <span>En curso</span>
+      <span class="text-fg-phosphor/80">Geopolítica · Cultura Electrónica · Tecnología · Poder</span>
+      <span class="text-fg-cyan/80">En línea</span>
     </div>
   </div>
 </header>
