@@ -20,7 +20,9 @@ const pillars = PILLARS.map((p) => ({
 }));
 
 const latestArticle = sorted[0];
-
+const recentArticles = latestArticle
+  ? sorted.filter((a) => a.id !== latestArticle.id).slice(0, 3)
+  : sorted.slice(0, 3);
 
 
 ---
@@ -48,7 +50,7 @@ const latestArticle = sorted[0];
   />
 
   <!-- 2. ÚLTIMAS SEÑALES — grid compacto, sin imagen grande -->
-  {sorted.length > 0 && (
+  {recentArticles.length > 0 && (
     <section class="fg-fallout-matrix relative overflow-hidden border-b border-white/10 py-10 lg:py-14">
       <div class="pointer-events-none absolute inset-0 opacity-[0.04]" aria-hidden="true">
         <img src="/images/sections/fg-section-archive.png" alt="" class="h-full w-full object-cover mix-blend-soft-light" loading="lazy" decoding="async" />
@@ -62,7 +64,7 @@ const latestArticle = sorted[0];
           <a href="/contenido" class="font-data text-[11px] uppercase tracking-[0.2em] text-fg-gray hover:text-fg-cyan transition-colors">Ver archivo →</a>
         </div>
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {sorted.slice(0, 3).map((article) => (
+          {recentArticles.map((article) => (
             <a
               href={`/contenido/${article.id}`}
               class="group fg-corner-cut flex flex-col border border-white/10 bg-black/25 p-5 transition-colors hover:border-white/20 hover:bg-black/35"
