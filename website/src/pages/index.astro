@@ -91,14 +91,14 @@ const radarItems = sorted.slice(0, 6).map((article) => ({
     kicker="Editorial"
     tagline="Análisis internacional con pulso electrónico."
     title="Frecuencia Global"
-    subtitle="Marca paraguas con cuatro pilares editoriales: cada uno con su enfoque — de la geopolítica visual al análisis profesional — bajo una sola señal."
+    subtitle="Marca paraguas con cuatro frecuencias editoriales: cada una con su enfoque — de la geopolítica visual al análisis profesional — bajo una sola señal."
     featured={latestArticle ? {
       title: latestArticle.data.title,
       pilar: latestArticle.data.pilar,
       href: `/contenido/${latestArticle.id}`
     } : undefined}
     ctas={{
-      primary: { label: 'Explorar pilares', href: '/pilares' },
+      primary: { label: 'Explorar frecuencias', href: '/pilares' },
       secondary: { label: 'Ver archivo', href: '/contenido' }
     }}
   />
@@ -114,9 +114,9 @@ const radarItems = sorted.slice(0, 6).map((article) => ({
       />
     </div>
     <div class="relative mx-auto max-w-[1400px] px-6 pt-4 pb-6 lg:px-12 lg:pt-5">
-      <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan mb-2">Accesos al sistema</p>
+      <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan mb-2">Rutas de lectura</p>
       <p class="text-sm text-fg-gray/90 max-w-2xl mb-4 leading-relaxed">
-        Atajos al archivo por pilar: cada enlace refleja el foco de esa frecuencia.
+        Atajos por frecuencia: cada ruta concentra una forma distinta de leer la señal.
       </p>
       <TopicChips topics={topicChips} variant="compact" />
     </div>
