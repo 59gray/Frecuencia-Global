@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="fg-h-scan-c" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0"/>
+      <stop offset="42%" stop-color="#00E5FF" stop-opacity="0.14"/>
+      <stop offset="58%" stop-color="#00E5FF" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#00E5FF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="fg-h-scan-a" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#d4a84b" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#d4a84b" stop-opacity="0.09"/>
+      <stop offset="100%" stop-color="#d4a84b" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="fg-h-hex" width="56" height="97.98" patternUnits="userSpaceOnUse" patternTransform="scale(1)">
+      <path d="M28 0 L52 13.86 L52 41.58 L28 55.44 L4 41.58 L4 13.86 Z" stroke="rgba(0,229,255,0.035)" stroke-width="1" fill="none"/>
+    </pattern>
+    <pattern id="fg-h-micro" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0H0V36" stroke="rgba(212,168,75,0.045)" stroke-width="1"/>
+    </pattern>
+    <filter id="fg-soft-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="fg-h-vignette" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#06080c" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#06080c" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#fg-h-hex)" opacity="0.85"/>
+  <rect width="1600" height="900" fill="url(#fg-h-micro)" opacity="0.45"/>
+  <path d="M0 600 C 300 520, 440 740, 680 640 S 1020 480, 1600 560" stroke="rgba(0,229,255,0.11)" stroke-width="1.5" fill="none"/>
+  <path d="M0 340 C 380 420, 540 220, 820 300 S 1080 160, 1600 240" stroke="rgba(255,0,229,0.07)" stroke-width="1.2" fill="none"/>
+  <path d="M140 900 C 220 620, 460 500, 760 580 S 1220 700, 1540 520" stroke="rgba(74,107,255,0.09)" stroke-width="1.1" fill="none"/>
+  <g filter="url(#fg-soft-glow)">
+    <circle cx="440" cy="300" r="3.5" fill="#00E5FF" opacity="0.5"/>
+    <circle cx="1020" cy="420" r="3" fill="#FF00E5" opacity="0.38"/>
+    <circle cx="1340" cy="500" r="2.8" fill="#B8FF00" opacity="0.32"/>
+    <circle cx="240" cy="660" r="2.5" fill="#4a6bff" opacity="0.45"/>
+    <circle cx="1180" cy="220" r="2" fill="#d4a84b" opacity="0.35"/>
+  </g>
+  <rect x="0" y="200" width="1600" height="36" fill="url(#fg-h-scan-c)" opacity="0.38"/>
+  <rect x="0" y="510" width="1600" height="22" fill="url(#fg-h-scan-a)" opacity="0.55"/>
+  <rect x="0" y="740" width="1600" height="14" fill="url(#fg-h-scan-c)" opacity="0.22"/>
+  <rect width="1600" height="900" fill="url(#fg-h-vignette)" opacity="0.9"/>
+  <g stroke="#00E5FF" stroke-opacity="0.42" stroke-width="1.5" fill="none">
+    <path d="M28 52 V28 H52"/><path d="M1572 52 V28 H1548"/><path d="M28 848 V872 H52"/><path d="M1572 848 V872 H1548"/>
+  </g>
+  <g stroke="#d4a84b" stroke-opacity="0.35" stroke-width="1" fill="none">
+    <path d="M44 68 V44 H68"/><path d="M1556 68 V44 H1532"/><path d="M44 832 V856 H68"/><path d="M1556 832 V856 H1532"/>
+  </g>
+  <g stroke="rgba(255,255,255,0.1)" stroke-width="1">
+    <path d="M112 0v18M224 0v11M336 0v18"/>
+    <path d="M1488 900v-18M1376 900v-11M1264 900v-18"/>
+  </g>
+  <text x="44" y="88" fill="rgba(212,168,75,0.42)" font-family="ui-monospace, monospace" font-size="11" letter-spacing="0.32em">GRID / SIGNAL / ROUTE</text>
+  <text x="44" y="108" fill="rgba(0,229,255,0.38)" font-family="ui-monospace, monospace" font-size="10" letter-spacing="0.26em">SCAN ACTIVE :: UPLINK STABLE</text>
+  <text x="1180" y="832" fill="rgba(245,247,251,0.2)" font-family="ui-monospace, monospace" font-size="10" letter-spacing="0.28em">NODE PRIORITY :: EDITORIAL CHANNEL</text>
+</svg>

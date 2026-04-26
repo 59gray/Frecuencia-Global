@@ -258,3 +258,397 @@ a:hover {
 .prose h2:first-child {
   margin-top: 0;
 }
+
+/* === REPAIR_STACK_20260425: editorial system from backup ===
+ * Append-only block. Adds utility classes (fg-tactical-panel, fg-corner-cut, fg-fallout-matrix,
+ * fg-hero-scanline, fg-site-shell, etc.) that ArticleLayout, BaseLayout, [slug].astro and the
+ * editorial/* components reference. Does NOT modify @theme (palette stays neon-vibrant) nor any
+ * existing rule above this marker. To revert: delete everything between this marker and END.
+ * Source: D:\FrecuenciaGlobal\backups\FG_PRE_REPAIR_20260425_123256\website\src\styles\global.css
+ */
+
+/* Extra design tokens (non-conflicting; merged with @theme above by Tailwind v4) */
+@theme {
+  --color-fg-phosphor: #d4a84b;
+  --color-fg-phosphor-dim: #9a7a38;
+
+  --spacing-fg-2xs: 4px;
+  --spacing-fg-xs: 8px;
+  --spacing-fg-sm: 12px;
+  --spacing-fg-md: 16px;
+  --spacing-fg-lg: 24px;
+  --spacing-fg-xl: 32px;
+  --spacing-fg-2xl: 48px;
+  --spacing-fg-3xl: 64px;
+}
+
+/* Heading utilities */
+.heading-brand {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height: 0.95;
+  font-weight: 400;
+}
+
+.heading-body {
+  font-family: var(--font-body);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
+
+/* Site shell + ambient layers */
+.fg-site-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.fg-site-atmosphere {
+  background-image:
+    radial-gradient(ellipse 74% 58% at 16% -8%, rgba(0, 229, 255, 0.06), transparent 52%),
+    radial-gradient(ellipse 56% 42% at 88% 6%, rgba(255, 0, 229, 0.05), transparent 46%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.012), transparent 260px);
+}
+
+.fg-site-vignette {
+  background:
+    radial-gradient(ellipse 90% 72% at 50% 50%, transparent 54%, rgba(0, 0, 0, 0.46) 100%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.28) 100%);
+}
+
+.fg-hud-chrome {
+  box-shadow:
+    inset 0 1px 0 rgba(0, 229, 255, 0.1),
+    inset 0 -1px 0 rgba(212, 168, 75, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+/* Tactical panels (cards, frames) */
+.fg-tactical-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(160deg, rgba(12, 16, 24, 0.94) 0%, rgba(10, 14, 20, 0.88) 55%, rgba(8, 11, 18, 0.94) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(212, 168, 75, 0.07),
+    0 16px 38px rgba(0, 0, 0, 0.34);
+}
+
+.fg-tactical-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(0, 229, 255, 0.06), transparent 40%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.012) 0,
+      rgba(255, 255, 255, 0.012) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  opacity: 0.55;
+}
+
+.fg-nav-shell {
+  overflow: visible;
+}
+
+.fg-tactical-panel--nav {
+  overflow: visible;
+}
+
+.fg-dropdown-panel {
+  position: absolute;
+  overflow: visible;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(160deg, rgba(12, 16, 24, 0.98) 0%, rgba(10, 14, 20, 0.95) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 20px 36px rgba(0, 0, 0, 0.4);
+}
+
+.fg-dropdown-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(0, 229, 255, 0.06), transparent 42%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.012) 0,
+      rgba(255, 255, 255, 0.012) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  opacity: 0.6;
+}
+
+.fg-corner-cut {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+}
+
+.fg-divider-hairline {
+  position: relative;
+}
+
+.fg-divider-hairline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.28), transparent);
+}
+
+/* Fallout matrix bg (used by hero / radar) */
+.fg-fallout-matrix {
+  position: relative;
+  overflow: hidden;
+}
+
+.fg-fallout-matrix::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 229, 255, 0.06) 0,
+      rgba(0, 229, 255, 0.06) 1px,
+      transparent 1px,
+      transparent 22px
+    ),
+    linear-gradient(180deg, rgba(0, 229, 255, 0.05) 0%, transparent 34%);
+  opacity: 0.28;
+}
+
+.fg-fallout-matrix::after {
+  content: "";
+  position: absolute;
+  inset: -120% 0 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(0, 229, 255, 0.08) 0,
+    rgba(0, 229, 255, 0.08) 2px,
+    transparent 2px,
+    transparent 14px
+  );
+  opacity: 0.1;
+  animation: fg-matrix-fall 14s linear infinite;
+}
+
+/* Content-zone scoped accents */
+.fg-content-zone {
+  --fg-content-accent: var(--color-fg-cyan);
+  --fg-content-glow: rgba(0, 229, 255, 0.28);
+}
+
+.fg-content-zone .fg-content-kicker {
+  color: var(--fg-content-accent);
+}
+
+.fg-content-zone .pilar-filter {
+  border-color: rgba(0, 229, 255, 0.26);
+  color: rgba(187, 204, 214, 0.9);
+  background: rgba(0, 229, 255, 0.05);
+}
+
+.fg-content-zone .pilar-filter:hover {
+  border-color: rgba(0, 229, 255, 0.44);
+  color: var(--color-fg-white);
+  background: rgba(0, 229, 255, 0.11);
+}
+
+.fg-content-zone .pilar-filter.is-active {
+  border-color: rgba(0, 229, 255, 0.78);
+  color: #0f151b;
+  background: rgba(171, 215, 230, 0.9);
+  box-shadow: 0 0 20px -8px var(--fg-content-glow);
+}
+
+/* Editorial weave bg (optional asset; no-op if image missing) */
+.fg-editorial-weave-bg {
+  background-image: url("/images/system/fg-overlay-section-weave.svg");
+  background-size: cover;
+  background-position: center top;
+}
+
+/* Hero scanline (animated overlay) */
+.fg-hero-scanline::after {
+  content: "";
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  top: -30%;
+  height: 45%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--color-fg-cyan) 9%, transparent) 38%,
+    color-mix(in srgb, var(--color-fg-phosphor) 4%, transparent) 52%,
+    color-mix(in srgb, var(--color-fg-cyan) 3%, transparent) 58%,
+    transparent 100%
+  );
+  opacity: 0.36;
+  filter: blur(0.5px);
+  animation: fg-hero-scan 9s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+.fg-hero-scan-img {
+  animation: signal-drift 18s ease-in-out infinite;
+}
+
+/* Keyframes added by repair stack */
+@keyframes fg-matrix-fall {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(56%);
+  }
+}
+
+@keyframes fg-hero-scan {
+  0%,
+  100% {
+    transform: translate3d(0, -12%, 0);
+    opacity: 0.22;
+  }
+  50% {
+    transform: translate3d(0, 72%, 0);
+    opacity: 0.38;
+  }
+}
+
+/* Reduced motion handling for new animations */
+@media (prefers-reduced-motion: reduce) {
+  .fg-hero-scan-img,
+  .fg-fallout-matrix::after {
+    animation: none;
+  }
+
+  .fg-hero-scanline::after {
+    animation: none;
+    opacity: 0.18;
+  }
+
+  .fg-tactical-panel::before {
+    background-image: none;
+  }
+}
+
+/* Prose extensions used by article body components */
+.prose .article-inline-figure {
+  margin: 2.25rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  background: linear-gradient(
+    165deg,
+    rgba(12, 16, 24, 0.55) 0%,
+    rgba(8, 11, 18, 0.72) 55%,
+    rgba(8, 11, 18, 0.88) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 14px 36px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.prose .article-inline-figure picture,
+.prose .article-inline-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border-radius: 0;
+}
+
+.prose .article-inline-figure figcaption {
+  font-family: var(--font-data);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(181, 190, 205, 0.88);
+  padding: 0.65rem 1rem 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  line-height: 1.45;
+}
+
+.prose .article-context-callout {
+  margin: 1.85rem 0 2rem;
+  padding: 1rem 1rem 1.05rem;
+  border: 1px solid rgba(0, 229, 255, 0.22);
+  border-left: 3px solid rgba(0, 229, 255, 0.72);
+  border-radius: 4px;
+  background:
+    linear-gradient(155deg, rgba(12, 16, 24, 0.9) 0%, rgba(8, 11, 18, 0.94) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.prose .article-context-callout p:last-child {
+  margin-bottom: 0;
+}
+
+.prose .article-context-label {
+  margin-bottom: 0.45rem;
+  font-family: var(--font-data);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(0, 229, 255, 0.92);
+}
+
+.prose .article-context-title {
+  margin-bottom: 0.45rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--color-fg-white);
+}
+
+.prose .article-context-body {
+  margin-bottom: 0.7rem;
+  font-size: 0.98rem;
+  line-height: 1.68;
+  color: rgba(242, 244, 248, 0.9);
+}
+
+.prose .article-context-takeaway {
+  font-size: 0.92rem;
+  line-height: 1.62;
+  color: rgba(181, 190, 205, 0.92);
+}
+
+.prose .article-x-embed {
+  margin: 1.9rem 0 2.15rem;
+}
+
+.prose .article-x-embed blockquote.twitter-tweet {
+  margin: 0 auto !important;
+}
+
+.prose .article-x-embed-caption {
+  margin-top: 0.75rem;
+  font-family: var(--font-data);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  line-height: 1.55;
+  text-transform: uppercase;
+  color: rgba(181, 190, 205, 0.9);
+}
+
+/* === END REPAIR_STACK === */

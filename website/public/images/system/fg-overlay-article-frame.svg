@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="fg-a-fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#06080c" stop-opacity="0"/>
+      <stop offset="52%" stop-color="#06080c" stop-opacity="0.58"/>
+      <stop offset="100%" stop-color="#06080c" stop-opacity="0.94"/>
+    </linearGradient>
+    <linearGradient id="fg-a-bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0"/>
+      <stop offset="40%" stop-color="#00E5FF" stop-opacity="0.35"/>
+      <stop offset="70%" stop-color="#d4a84b" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#00E5FF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#fg-a-fade)"/>
+  <rect x="0" y="52" width="1200" height="3" fill="url(#fg-a-bar)" opacity="0.65"/>
+  <g stroke="#00E5FF" stroke-opacity="0.28" stroke-width="1.25" fill="none">
+    <path d="M28 44 H180"/><path d="M1172 44 H1020"/><path d="M28 631 H220"/><path d="M1172 631 H980"/>
+  </g>
+  <g stroke="#d4a84b" stroke-opacity="0.22" stroke-width="1" fill="none">
+    <path d="M44 60 H140"/><path d="M1156 60 H1060"/><path d="M44 615 H160"/><path d="M1156 615 H1040"/>
+  </g>
+  <rect x="10" y="10" width="1180" height="655" stroke="rgba(255,255,255,0.07)" stroke-width="1" fill="none"/>
+  <text x="36" y="654" fill="rgba(212,168,75,0.38)" font-family="ui-monospace, monospace" font-size="10" letter-spacing="0.38em">EDITORIAL COVER / SIGNAL LOCK</text>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" role="img" aria-labelledby="title desc">
+  <title id="title">Frecuencia Global 16px Mark</title>
+  <desc id="desc">Compact FG monogram optimized for favicon and micro sizes.</desc>
+  <rect width="16" height="16" rx="3" fill="#0A0A0F" />
+  <path d="M3 3h5v2H5v2h3v2H5v4H3Z" fill="#FFFFFF" />
+  <path d="M13 5H9v2h4v2h-2v2h2v2H9a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4Z" fill="#00E5FF" />
+</svg>
