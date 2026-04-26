@@ -17,34 +17,39 @@ El artículo argumenta que Detroit fue la matriz material del techno —no un mi
 
 ## Visual thesis
 
-Detroit no como postal turística ni como ruina industrial, sino como ciudad-fábrica negra donde la máquina, el circuito y el deseo de futuro se cruzaron para producir algo nuevo.
+Detroit no como ruina industrial ni postal nostálgica, sino como ciudad-fábrica negra donde sintetizadores, radio nocturna y deseo de futuro se cruzaron activamente para producir algo nuevo. El marco es el Afrofuturismo: escapismo positivo hacia el futuro, no reflejo mecánico del colapso.
+
+> Actualizado 2026-04-26 con hallazgos de investigación factual (SOURCE_LEDGER + CLAIM_LEDGER).
 
 ---
 
-## Key concepts from article
+## Key concepts from article (verificados)
 
-- Ciudad-fábrica / automoción / manufactura
-- Memoria negra y cultura Black LGBTQ (Club Heaven)
-- Circuito: Belleville → radio nocturna → sellos propios
-- Máquina como sonido de futuro, no de nostalgia
-- Tensión Detroit (origen) vs. Berlín (visibilidad/canon)
-- Escena underground electrónica nocturna
-- Infraestructura urbana densa, pesada
-- Continuidad viva: Underground Music Academy
-- Disputa de relato y legitimidad
+- Ciudad-fábrica / automoción / manufactura — contexto, no causa
+- Afrofuturismo: tecnología como imaginación de futuros negros (verificado: Routes Journal)
+- Memoria negra y cultura Black LGBTQ — Club Heaven (7 Mile y Woodward, DSC archive)
+- Circuito: Belleville → radio nocturna (Electrifying Mojo) → sellos propios
+- Sintetizador como instrumento solista de bedroom (MiniKorg-700S, 1979 — Atkins en primera persona)
+- Máquina como sonido de futuro activo, no nostalgia ni lamento
+- Tensión Detroit (origen) vs. Berlín (visibilidad/canon global post-1989)
+- Escena underground electrónica nocturna — club culture Black LGBTQ
+- Infraestructura urbana densa, pesada — pero no una ciudad en ruina pasiva
+- Disputa de relato y legitimidad — quién controla la memoria del género
 
 ---
 
 ## Allowed visual elements
 
-- Skyline nocturno abstracto de Detroit
-- Fábrica / ciudad industrial en plano lejano
-- Líneas de circuito o señal electrónica
-- Luces de club: magenta, cyan, violeta — sin texto
-- Textura urbana densa, concreto, metal
-- Ambiente subterráneo o nocturno
-- Señal / pulso / onda como metáfora visual
+- Skyline nocturno abstracto de Detroit — desde distancia, no como postal turística
+- Ciudad industrial en plano lejano — contexto de fondo, no protagonista
+- Señal electrónica / onda / circuito como metáfora visual del sintetizador y la radio
+- Luces de club: magenta, cyan, violeta — ambiente subterráneo Black LGBTQ
+- Textura urbana densa: concreto, metal, asfalto mojado
+- Ambiente subterráneo o nocturno — calle, club, after-hours
+- Pulso / onda / frecuencia como objeto visual central
 - Perspectiva aérea o picada sobre ciudad oscura
+- Antena de radio o frecuencia — referencia a Electrifying Mojo (verificado como vector indispensable)
+- Energía de futuro — no de colapso
 
 ---
 
@@ -58,6 +63,8 @@ Detroit no como postal turística ni como ruina industrial, sino como ciudad-fá
 - Banderas nacionales innecesarias
 - Imágenes stock genéricas de "música electrónica"
 - Colores pastel o estética pop sin contraste
+- **NUEVO — Ruina urbana como metáfora central:** no representar Detroit como ciudad muerta o abandonada. La investigación confirma que el techno fue una respuesta activa de futuro, no un lamento del colapso.
+- **NUEVO — Fábrica en primer plano sin señal electrónica:** si hay fábrica, debe coexistir con elementos de señal/circuito/frecuencia para comunicar la síntesis, no el determinismo industrial.
 
 ---
 
