@@ -109,56 +109,49 @@ const bassBordersMeta: Record<string, { label: string; supportLine: string; city
       {sorted.length > 0 ? (
         isBassBorders ? (
           <div class="mt-fg-xl space-y-fg-xl">
-            <section class="relative overflow-hidden border-y border-white/10 py-8 sm:py-10">
+            <section class="relative overflow-hidden py-7 sm:py-9">
               <div
-                class="pointer-events-none absolute inset-0 opacity-70"
-                style="background: radial-gradient(circle at 18% 0%, rgba(124, 114, 143, 0.14), transparent 36%), linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 52%);"
+                class="pointer-events-none absolute inset-0"
+                style="background: linear-gradient(135deg, rgba(124,114,143,0.07) 0%, transparent 55%), linear-gradient(to bottom, rgba(255,255,255,0.012), transparent 70%);"
                 aria-hidden="true"
               ></div>
+              <div class="pointer-events-none absolute top-0 left-0 h-px w-full" style="background: linear-gradient(90deg, var(--color-pilar-p2), transparent 60%);" aria-hidden="true"></div>
+              <div class="pointer-events-none absolute bottom-0 left-0 h-px w-full opacity-30" style="background: linear-gradient(90deg, var(--color-pilar-p2), transparent 40%);" aria-hidden="true"></div>
 
-              <div class="relative grid gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)]">
-                <div class="max-w-4xl">
-                  <p class="font-data text-[11px] uppercase tracking-[0.3em] text-pilar-p2/90">
-                    Bass & Borders // Dossier
-                  </p>
-                  <h2 class="mt-3 text-3xl font-semibold leading-tight text-fg-white sm:text-[2.6rem] lg:text-[3rem]">
-                    Detroit fabrica el pulso. Berghain administra el umbral.
+              <div class="relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
+                <div>
+                  <div class="flex items-center gap-3 mb-4">
+                    <span class="font-data text-[10px] uppercase tracking-[0.32em] text-pilar-p2/80">Dossier</span>
+                    <span class="h-px flex-1 max-w-[40px]" style="background: var(--color-pilar-p2); opacity: 0.4;"></span>
+                    <span class="font-data text-[10px] uppercase tracking-[0.32em] text-fg-gray/50">Bass & Borders</span>
+                  </div>
+                  <h2 class="text-2xl font-semibold leading-[1.15] text-fg-white sm:text-[1.85rem] lg:text-[2.1rem] max-w-xl">
+                    Detroit fabrica el pulso.<br />
+                    <em class="not-italic" style="color: var(--color-pilar-p2);">Berghain</em> administra el umbral.
                   </h2>
-                  <p class="mt-5 text-[15px] leading-relaxed text-fg-gray sm:text-base">
-                    Bass & Borders entra cuando la música deja de ser fondo y empieza a ordenar ciudad, cuerpo y acceso.
-                    No miramos escenas para celebrar su iconografía, sino para leer qué tipo de pertenencia producen y
-                    qué reglas dejan inscritas en la noche.
-                  </p>
-                  <p class="mt-4 text-[15px] leading-relaxed text-fg-gray sm:text-base">
-                    Detroit y Berghain conviven aquí porque nombran dos operaciones distintas del mismo mapa. Detroit
-                    aparece como matriz material: ciudad-fábrica, circuito negro, máquina, ruina activa y memoria.
-                    Berghain aparece como dispositivo social: filtro, anonimato, jerarquía y control de la imagen.
+                  <p class="mt-4 text-[14px] leading-relaxed text-fg-gray/85 max-w-lg">
+                    Bass & Borders lee la escena como mapa político: qué tipo de pertenencia produce la música,
+                    qué reglas deja inscrita en el cuerpo y la ciudad.
                   </p>
                 </div>
 
-                <div class="flex flex-col divide-y divide-white/10 border-l border-white/10 pl-0 lg:pl-8">
-                  <div class="pb-5">
-                    <p class="font-data text-[10px] uppercase tracking-[0.24em] text-pilar-p2/95">
-                      Qué conecta estas piezas
-                    </p>
-                    <p class="mt-2 text-sm leading-relaxed text-fg-white/88">
-                      En ambas, la música funciona como regla de pertenencia antes que como simple entretenimiento.
+                <div class="flex flex-col gap-0 border-l border-white/8 pl-6 lg:pl-7">
+                  <div class="pb-4 border-b border-white/8">
+                    <span class="font-data text-[9px] uppercase tracking-[0.3em]" style="color: var(--color-pilar-p2); opacity: 0.75;">Nexo</span>
+                    <p class="mt-1.5 text-[13px] leading-snug text-fg-white/75">
+                      En ambas, la música ordena pertenencia antes que entretenimiento.
                     </p>
                   </div>
-
-                  <div class="py-5">
-                    <p class="font-data text-[10px] uppercase tracking-[0.24em] text-pilar-p2/95">Tensión central</p>
-                    <p class="mt-2 text-sm leading-relaxed text-fg-white/88">
-                      Detroit pone la raíz, la densidad histórica y la máquina; Berlín concentra el filtro, el
-                      prestigio y la administración del acceso.
+                  <div class="py-4 border-b border-white/8">
+                    <span class="font-data text-[9px] uppercase tracking-[0.3em]" style="color: var(--color-pilar-p2); opacity: 0.75;">Tensión</span>
+                    <p class="mt-1.5 text-[13px] leading-snug text-fg-white/75">
+                      Detroit: raíz, máquina, memoria. <br/>Berlín: filtro, prestigio, acceso.
                     </p>
                   </div>
-
-                  <div class="pt-5">
-                    <p class="font-data text-[10px] uppercase tracking-[0.24em] text-pilar-p2/95">Cómo leer el radar</p>
-                    <p class="mt-2 text-sm leading-relaxed text-fg-white/88">
-                      Detroit se lee desde circuito, memoria y ciudad-fábrica. Berghain, desde umbral, anonimato y
-                      disciplina visual.
+                  <div class="pt-4">
+                    <span class="font-data text-[9px] uppercase tracking-[0.3em]" style="color: var(--color-pilar-p2); opacity: 0.75;">Radar</span>
+                    <p class="mt-1.5 text-[13px] leading-snug text-fg-white/75">
+                      Circuito y memoria en Detroit. <br/>Umbral y disciplina en Berghain.
                     </p>
                   </div>
                 </div>
