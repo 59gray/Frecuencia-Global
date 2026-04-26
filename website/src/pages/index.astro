@@ -11,9 +11,6 @@ import { PILLARS, pillarPath } from '../lib/pillars';
 const allArticles = await getCollection('articles', ({ data }) => !data.draft);
 const sorted = allArticles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const allEpisodes = await getCollection('episodes', ({ data }) => !data.draft);
-const sortedEpisodes = allEpisodes.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
-
 const pillars = PILLARS.map((p) => ({
   id: p.id,
   number: p.number,
@@ -24,7 +21,6 @@ const pillars = PILLARS.map((p) => ({
 }));
 
 const latestArticle = sorted[0];
-const latestEpisode = sortedEpisodes[0];
 
 
 
@@ -95,35 +91,28 @@ const latestEpisode = sortedEpisodes[0];
   <!-- 3. CUATRO FRECUENCIAS -->
   <PillarGrid pillars={pillars} />
 
-  <!-- 4. PODCAST — tarjeta compacta -->
-  {latestEpisode && (
-    <section class="fg-fallout-matrix relative border-t border-white/10 py-10 lg:py-14">
-      <div class="relative mx-auto max-w-[1400px] px-6 lg:px-12">
-        <div class="flex items-center gap-3 mb-5">
-          <SignalNode size="sm" />
-          <span class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">Podcast</span>
+  <!-- 4. PODCAST — próximamente -->
+  <section class="fg-fallout-matrix relative border-t border-white/10 py-10 lg:py-14">
+    <div class="relative mx-auto max-w-[1400px] px-6 lg:px-12">
+      <div class="flex items-center gap-3 mb-5">
+        <SignalNode size="sm" />
+        <span class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">Podcast</span>
+      </div>
+      <div class="fg-corner-cut border border-white/10 bg-black/20 p-6 lg:p-8 max-w-3xl flex items-center gap-6">
+        <div class="shrink-0 flex items-center justify-center w-10 h-10 rounded-full border border-fg-cyan/25 text-fg-cyan/50">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+          </svg>
         </div>
-        <div class="fg-corner-cut border border-white/12 bg-black/25 p-6 lg:p-8 max-w-3xl">
-          <div class="flex items-center gap-2 mb-3">
-            <PillarPill pilar={latestEpisode.data.pilar} size="sm" />
-            <span class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray">
-              EP{String(latestEpisode.data.episodeNumber).padStart(2, '0')}
-            </span>
-          </div>
-          <h3 class="text-xl font-semibold text-fg-white mb-2">{latestEpisode.data.title}</h3>
-          <p class="text-sm text-fg-gray/85 mb-5 max-w-xl leading-relaxed">{latestEpisode.data.description}</p>
-          <div class="flex flex-wrap gap-3">
-            <a href={`/podcast/${latestEpisode.id}`} class="inline-flex items-center gap-2 bg-fg-cyan px-4 py-2 font-data text-xs uppercase tracking-[0.2em] text-fg-black transition-all hover:bg-fg-white">
-              Escuchar episodio →
-            </a>
-            <a href="/podcast" class="inline-flex items-center gap-2 border border-white/20 px-4 py-2 font-data text-xs uppercase tracking-[0.2em] text-fg-white transition-all hover:border-fg-cyan hover:text-fg-cyan">
-              Todos los episodios
-            </a>
-          </div>
+        <div>
+          <p class="font-data text-[10px] uppercase tracking-[0.3em] text-fg-cyan/60 mb-1">Próximamente</p>
+          <p class="text-sm text-fg-gray/70 leading-relaxed max-w-lg">
+            Audio-first en RSS, videopodcast con visualizer editorial en YouTube. La señal llega pronto.
+          </p>
         </div>
       </div>
-    </section>
-  )}
+    </div>
+  </section>
 
   <!-- 5. CTA FINAL -->
   <EditorialCTA
