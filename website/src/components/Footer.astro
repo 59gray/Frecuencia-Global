@@ -17,7 +17,7 @@ const pilars = PILLARS.map((p) => ({
 const links = [
   { label: 'Archivo', href: '/contenido' },
   { label: 'Podcast', href: '/podcast' },
-  { label: 'Sobre', href: '/sobre' },
+  { label: 'About', href: '/sobre' },
   { label: 'Contacto', href: '/contacto' },
   { label: 'Privacy Policy', href: '/privacy' },
   { label: 'Terms of Service', href: '/terms' },
@@ -141,14 +141,22 @@ const socials = [
           </div>
         </div>
 
-        <div class="fg-corner-cut border border-white/12 bg-black/30 px-4 py-4">
-          <p class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray">linea editorial</p>
-          <p class="mt-3 text-sm leading-relaxed text-fg-gray">
-            Cada pieza mantiene trazabilidad editorial por pilar y superficie de salida.
+        <div class="fg-corner-cut border border-white/12 bg-black/30 px-4 py-5 flex flex-col gap-3">
+          <p class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-cyan">Transmisión continua</p>
+          <p class="text-sm font-semibold text-fg-white leading-snug">
+            La señal se construye en cada frecuencia.
           </p>
-          <p class="mt-4 font-data text-[10px] uppercase tracking-[0.24em] text-fg-cyan">
-            verificacion activa
+          <p class="text-xs leading-relaxed text-fg-gray">
+            Podcast, archivo y piezas largas bajo la misma señal editorial.
           </p>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <a href="/contacto" class="fg-corner-cut bg-fg-cyan px-3 py-1.5 font-data text-[10px] uppercase tracking-[0.18em] text-fg-black transition-colors hover:bg-fg-white">
+              Contactar
+            </a>
+            <a href="/sobre" class="fg-corner-cut border border-white/20 px-3 py-1.5 font-data text-[10px] uppercase tracking-[0.18em] text-fg-white transition-colors hover:border-fg-cyan hover:text-fg-cyan">
+              About
+            </a>
+          </div>
         </div>
       </div>
 

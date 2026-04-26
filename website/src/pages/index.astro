@@ -2,7 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HomeFold from '../components/editorial/HomeFold.astro';
 import PillarGrid from '../components/editorial/PillarGrid.astro';
-import EditorialCTA from '../components/editorial/EditorialCTA.astro';
 import SignalNode from '../components/SignalNode.astro';
 import PillarPill from '../components/PillarPill.astro';
 import { getCollection } from 'astro:content';
@@ -113,13 +112,4 @@ const latestArticle = sorted[0];
       </div>
     </div>
   </section>
-
-  <!-- 5. CTA FINAL -->
-  <EditorialCTA
-    label="Transmisión continua"
-    title="La señal se construye en cada frecuencia."
-    description="Podcast, archivo y piezas largas bajo la misma señal editorial."
-    primaryAction={{ label: 'Contactar', href: '/contacto' }}
-    secondaryAction={{ label: 'Sobre el proyecto', href: '/sobre' }}
-  />
 </BaseLayout>
