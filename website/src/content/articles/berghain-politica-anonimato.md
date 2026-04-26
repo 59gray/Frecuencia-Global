@@ -1,4 +1,4 @@
----
+﻿---
 title: "Berghain y la política del anonimato (no es solo música)"
 description: "El club más difícil de entrar del mundo no es un espacio de entretenimiento: es un dispositivo social. El filtro en la puerta, el anonimato dentro y el control de la imagen son su verdadera arquitectura."
 date: 2026-04-10
