@@ -83,10 +83,10 @@ const isTechnoDetroit = featured.image?.includes('DETROIT') || featured.image?.i
       <!-- Top accent bar -->
       <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-fg-cyan/50 to-transparent" aria-hidden="true"></div>
 
-      <div class="grid lg:grid-cols-[1fr_0.85fr] min-h-[420px]">
+      <div style="width:100%" class="grid lg:grid-cols-[1fr_0.85fr] min-h-[420px]">
 
         <!-- Left: editorial content panel -->
-        <div class="flex flex-col justify-between p-6 sm:p-8 lg:p-10 xl:p-12">
+        <div style="min-width:0;width:100%" class="flex flex-col justify-between p-6 sm:p-8 lg:p-10 xl:p-12">
 
           <!-- Top badges row -->
           <div class="flex flex-wrap items-center gap-3 mb-6">
@@ -110,7 +110,7 @@ const isTechnoDetroit = featured.image?.includes('DETROIT') || featured.image?.i
               </h3>
             </a>
 
-            <p class="mt-5 text-base leading-relaxed text-fg-gray/90 max-w-lg line-clamp-3 sm:line-clamp-none">
+            <p style="white-space:normal;word-break:normal;overflow-wrap:break-word" class="mt-5 text-base leading-relaxed text-fg-gray/90 max-w-lg">
               {isTechnoDetroit
                 ? 'De las fábricas de Detroit a las pistas del mundo: una historia de migración cultural, resistencia y frecuencia electrónica.'
                 : featured.description}

@@ -33,13 +33,13 @@ const colorStyles = {
     <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray mb-4">{title}</p>
   )}
   
-  <div class="flex flex-wrap gap-3 sm:gap-4">
+  <div style="width:100%" class="flex flex-wrap gap-3 sm:gap-4">
     {topics.map((topic) => (
       <a
         href={topic.href}
-        class={`inline-flex max-w-full items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 border font-data text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.15em] transition-all duration-300 break-words ${colorStyles[topic.color || 'neutral']}`}
+        class={`inline-flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 border font-data text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.15em] transition-all duration-300 ${colorStyles[topic.color || 'neutral']}`}
       >
-        <span class="break-words text-left leading-snug">{topic.label}</span>
+        <span class="leading-snug">{topic.label}</span>
         {topic.count !== undefined && (
           <span class="inline-flex min-w-[1.6rem] items-center justify-center rounded-full bg-black/25 px-1.5 py-0.5 text-[10px] opacity-75">{topic.count}</span>
         )}
