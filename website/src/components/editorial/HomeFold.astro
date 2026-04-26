@@ -139,43 +139,43 @@ const {
       {featured && (
         <a
           href={featured.href}
-          class="group mt-4 sm:mt-5 lg:mt-6 block max-w-3xl overflow-hidden border border-white/12 border-l-2 border-l-fg-phosphor/60 bg-black/25 shadow-[0_0_35px_-24px_rgba(0,229,255,0.5)] transition-colors hover:border-white/20 hover:bg-black/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg-cyan"
+          class="group relative mt-4 sm:mt-5 lg:mt-6 block overflow-hidden border border-white/12 border-l-2 border-l-fg-phosphor/60 shadow-[0_0_40px_-20px_rgba(0,229,255,0.4)] transition-colors hover:border-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg-cyan"
+          style="min-height:10rem"
         >
-          <div class="flex flex-col sm:flex-row">
-            {/* Columna izquierda: labels + título + sinopsis + CTA */}
-            <div class="flex flex-col gap-2.5 p-5 sm:flex-1 sm:p-6 lg:p-7">
-              <div class="flex items-center gap-2">
-                <PillarPill pilar={featured.pilar} size="sm" />
-                <span class="font-data text-[10px] uppercase tracking-[0.2em] text-fg-gray/85">Señal destacada</span>
-              </div>
-              <h2 class="text-base font-semibold leading-snug text-fg-white transition-colors group-hover:text-fg-cyan sm:text-lg">
-                {featured.title}
-              </h2>
-              {featured.description && (
-                <p class="line-clamp-2 text-xs leading-relaxed text-fg-gray/70">
-                  {featured.description}
-                </p>
-              )}
-              <span class="mt-0.5 inline-flex items-center gap-1 font-data text-xs uppercase tracking-[0.15em] text-fg-cyan">
-                <span>Leer análisis</span>
-                <span class="transition-transform group-hover:translate-x-1">→</span>
-              </span>
+          {/* Imagen de fondo full-width */}
+          {featured.image && (
+            <div class="absolute inset-0">
+              <img
+                src={featured.image}
+                alt=""
+                aria-hidden="true"
+                class="h-full w-full object-cover object-[center_35%] transition-transform duration-700 group-hover:scale-[1.02]"
+                loading="eager"
+                decoding="async"
+              />
+              {/* Overlay: oscuro a izquierda donde va el texto, transparente a la derecha */}
+              <div class="absolute inset-0 bg-linear-to-r from-black/85 via-black/55 to-black/10" aria-hidden="true"></div>
+              <div class="absolute inset-0 shadow-[inset_0_0_0_1px_rgba(0,229,255,0.12)]" aria-hidden="true"></div>
             </div>
-            {/* Columna derecha: imagen — 28% aprox en desktop */}
-            {featured.image && (
-              <div class="relative h-64 shrink-0 overflow-hidden border-l border-fg-cyan/20 sm:h-auto sm:w-[62%]">
-                <img
-                  src={featured.image}
-                  alt=""
-                  aria-hidden="true"
-                  class="h-full w-full object-cover object-[center_35%] transition-transform duration-500 group-hover:scale-[1.03]"
-                  loading="eager"
-                  decoding="async"
-                />
-                <div class="absolute inset-0 bg-linear-to-l from-transparent via-black/5 to-black/30 sm:bg-linear-to-r sm:from-black/20 sm:via-transparent sm:to-transparent" aria-hidden="true"></div>
-                <div class="absolute inset-0 shadow-[inset_0_0_0_1px_rgba(0,229,255,0.14),inset_-1px_0_12px_rgba(0,229,255,0.06)]" aria-hidden="true"></div>
-              </div>
+          )}
+          {/* Contenido sobre la imagen */}
+          <div class="relative z-10 flex flex-col gap-2.5 p-5 sm:max-w-[55%] sm:p-6 lg:p-7">
+            <div class="flex items-center gap-2">
+              <PillarPill pilar={featured.pilar} size="sm" />
+              <span class="font-data text-[10px] uppercase tracking-[0.2em] text-fg-gray/90">Señal destacada</span>
+            </div>
+            <h2 class="text-base font-semibold leading-snug text-fg-white transition-colors group-hover:text-fg-cyan sm:text-lg lg:text-xl">
+              {featured.title}
+            </h2>
+            {featured.description && (
+              <p class="line-clamp-2 text-xs leading-relaxed text-fg-gray/75">
+                {featured.description}
+              </p>
             )}
+            <span class="mt-0.5 inline-flex items-center gap-1 font-data text-xs uppercase tracking-[0.15em] text-fg-cyan">
+              <span>Leer análisis</span>
+              <span class="transition-transform group-hover:translate-x-1">→</span>
+            </span>
           </div>
         </a>
       )}
