@@ -40,7 +40,7 @@ function isActive(href: string): boolean {
       aria-hidden="true"
     ></div>
 
-    <nav class="relative mx-auto flex h-[4.25rem] max-w-[1500px] items-center justify-between px-fg-md lg:px-fg-xl">
+    <nav class="relative mx-auto flex h-14 max-w-[1500px] items-center justify-between px-fg-md lg:px-fg-xl">
       <a href="/" class="flex min-w-0 items-center gap-3">
         <span class="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-cyan-500/35 bg-[rgba(10,10,15,0.96)] shadow-[0_0_18px_-8px_rgba(0,229,255,0.7)]">
           <img src="/images/logo/fg_isotipo_512.png" alt="Frecuencia Global" class="h-full w-full object-cover" />
@@ -58,7 +58,7 @@ function isActive(href: string): boolean {
         </span>
       </a>
 
-      <ul class="hidden items-center gap-1 md:flex">
+      <ul class="hidden items-center gap-0.5 md:flex">
         {navItems.map((item) => (
           <li class="group relative z-20 after:absolute after:left-0 after:right-0 after:top-full after:h-2 after:content-[''] hover:z-40 focus-within:z-40">
             <a
@@ -83,12 +83,12 @@ function isActive(href: string): boolean {
               {item.label}
               {item.label === 'Pilares' && (
                 <span class="hidden items-center gap-1 rounded-sm border border-fg-cyan/45 bg-fg-cyan/14 px-1.5 py-0.5 font-data text-[9px] tracking-[0.22em] text-fg-cyan md:inline-flex">
-                  <span class="h-1.5 w-1.5 rounded-full bg-fg-cyan animate-pulse"></span>
-                  4 PILARES
+                  <span class="h-1 w-1 rounded-full bg-fg-cyan"></span>
+                  04
                 </span>
               )}
               {item.children && (
-                <svg class="h-3 w-3 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="h-2.5 w-2.5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               )}
