@@ -4,7 +4,7 @@ description: "El 99% del tráfico de datos intercontinental viaja por cables de 
 date: 2026-03-30
 pilar: p1
 tags: ["geopolítica", "infraestructura", "cables submarinos", "China", "EEUU", "internet"]
-image: "/images/articles/cables-submarinos.jpg"
+image: "/images/articles/cables-submarinos.png"
 draft: false
 ---
 
