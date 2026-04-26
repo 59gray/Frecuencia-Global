@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import EditorialPageShell from '../../components/EditorialPageShell.astro';
 import EpisodeCard from '../../components/EpisodeCard.astro';
 import FrequencyLine from '../../components/FrequencyLine.astro';
 import PillarPill from '../../components/PillarPill.astro';
@@ -10,23 +11,24 @@ const sorted = allEpisodes.sort((a, b) => b.data.publishDate.getTime() - a.data.
 const latestEpisode = sorted[0];
 ---
 
-<BaseLayout title="Podcast — Frecuencia Global" description="Archivo del podcast y videopodcast de Frecuencia Global: episodios semanales con salida a RSS, web y YouTube.">
-  <section class="mx-auto max-w-[1500px] px-md py-2xl lg:px-xl">
-    <div class="grid gap-10 border-b border-white/10 pb-xl lg:grid-cols-[minmax(0,1.15fr)_380px]">
+<BaseLayout title="Podcast — Frecuencia Global" description="Archivo del podcast y videopodcast de Frecuencia Global con episodios semanales en web y plataformas.">
+  <EditorialPageShell density="standard" texture="radar">
+  <section class="fg-fallout-matrix mx-auto max-w-[1500px] px-fg-md py-fg-2xl lg:px-fg-xl">
+    <div class="grid gap-10 border-b border-white/10 pb-fg-xl lg:grid-cols-[minmax(0,1.15fr)_380px]">
       <div>
         <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">frecuencia global podcast</p>
-        <h1 class="mt-4 max-w-[10ch] font-display text-5xl leading-[0.84] tracking-[0.08em] text-fg-white sm:text-6xl">
-          audio-first, con videopodcast en youtube
+        <h1 class="mt-4 max-w-[18ch] font-display text-4xl sm:text-5xl tracking-wide text-fg-white leading-tight">
+          Audio-first, con videopodcast en YouTube
         </h1>
         <p class="mt-5 max-w-3xl text-lg leading-relaxed text-fg-gray">
-          Un episodio semanal que vive en tres superficies al mismo tiempo: feed RSS, archivo público del sitio y videopodcast largo con visualizer editorial 16:9.
+          Un episodio semanal disponible en el sitio, plataformas de audio y videopodcast en YouTube.
         </p>
         <div class="mt-8 flex flex-wrap gap-4">
           <a
             href="/podcast/rss.xml"
-            class="inline-flex items-center justify-center border border-fg-cyan bg-fg-cyan px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-black transition-transform duration-300 hover:-translate-y-0.5"
+            class="inline-flex items-center justify-center border border-fg-cyan bg-fg-cyan px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-black transition-opacity duration-300 hover:opacity-90"
           >
-            abrir rss
+            escuchar en podcast
           </a>
           <a
             href="https://youtube.com/@FrecuenciaGlobal"
@@ -39,8 +41,11 @@ const latestEpisode = sorted[0];
         </div>
       </div>
 
-      <aside class="overflow-hidden border border-white/10 bg-white/[0.03] p-6">
-        <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">estado del feed</p>
+      <aside class="fg-corner-cut relative overflow-hidden border border-white/10 bg-white/[0.03] p-6">
+        <div class="pointer-events-none absolute inset-0 opacity-[0.24]" aria-hidden="true">
+          <img src="/images/components/overlays/lower-third-web-reference.svg" alt="" class="h-full w-full object-cover" loading="lazy" decoding="async" />
+        </div>
+        <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">estado de cabina</p>
         <dl class="mt-6 grid grid-cols-2 gap-4">
           <div>
             <dt class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray">episodios</dt>
@@ -52,16 +57,22 @@ const latestEpisode = sorted[0];
           </div>
         </dl>
         <p class="mt-6 text-sm leading-relaxed text-fg-gray">
-          Cada episodio genera audio RSS, página pública, videopodcast largo y cortes sociales derivados.
+          Flujo activo: guion validado, episodio largo y cortes derivados listos para distribucion multiplataforma.
         </p>
       </aside>
     </div>
 
     {latestEpisode && (
-      <section class="mt-xl grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_360px]">
-        <div class="overflow-hidden border border-white/10 bg-white/[0.03]">
+      <section class="mt-fg-xl grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_360px]">
+        <div class="fg-corner-cut relative overflow-hidden border border-white/10 bg-white/[0.03]">
           <a href={`/podcast/${latestEpisode.id}`} class="block aspect-video overflow-hidden border-b border-white/10">
-            <img src={latestEpisode.data.coverImage} alt={latestEpisode.data.title} class="h-full w-full object-cover" />
+            <div class="absolute inset-0" aria-hidden="true">
+              <img src="/images/hero/fg-hero-atmosphere-grid.png" alt="" class="h-full w-full object-cover opacity-42 mix-blend-screen" loading="lazy" decoding="async" />
+            </div>
+            <img src={latestEpisode.data.coverImage} alt={latestEpisode.data.title} class="relative z-10 h-full w-full object-cover" />
+            <div class="pointer-events-none absolute inset-0 z-20 opacity-[0.32]" aria-hidden="true">
+              <img src="/images/system/fg-overlay-article-frame.svg" alt="" class="h-full w-full object-cover" loading="lazy" decoding="async" />
+            </div>
           </a>
           <div class="px-6 py-6">
             <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">episodio más reciente</p>
@@ -93,20 +104,23 @@ const latestEpisode = sorted[0];
           </div>
         </div>
 
-        <aside class="border border-white/10 bg-white/[0.03] px-6 py-6">
+        <aside class="fg-corner-cut relative border border-white/10 bg-white/[0.03] px-6 py-6">
+          <div class="pointer-events-none absolute inset-0 opacity-[0.12]" aria-hidden="true">
+            <img src="/images/sections/fg-section-radar.png" alt="" class="h-full w-full object-cover mix-blend-soft-light" loading="lazy" decoding="async" />
+          </div>
           <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">pipeline del episodio</p>
           <ul class="mt-5 space-y-3 text-sm leading-relaxed text-fg-gray">
-            <li>audio master para Spotify, Apple Podcasts y web</li>
-            <li>visualizer editorial 16:9 para videopodcast</li>
-            <li>show notes y metadata para RSS</li>
-            <li>2-3 clips para Shorts, Reels y TikTok</li>
-            <li>copy nativo para X y LinkedIn</li>
+            <li>master de audio: mezcla final y loudness normalizado</li>
+            <li>videopodcast 16:9 con capa grafica editorial</li>
+            <li>show notes con referencias, timestamps y contexto</li>
+            <li>cortes verticales para Shorts, Reels y TikTok</li>
+            <li>copys nativos para X, LinkedIn y Threads</li>
           </ul>
         </aside>
       </section>
     )}
 
-    <section class="mt-xl">
+    <section class="mt-fg-xl">
       <div class="flex items-center justify-between gap-4">
         <div>
           <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">archivo</p>
@@ -116,7 +130,7 @@ const latestEpisode = sorted[0];
 
       <FrequencyLine class="mt-6" />
 
-      <div class="mt-xl grid grid-cols-1 gap-lg md:grid-cols-2 lg:grid-cols-3">
+      <div class="mt-fg-xl grid grid-cols-1 gap-fg-lg md:grid-cols-2 lg:grid-cols-3">
         {sorted.map((episode) => (
           <EpisodeCard
             title={episode.data.title}
@@ -135,10 +149,11 @@ const latestEpisode = sorted[0];
       </div>
 
       {sorted.length === 0 && (
-        <div class="py-3xl text-center">
+        <div class="py-fg-3xl text-center">
           <p class="font-data text-sm tracking-widest text-fg-gray">[SIN EPISODIOS PUBLICADOS AÚN]</p>
         </div>
       )}
     </section>
   </section>
+  </EditorialPageShell>
 </BaseLayout>

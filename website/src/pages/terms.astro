@@ -1,41 +1,79 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import LegalLayout from '../layouts/LegalLayout.astro';
 ---
 
-<BaseLayout title="Términos de Servicio" description="Términos de servicio de Frecuencia Global.">
-  <section class="max-w-3xl mx-auto px-6 py-20">
-    <h1 class="text-4xl font-bold mb-8 text-fg-cyan font-display">Términos de Servicio</h1>
-    <p class="text-fg-gray-400 text-sm mb-8">Última actualización: 4 de abril de 2026</p>
+<LegalLayout
+  title="Terms of Service"
+  description="Terms of Service for Frecuencia Global Publisher."
+  lastUpdated="April 16, 2026"
+  lang="en"
+>
+  <p>
+    <strong>Frecuencia Global Publisher</strong> is the publishing service operated by Frecuencia Global to distribute editorial content across connected platforms. By using this service or related website features, you agree to these Terms of Service.
+  </p>
 
-    <div class="space-y-6 text-fg-gray-300 leading-relaxed">
-      <h2 class="text-xl font-semibold text-fg-white mt-8">1. Aceptación de los Términos</h2>
-      <p>Al acceder y utilizar el sitio web de Frecuencia Global y sus servicios asociados (incluyendo aplicaciones de publicación automatizada en redes sociales), usted acepta estos Términos de Servicio en su totalidad.</p>
+  <h2>1. Service Description</h2>
+  <p>
+    Frecuencia Global Publisher provides tools to authenticate official social accounts, prepare and publish editorial content, and monitor publication status across connected channels such as TikTok and other social platforms.
+  </p>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">2. Descripción del Servicio</h2>
-      <p>Frecuencia Global es una plataforma de análisis internacional que produce y distribuye contenido editorial sobre geopolítica, cultura, música y política global. Nuestros servicios incluyen:</p>
-      <ul class="list-disc list-inside space-y-2 ml-4">
-        <li>Publicación de artículos y análisis en nuestro sitio web</li>
-        <li>Distribución automatizada de contenido en redes sociales (Instagram, TikTok, X/Twitter, LinkedIn)</li>
-        <li>Producción de contenido multimedia (imágenes, video, audio)</li>
-      </ul>
+  <h2>2. User Obligations</h2>
+  <ul>
+    <li>Provide accurate information when submitting requests or connecting authorized accounts.</li>
+    <li>Use the service in compliance with applicable laws and platform policies.</li>
+    <li>Maintain control of account permissions and notify us of unauthorized access concerns.</li>
+    <li>Refrain from actions that could disrupt, abuse, or compromise the service or connected APIs.</li>
+  </ul>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">3. Propiedad Intelectual</h2>
-      <p>Todo el contenido publicado por Frecuencia Global, incluyendo textos, imágenes, videos, gráficos y elementos de marca, es propiedad de Frecuencia Global y está protegido por las leyes de propiedad intelectual aplicables.</p>
+  <h2>3. Acceptable Use</h2>
+  <p>You agree not to use Frecuencia Global Publisher to:</p>
+  <ul>
+    <li>Publish unlawful, fraudulent, or infringing content.</li>
+    <li>Attempt unauthorized access to systems, credentials, or third-party accounts.</li>
+    <li>Circumvent platform restrictions, rate limits, or developer terms.</li>
+    <li>Transmit malicious code, spam, or abusive automated activity.</li>
+  </ul>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">4. Uso Aceptable</h2>
-      <p>El contenido de Frecuencia Global es para uso informativo y educativo. Queda prohibida la reproducción no autorizada, distribución o modificación del contenido sin consentimiento previo por escrito.</p>
+  <h2>4. Third-Party Platforms</h2>
+  <p>
+    Frecuencia Global Publisher depends on third-party services and APIs, including TikTok and other social networks. Your use of those platforms is also governed by their own terms, privacy policies, and developer rules.
+  </p>
+  <p>
+    We are not responsible for changes, downtime, policy updates, or restrictions imposed by third-party platforms.
+  </p>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">5. Aplicaciones de Terceros</h2>
-      <p>Frecuencia Global utiliza APIs de terceros (incluyendo TikTok, Instagram, X/Twitter y LinkedIn) para la distribución automatizada de contenido. El uso de estas plataformas está sujeto a sus propios términos de servicio.</p>
+  <h2>5. Intellectual Property</h2>
+  <p>
+    The Frecuencia Global brand, website content, publishing workflows, and related materials are protected by applicable intellectual property laws. No rights are granted except as expressly stated in these Terms.
+  </p>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">6. Limitación de Responsabilidad</h2>
-      <p>Frecuencia Global proporciona su contenido "tal cual" sin garantías de ningún tipo. No nos hacemos responsables de daños directos o indirectos derivados del uso de nuestro contenido o servicios.</p>
+  <h2>6. Limitation of Liability</h2>
+  <p>
+    Frecuencia Global Publisher is provided on an "as is" and "as available" basis, without warranties of uninterrupted operation, specific performance outcomes, or error-free availability.
+  </p>
+  <p>
+    To the maximum extent permitted by law, Frecuencia Global is not liable for indirect, incidental, special, consequential, or punitive damages arising from use of the service, third-party platform actions, or temporary interruptions.
+  </p>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">7. Modificaciones</h2>
-      <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios entrarán en vigor inmediatamente tras su publicación en este sitio.</p>
+  <h2>7. Suspension or Termination</h2>
+  <p>
+    We may suspend or terminate access to Frecuencia Global Publisher if required for security, legal compliance, abuse prevention, or breach of these Terms.
+  </p>
+  <p>
+    You may stop using the service at any time by revoking platform permissions and requesting account disconnection.
+  </p>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">8. Contacto</h2>
-      <p>Para consultas sobre estos términos, contáctenos a través de nuestra <a href="/contacto" class="text-fg-cyan hover:underline">página de contacto</a>.</p>
-    </div>
-  </section>
-</BaseLayout>
+  <h2>8. Changes to These Terms</h2>
+  <p>
+    We may modify these Terms of Service to reflect legal, operational, or technical updates. Revised terms become effective when published on this page, with an updated last updated date.
+  </p>
+
+  <h2>9. Contact</h2>
+  <div class="contact-box">
+    <p>
+      <strong>Email:</strong> <a href="mailto:contacto@frecuenciaglobal.org">contacto@frecuenciaglobal.org</a><br>
+      <strong>Website:</strong> <a href="https://frecuenciaglobal.org">frecuenciaglobal.org</a><br>
+      <strong>Contact page:</strong> <a href="/contacto">frecuenciaglobal.org/contacto</a>
+    </p>
+  </div>
+</LegalLayout>

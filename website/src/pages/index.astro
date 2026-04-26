@@ -1,10 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
-import PillarSection from '../components/PillarSection.astro';
-import EpisodeCard from '../components/EpisodeCard.astro';
+import HomeFold from '../components/editorial/HomeFold.astro';
+import FeaturedBlock from '../components/editorial/FeaturedBlock.astro';
+import PillarGrid from '../components/editorial/PillarGrid.astro';
+import TopicChips from '../components/editorial/TopicChips.astro';
+import RadarModule from '../components/editorial/RadarModule.astro';
+import EditorialCTA from '../components/editorial/EditorialCTA.astro';
 import SignalNode from '../components/SignalNode.astro';
+import PillarPill from '../components/PillarPill.astro';
 import { getCollection } from 'astro:content';
+import { PILLARS, pillarPath, PILLAR_BY_ID } from '../lib/pillars';
 
 const allArticles = await getCollection('articles', ({ data }) => !data.draft);
 const sorted = allArticles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -12,254 +17,232 @@ const sorted = allArticles.sort((a, b) => b.data.date.getTime() - a.data.date.ge
 const allEpisodes = await getCollection('episodes', ({ data }) => !data.draft);
 const sortedEpisodes = allEpisodes.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
 
-const pilars = [
-  { id: 'p1' as const, title: 'GEOPOLITIK DROP', desc: 'Poder, conflicto y movimientos estratégicos globales.', href: '/pilares/geopolitik-drop' },
-  { id: 'p2' as const, title: 'BASS & BORDERS', desc: 'Música electrónica como lente cultural y geopolítico.', href: '/pilares/bass-and-borders' },
-  { id: 'p3' as const, title: 'FRECUENCIA GLOBAL', desc: 'Tecnología, datos y las fuerzas que dan forma al mundo.', href: '/pilares/frecuencia-global' },
-  { id: 'p4' as const, title: 'BEHIND THE POLICY', desc: 'Lo que hay detrás de las políticas que afectan tu vida.', href: '/pilares/behind-the-policy' },
-];
+const pillars = PILLARS.map((p) => ({
+  id: p.id,
+  number: p.number,
+  title: p.titleEs,
+  subtitle: p.subtitleEs,
+  description: p.description,
+  href: pillarPath(p.slug),
+}));
 
 const latestArticle = sorted[0];
 const latestEpisode = sortedEpisodes[0];
-const activePillars = new Set(sorted.map((article) => article.data.pilar)).size;
 
-const featuredArticle = latestArticle
-  ? {
-      title: latestArticle.data.title,
-      description: latestArticle.data.description,
-      href: `/contenido/${latestArticle.id}`,
-      dateLabel: latestArticle.data.date.toLocaleDateString('es-MX', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      }),
-      pilar: latestArticle.data.pilar,
-    }
-  : undefined;
+// Artículo destacado + secundarios (inspiración Dubstep FBI)
+const featuredArticleData = sorted[0];
+const secondaryArticlesData = sorted.slice(1, 4);
 
-const signalStats = [
-  { label: 'artículos publicados', value: String(sorted.length).padStart(2, '0'), tone: 'cyan' as const },
-  { label: 'episodios de podcast', value: String(sortedEpisodes.length).padStart(2, '0'), tone: 'blue' as const },
-  { label: 'pilares editoriales', value: '04', tone: 'magenta' as const },
-  { label: 'plataformas activas', value: '06', tone: 'green' as const },
+const featuredArticle = featuredArticleData ? {
+  title: featuredArticleData.data.title,
+  description: featuredArticleData.data.description,
+  slug: featuredArticleData.id,
+  pilar: featuredArticleData.data.pilar,
+  date: featuredArticleData.data.date,
+  image: featuredArticleData.data.image,
+} : undefined;
+
+const secondaryArticles = secondaryArticlesData.map((article) => ({
+  title: article.data.title,
+  description: article.data.description,
+  slug: article.id,
+  pilar: article.data.pilar,
+  date: article.data.date,
+}));
+
+// Chips temáticos (inspiración Polymarket)
+const chipColorById = { p1: 'cyan', p2: 'magenta', p3: 'green', p4: 'blue' } as const;
+const topicChips = [
+  ...PILLARS.map((p) => ({
+    id: p.id,
+    label: p.titleEs,
+    count: sorted.filter((a) => a.data.pilar === p.id).length,
+    href: pillarPath(p.slug),
+    color: chipColorById[p.id],
+  })),
+  { id: 'all', label: 'Todo el archivo', count: sorted.length, href: '/contenido', color: 'neutral' as const },
 ];
 
-const tickerItems = [
-  'análisis internacional',
-  'geopolítica contemporánea',
-  'cultura global',
-  'música y fronteras',
-  'política explicada',
-  'perspectiva latinoamericana',
-  'contenido editorial riguroso',
-  'distribución multiplataforma',
-];
+// Items para Radar (inspiración EDMtrain)
+const radarItems = sorted.slice(0, 6).map((article) => ({
+  title: article.data.title,
+  meta: article.data.date.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }),
+  href: `/contenido/${article.id}`,
+  tag: PILLAR_BY_ID[article.data.pilar].subtitleEs,
+  tagColor:
+    article.data.pilar === 'p1'
+      ? ('cyan' as const)
+      : article.data.pilar === 'p2'
+        ? ('magenta' as const)
+        : article.data.pilar === 'p3'
+          ? ('green' as const)
+            : ('blue' as const),
+}));
 
-const manifestoPoints = [
-  {
-    label: 'Análisis',
-    title: 'Geopolítica con perspectiva contemporánea.',
-    body: 'Cada pieza editorial combina rigor periodístico con lenguaje actual. Sin jargon innecesario, sin simplificaciones perezosas.',
-  },
-  {
-    label: 'Distribución',
-    title: 'El mismo contenido, optimizado para cada plataforma.',
-    body: 'Adaptamos nuestro análisis para X, Instagram, LinkedIn, TikTok, Threads y YouTube — respetando el formato y la audiencia de cada una.',
-  },
-  {
-    label: 'Presencia',
-    title: '6 plataformas. Una voz coherente.',
-    body: 'Estamos donde está la conversación global: desde el hilo técnico en X hasta el videopodcast en YouTube, pasando por el formato corto en TikTok.',
-  },
-];
 ---
 
-<BaseLayout title="Frecuencia Global — Análisis internacional con pulso electrónico" description="Proyecto editorial independiente dedicado al análisis internacional: geopolítica, cultura global y tecnología contados con rigor y energía contemporánea." image="/images/og/fg_website_hero_20260402_v1.webp">
-  <Hero
-    title="FRECUENCIA GLOBAL"
-    subtitle="Análisis internacional que respeta tu inteligencia y tu tiempo. Cuatro pilares, un lenguaje visual de frecuencia grave."
-    ctaLabel="Explorar pilares"
-    ctaHref="/pilares"
-    secondaryLabel="Último drop"
-    secondaryHref="/contenido"
-    backgroundImage="/images/og/fg_website_hero_20260402_v1.webp"
-    featuredArticle={featuredArticle}
-    stats={signalStats}
-    tickerItems={tickerItems}
+<BaseLayout
+  title="Frecuencia Global"
+  description="Medio editorial independiente: geopolítica, escena electrónica, tecnología y economía política del entretenimiento — cuatro pilares, archivo y podcast."
+  image="/images/og/fg_og_default_1200x630.png"
+>
+  <!-- 1. HOME FOLD: Columna única ancha, jerarquía editorial clara -->
+  <HomeFold
+    kicker="Editorial"
+    tagline="Análisis internacional con pulso electrónico."
+    title="Frecuencia Global"
+    subtitle="Marca paraguas con cuatro pilares editoriales: cada uno con su enfoque — de la geopolítica visual al análisis profesional — bajo una sola señal."
+    featured={latestArticle ? {
+      title: latestArticle.data.title,
+      pilar: latestArticle.data.pilar,
+      href: `/contenido/${latestArticle.id}`
+    } : undefined}
+    ctas={{
+      primary: { label: 'Explorar pilares', href: '/pilares' },
+      secondary: { label: 'Ver archivo', href: '/contenido' }
+    }}
   />
 
+  <!-- 2. CHIPS — taxonomía con capa de sistema (textura FG v5, lectura editorial) -->
+  <div class="fg-fallout-matrix relative overflow-hidden border-b border-white/10">
+    <div class="pointer-events-none absolute inset-0 opacity-[0.045]" aria-hidden="true">
+      <img
+        src="/images/sections/fg-section-radar.png"
+        alt=""
+        class="h-full w-full object-cover mix-blend-overlay"
+        loading="lazy"
+      />
+    </div>
+    <div class="relative mx-auto max-w-[1400px] px-6 pt-4 pb-6 lg:px-12 lg:pt-5">
+      <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan mb-2">Accesos al sistema</p>
+      <p class="text-sm text-fg-gray/90 max-w-2xl mb-4 leading-relaxed">
+        Atajos al archivo por pilar: cada enlace refleja el foco de esa frecuencia.
+      </p>
+      <TopicChips topics={topicChips} variant="compact" />
+    </div>
+  </div>
+
+  <!-- 3. BLOQUE DESTACADO (inspiración Dubstep FBI: pieza fuerte, sidebar de más contenido) -->
+  {featuredArticle && (
+    <FeaturedBlock
+      label="Señal fuerte"
+      headline="Análisis destacado"
+      subheadline="Última pieza publicada; el pilar indica el enfoque editorial que la enmarca."
+      featured={featuredArticle}
+      secondary={secondaryArticles}
+    />
+  )}
+
+  <!-- 4. RADAR DE CONTENIDO (inspiración EDMtrain: utilidad, claridad, escaneable) -->
+  <RadarModule
+    title="Radar de señales"
+    subtitle="Lectura transversal del archivo: salta al pilar si quieres profundizar en su enfoque."
+    filters={[
+      { id: 'all', label: 'Todas', href: '/contenido', isActive: true },
+      ...PILLARS.map((p) => ({
+        id: p.id,
+        label: p.titleEs,
+        href: pillarPath(p.slug),
+      })),
+    ]}
+    items={radarItems}
+    href="/contenido"
+    hrefLabel="Ver archivo completo →"
+  />
+
+  <!-- 5. CUATRO PILARES -->
+  <PillarGrid pillars={pillars} />
+
+  <!-- 6. PODCAST -->
   {latestEpisode && (
-    <section class="relative py-16 lg:py-24">
-      <div class="mx-auto max-w-[1500px] px-md lg:px-xl">
-        <div class="grid gap-8 border border-white/10 bg-[linear-gradient(135deg,rgba(0,229,255,0.08),rgba(255,255,255,0.02))] p-6 lg:grid-cols-[minmax(0,1.1fr)_340px] lg:p-8">
+    <section class="fg-fallout-matrix relative py-20 lg:py-28 border-t border-white/10">
+      <div class="mx-auto max-w-[1200px] px-6 lg:px-12">
+        <div class="grid gap-8 lg:grid-cols-[1fr_0.6fr] lg:gap-12 items-start">
+          <!-- Info -->
           <div>
-            <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">podcast + videopodcast</p>
-            <h2 class="mt-4 font-display text-4xl leading-[0.86] tracking-[0.08em] text-fg-white sm:text-5xl">
-              La señal ahora también sale en audio RSS y YouTube largo.
+            <div class="flex items-center gap-3 mb-6">
+              <SignalNode size="sm" />
+              <span class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">Podcast + Videopodcast</span>
+            </div>
+
+            <h2 class="font-display text-4xl leading-tight text-fg-white sm:text-5xl mb-4">
+              La señal en audio y video.
             </h2>
-            <p class="mt-4 max-w-2xl text-base leading-relaxed text-fg-gray">
-              Cada episodio vive como audio-first en el feed del podcast, página canónica en el sitio y videopodcast 16:9 con visualizer editorial en el canal de YouTube.
+
+            <p class="text-lg leading-relaxed text-fg-gray max-w-2xl mb-8">
+              Cada episodio como audio-first en RSS, página canónica en el sitio y videopodcast con visualizer editorial en YouTube.
             </p>
-            <div class="mt-8 flex flex-wrap gap-4">
+
+            <!-- Episodio destacado -->
+            <div class="fg-corner-cut border-l-2 border-fg-cyan/30 bg-black/25 pl-6 pr-4 py-4 mb-8">
+              <div class="flex items-center gap-2 mb-2">
+                <PillarPill pilar={latestEpisode.data.pilar} size="sm" />
+                <span class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray">
+                  EP{String(latestEpisode.data.episodeNumber).padStart(2, '0')}
+                </span>
+              </div>
+              <h3 class="text-xl font-semibold text-fg-white mb-2">
+                {latestEpisode.data.title}
+              </h3>
+              <p class="text-sm text-fg-gray mb-3">
+                {latestEpisode.data.description}
+              </p>
               <a
-                href="/podcast"
-                class="inline-flex items-center justify-center border border-fg-cyan bg-fg-cyan px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-black transition-transform duration-300 hover:-translate-y-0.5"
+                href={`/podcast/${latestEpisode.id}`}
+                class="inline-flex items-center gap-2 font-data text-xs uppercase tracking-[0.2em] text-fg-cyan hover:text-fg-white transition-colors"
               >
-                abrir podcast
+                <span>Escuchar episodio</span>
+                <span>→</span>
               </a>
-              <a
-                href="/podcast/rss.xml"
-                class="inline-flex items-center justify-center border border-white/15 px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-white transition-colors duration-300 hover:border-white/35 hover:bg-white/5"
-              >
-                feed rss
+            </div>
+
+            <!-- Links -->
+            <div class="flex flex-wrap gap-4">
+              <a href="/podcast" class="inline-flex items-center justify-center bg-fg-cyan px-6 py-3 font-data text-xs uppercase tracking-[0.2em] text-fg-black transition-all hover:bg-fg-white hover:text-fg-black">
+                Todos los episodios
+              </a>
+              <a href="/podcast/rss.xml" class="inline-flex items-center justify-center border border-white/20 px-6 py-3 font-data text-xs uppercase tracking-[0.2em] text-fg-white transition-all hover:border-fg-cyan hover:text-fg-cyan">
+                RSS Feed
               </a>
             </div>
           </div>
 
-          <EpisodeCard
-            title={latestEpisode.data.title}
-            description={latestEpisode.data.description}
-            publishDate={latestEpisode.data.publishDate}
-            pilar={latestEpisode.data.pilar}
-            slug={latestEpisode.id}
-            coverImage={latestEpisode.data.coverImage}
-            duration={latestEpisode.data.duration}
-            episodeNumber={latestEpisode.data.episodeNumber}
-            season={latestEpisode.data.season}
-            videoMode={latestEpisode.data.videoMode}
-            platformLinks={latestEpisode.data.platformLinks}
-          />
+          <!-- Cover -->
+          <a href={`/podcast/${latestEpisode.id}`} class="block">
+            <div class="fg-corner-cut relative aspect-square overflow-hidden border border-fg-cyan/20">
+              <div class="absolute inset-0" aria-hidden="true">
+                <img src="/images/hero/fg-hero-atmosphere-cyan.png" alt="" class="h-full w-full object-cover opacity-45 mix-blend-screen" loading="lazy" />
+              </div>
+              <div class="absolute inset-0" aria-hidden="true">
+                <img src="/images/sections/fg-section-radar.png" alt="" class="h-full w-full object-cover opacity-55 mix-blend-soft-light" loading="lazy" />
+              </div>
+              {latestEpisode.data.coverImage ? (
+                <img
+                  src={latestEpisode.data.coverImage}
+                  alt={latestEpisode.data.title}
+                  class="relative z-10 h-full w-full object-cover opacity-92"
+                />
+              ) : (
+                <div class="relative z-10 flex h-full items-end p-5">
+                  <img src="/images/components/cards/template-featured-1200x630.svg" alt="" class="h-full w-full object-cover opacity-70" loading="lazy" />
+                </div>
+              )}
+              <div class="pointer-events-none absolute inset-0 z-20 opacity-[0.32]" aria-hidden="true">
+                <img src="/images/system/fg-overlay-article-frame.svg" alt="" class="h-full w-full object-cover" loading="lazy" />
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </section>
   )}
 
-  <!-- Content Distribution Section -->
-  <section class="relative py-16 lg:py-24 border-b border-white/10">
-    <div class="mx-auto max-w-[1500px] px-md lg:px-xl">
-      <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">distribución editorial</p>
-      <h2 class="mt-4 font-display text-4xl leading-[0.86] tracking-[0.08em] text-fg-white sm:text-5xl">
-        MULTIPLATAFORMA
-      </h2>
-      <p class="mt-4 max-w-2xl text-fg-gray">
-        Adaptamos cada pieza editorial para su mejor formato en cada plataforma.
-        El mismo análisis, optimizado para X, Instagram, LinkedIn, TikTok, Threads y YouTube.
-      </p>
-      <div class="mt-8 grid gap-6 lg:grid-cols-3">
-        <div class="border border-white/10 bg-white/[0.02] p-6">
-          <div class="flex items-center gap-3">
-            <SignalNode size="sm" color="var(--color-fg-cyan)" />
-            <p class="font-data text-xs uppercase tracking-wider text-fg-cyan">Texto y análisis</p>
-          </div>
-          <p class="mt-3 text-sm leading-relaxed text-fg-gray">
-            Hilos argumentativos en X y LinkedIn. Publicaciones de texto en Threads.
-            Análisis estructurados para lectores que buscan profundidad.
-          </p>
-        </div>
-        <div class="border border-white/10 bg-white/[0.02] p-6">
-          <div class="flex items-center gap-3">
-            <SignalNode size="sm" color="var(--color-pilar-p3)" />
-            <p class="font-data text-xs uppercase tracking-wider text-pilar-p3">Visual y audio</p>
-          </div>
-          <p class="mt-3 text-sm leading-relaxed text-fg-gray">
-            Covers editoriales para Instagram. Videopodcast en YouTube.
-            Formatos cortos para TikTok. Cada pieza en su medio ideal.
-          </p>
-        </div>
-        <div class="border border-white/10 bg-white/[0.02] p-6">
-          <div class="flex items-center gap-3">
-            <SignalNode size="sm" color="var(--color-pilar-p2)" />
-            <p class="font-data text-xs uppercase tracking-wider text-pilar-p2">Presencia coherente</p>
-          </div>
-          <p class="mt-3 text-sm leading-relaxed text-fg-gray">
-            Una misma voz editorial en 6 plataformas. Sin fragmentación de mensaje,
-            sin perder la identidad de Frecuencia Global en ningún canal.
-          </p>
-        </div>
-      </div>
-      <div class="mt-8 flex flex-wrap gap-4">
-        <a href="/pilares" class="inline-flex items-center justify-center border border-fg-cyan bg-fg-cyan px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-black transition-transform duration-300 hover:-translate-y-0.5">ver pilares editoriales</a>
-        <a href="/contenido" class="inline-flex items-center justify-center border border-white/15 px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-white transition-colors duration-300 hover:border-white/35 hover:bg-white/5">explorar archivo</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="relative py-16 lg:py-24">
-    <div class="mx-auto grid max-w-[1500px] gap-10 px-md lg:grid-cols-[minmax(0,0.95fr)_1.05fr] lg:gap-14 lg:px-xl">
-      <div>
-        <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">filosofía editorial</p>
-        <h2 class="mt-4 max-w-[12ch] font-display text-4xl leading-[0.86] tracking-[0.08em] text-fg-white sm:text-5xl lg:text-6xl">
-          El rigor no está reñido con el pulso.
-        </h2>
-      </div>
-
-      <div class="grid gap-8 sm:grid-cols-3">
-        {manifestoPoints.map((point) => (
-          <div class="border-t border-white/10 pt-4">
-            <p class="font-data text-[10px] uppercase tracking-[0.28em] text-fg-gray">{point.label}</p>
-            <h3 class="mt-3 font-body text-base font-semibold leading-snug text-fg-white">
-              {point.title}
-            </h3>
-            <p class="mt-3 text-sm leading-relaxed text-fg-gray">
-              {point.body}
-            </p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  {pilars.map((p) => {
-    const pilarArticles = sorted
-      .filter((a) => a.data.pilar === p.id)
-      .slice(0, 3)
-      .map((a) => ({
-        title: a.data.title,
-        description: a.data.description,
-        date: a.data.date,
-        pilar: a.data.pilar,
-        slug: a.id,
-        image: a.data.image,
-      }));
-
-    return (
-      <PillarSection
-        pilar={p.id}
-        title={p.title}
-        description={p.desc}
-        articles={pilarArticles}
-        href={p.href}
-      />
-    );
-  })}
-
-  <section class="px-md pb-16 pt-8 lg:px-xl lg:pb-24">
-    <div class="mx-auto max-w-[1500px] border border-white/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))] px-6 py-8 sm:px-8 sm:py-10 lg:flex lg:items-end lg:justify-between lg:gap-10">
-      <div>
-        <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">última llamada</p>
-        <h2 class="mt-4 max-w-[13ch] font-display text-4xl leading-[0.86] tracking-[0.08em] text-fg-white sm:text-5xl">
-          Si la señal te sirve, sigamos construyéndola.
-        </h2>
-        <p class="mt-4 max-w-2xl text-base leading-relaxed text-fg-gray">
-          El siguiente paso es consolidar cada pilar editorial, expandir la línea de podcast semanal
-          y profundizar el análisis internacional desde nuestra perspectiva.
-        </p>
-      </div>
-
-      <div class="mt-8 flex flex-wrap gap-4 lg:mt-0">
-        <a
-          href="/contacto"
-          class="inline-flex items-center justify-center border border-fg-cyan bg-fg-cyan px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-black transition-transform duration-300 hover:-translate-y-0.5"
-        >
-          contactar
-        </a>
-        <a
-          href="/podcast"
-          class="inline-flex items-center justify-center border border-white/15 px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-white transition-colors duration-300 hover:border-white/35 hover:bg-white/5"
-        >
-          escuchar podcast
-        </a>
-      </div>
-    </div>
-  </section>
+  <!-- 7. CTA FINAL -->
+  <EditorialCTA
+    label="Transmisión continua"
+    title="La señal se construye en cada frecuencia."
+    description="Podcast, archivo y piezas largas bajo la misma señal — con el pilar Frecuencia Global como cadencia informativa dentro del conjunto."
+    primaryAction={{ label: 'Contactar', href: '/contacto' }}
+    secondaryAction={{ label: 'Sobre el proyecto', href: '/sobre' }}
+  />
 </BaseLayout>

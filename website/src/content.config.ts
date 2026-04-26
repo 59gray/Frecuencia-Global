@@ -10,6 +10,17 @@ const articles = defineCollection({
     pilar: z.enum(['p1', 'p2', 'p3', 'p4']),
     tags: z.array(z.string()).default([]),
     image: z.string().optional(),
+    cardImage: z.string().optional(),
+    ogImage: z.string().optional(),
+    heroVariant: z.enum(['detroit-billboard']).optional(),
+    /** Línea corta opcional sobre el hero (dek / entrada editorial); solo si lleva imagen estándar. */
+    heroDek: z.string().optional(),
+    /** Valor CSS para `object-position` del hero (ej. `center 72%` o `center bottom`) cuando el encuadre por defecto recorta mal. */
+    heroImagePosition: z.string().optional(),
+    /** Ruta pública a WebP del hero (misma pieza que `image`); el componente usa <picture> con fallback PNG. */
+    heroImageWebp: z.string().optional(),
+    /** Activa scripts de embeds sociales solo cuando el artículo realmente los necesita. */
+    enableXEmbeds: z.boolean().default(false),
     draft: z.boolean().default(false),
   }),
 });

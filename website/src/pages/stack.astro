@@ -1,0 +1,262 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EditorialPageShell from '../components/EditorialPageShell.astro';
+import FrequencyLine from '../components/FrequencyLine.astro';
+import SignalNode from '../components/SignalNode.astro';
+
+const coreStack = [
+  { name: 'Astro', version: '6.x', role: 'Static site generator', color: 'text-fg-cyan' },
+  { name: 'Tailwind CSS', version: '4.x', role: 'Utility-first styling', color: 'text-fg-cyan' },
+  { name: 'Python', version: '3.14', role: 'Automation scripts & bridge server', color: 'text-pilar-p3' },
+  { name: 'Node.js', version: '22.x', role: 'Build tooling & RSS generation', color: 'text-pilar-p3' },
+  { name: 'Playwright', version: '1.58', role: 'Browser automation for publishing', color: 'text-pilar-p2' },
+  { name: 'n8n Cloud', version: '-', role: 'Workflow orchestration', color: 'text-pilar-p4' },
+  { name: 'Docker', version: '29.x', role: 'Containerized services', color: 'text-pilar-p4' },
+  { name: 'PowerShell', version: '5.1', role: 'Daily ops automation', color: 'text-fg-gray' },
+];
+
+const scripts = [
+  { name: 'x_publish_post.py', desc: 'Publishes to X/Twitter via Playwright + persistent Chrome session' },
+  { name: 'threads_publish_post.py', desc: 'Publishes to Threads via Graph API (text + image)' },
+  { name: 'ig_publish_post.py', desc: 'Publishes to Instagram via browser automation' },
+  { name: 'linkedin_publish_post.py', desc: 'Publishes to LinkedIn Company Page via Playwright' },
+  { name: 'gemini_generate_image.py', desc: 'AI image generation via Gemini web + clipboard automation' },
+  { name: 'fg_local_publish_mvp.py', desc: 'Dry-run validator for all platforms before publishing' },
+  { name: 'activepieces_bridge.py', desc: 'HTTP bridge server with API key auth (5 endpoints)' },
+  { name: 'fg_daily_check.ps1', desc: 'PowerShell wrapper for daily batch validation' },
+  { name: 'monitor_domain.py', desc: 'DNS monitoring with Telegram notifications' },
+];
+
+const apis = [
+  { platform: 'Threads', method: 'Graph API', status: 'Operational' },
+  { platform: 'X / Twitter', method: 'Browser automation', status: 'Operational' },
+  { platform: 'Instagram', method: 'Browser automation', status: 'Operational' },
+  { platform: 'LinkedIn', method: 'Browser automation', status: 'Operational' },
+  { platform: 'Gemini', method: 'Web automation', status: 'Operational' },
+  { platform: 'Telegram', method: 'Bot API', status: 'Operational' },
+];
+
+const bridgeEndpoints = [
+  { method: 'GET', path: '/', desc: 'Health check + version info' },
+  { method: 'GET', path: '/piezas', desc: 'Auto-discover PublishReady content' },
+  { method: 'GET', path: '/history', desc: 'List recent validation reports' },
+  { method: 'POST', path: '/run_mvp', desc: 'Validate single content piece (auth required)' },
+  { method: 'POST', path: '/run_all', desc: 'Batch validate all pieces (auth required)' },
+];
+---
+
+<BaseLayout
+  title="Technical Stack — Frecuencia Global"
+  description="Open-source publishing automation system built with Python, Astro, Playwright, and n8n. Multi-platform content delivery with API integrations and browser automation."
+>
+  <EditorialPageShell density="standard">
+  <section class="mx-auto max-w-4xl px-fg-md py-fg-2xl lg:px-fg-xl lg:py-fg-3xl">
+    <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">system architecture</p>
+    <h1 class="mt-4 font-display text-5xl tracking-wide text-fg-white sm:text-6xl">Technical Stack</h1>
+    <p class="mt-6 max-w-2xl text-lg leading-relaxed text-fg-gray">
+      Frecuencia Global is a <strong class="text-fg-white">publishing automation system</strong> that
+      transforms markdown content into validated, multi-platform posts via custom scripts, API integrations,
+      and a local HTTP bridge server.
+    </p>
+
+    <FrequencyLine />
+
+    <!-- Architecture Overview -->
+    <h2 class="mt-12 text-2xl text-fg-white">Architecture Overview</h2>
+    <div class="mt-6 border border-white/10 bg-fg-surface/30 p-6 font-data text-sm leading-relaxed text-fg-gray">
+      <pre class="overflow-x-auto whitespace-pre text-[13px]"><code>┌─────────────────────────────────────────────────┐
+│  Content Pipeline                                │
+│                                                   │
+│  Markdown → Preflight → Dry-run → Publish        │
+│  (04_Produccion/)  (validator)  (per-platform)   │
+│                                                   │
+├───────────────┬───────────────┬───────────────────┤
+│  Bridge API   │  Publishing   │  Asset Generation │
+│  (Python HTTP)│  Scripts      │                   │
+│  :3001        │  (Playwright) │  (Gemini AI)      │
+│  5 endpoints  │  (Graph API)  │  (auto-watermark) │
+│  API key auth │  (Bot API)    │                   │
+├───────────────┴───────────────┴───────────────────┤
+│  Infrastructure                                   │
+│  Astro 6 · Tailwind 4 · n8n Cloud · Docker       │
+│  Cloudflare Tunnel · ForwardEmail                │
+└─────────────────────────────────────────────────┘</code></pre>
+    </div>
+
+    <FrequencyLine color="var(--color-pilar-p3)" />
+
+    <!-- Core Stack -->
+    <h2 class="mt-12 text-2xl text-fg-white">Core Stack</h2>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      {coreStack.map((tech) => (
+        <div class="flex items-start gap-3 border border-white/10 bg-white/[0.02] p-4">
+          <SignalNode size="sm" color="var(--color-fg-cyan)" />
+          <div>
+            <p class:list={['font-data text-sm font-semibold', tech.color]}>{tech.name}
+              {tech.version !== '-' && <span class="text-fg-gray"> v{tech.version}</span>}
+            </p>
+            <p class="mt-1 text-sm text-fg-gray">{tech.role}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <FrequencyLine color="var(--color-pilar-p2)" />
+
+    <!-- Publishing Scripts -->
+    <h2 class="mt-12 text-2xl text-fg-white">Publishing Scripts</h2>
+    <p class="mt-3 text-base text-fg-gray">
+      Each script handles the full lifecycle for one platform: content extraction from markdown,
+      asset resolution, authentication, and either API calls or browser automation.
+    </p>
+    <div class="mt-6 space-y-3">
+      {scripts.map((s) => (
+        <div class="border-l-2 border-fg-cyan/30 pl-4 py-2">
+          <code class="font-data text-sm text-fg-cyan">{s.name}</code>
+          <p class="mt-1 text-sm text-fg-gray">{s.desc}</p>
+        </div>
+      ))}
+    </div>
+
+    <FrequencyLine color="var(--color-pilar-p4)" />
+
+    <!-- Bridge API -->
+    <h2 class="mt-12 text-2xl text-fg-white">Bridge API Server</h2>
+    <p class="mt-3 text-base text-fg-gray">
+      A local Python HTTP server that exposes the publishing pipeline as a REST API.
+      Authenticated via <code class="font-data text-fg-cyan">X-API-Key</code> header on write endpoints.
+    </p>
+    <div class="mt-6 overflow-x-auto">
+      <table class="w-full text-left text-sm">
+        <thead>
+          <tr class="border-b border-white/10 font-data text-[11px] uppercase tracking-wider text-fg-gray">
+            <th class="pb-3 pr-4">Method</th>
+            <th class="pb-3 pr-4">Endpoint</th>
+            <th class="pb-3">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {bridgeEndpoints.map((ep) => (
+            <tr class="border-b border-white/5">
+              <td class="py-3 pr-4">
+                <span class:list={[
+                  'font-data text-xs px-2 py-0.5 border',
+                  ep.method === 'GET' ? 'border-pilar-p3/30 text-pilar-p3' : 'border-fg-cyan/30 text-fg-cyan'
+                ]}>{ep.method}</span>
+              </td>
+              <td class="py-3 pr-4 font-data text-fg-white">{ep.path}</td>
+              <td class="py-3 text-fg-gray">{ep.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <FrequencyLine />
+
+    <!-- Platform Integrations -->
+    <h2 class="mt-12 text-2xl text-fg-white">Platform Integrations</h2>
+    <div class="mt-6 overflow-x-auto">
+      <table class="w-full text-left text-sm">
+        <thead>
+          <tr class="border-b border-white/10 font-data text-[11px] uppercase tracking-wider text-fg-gray">
+            <th class="pb-3 pr-4">Platform</th>
+            <th class="pb-3 pr-4">Method</th>
+            <th class="pb-3">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {apis.map((api) => (
+            <tr class="border-b border-white/5">
+              <td class="py-3 pr-4 font-data text-fg-white">{api.platform}</td>
+              <td class="py-3 pr-4 text-fg-gray">{api.method}</td>
+              <td class="py-3">
+                <span class="inline-flex items-center gap-2 font-data text-xs text-pilar-p3">
+                  <span class="h-1.5 w-1.5 rounded-full bg-pilar-p3"></span>
+                  {api.status}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <FrequencyLine color="var(--color-pilar-p3)" />
+
+    <!-- Project Structure -->
+    <h2 class="mt-12 font-display text-2xl tracking-wider text-fg-white">PROJECT STRUCTURE</h2>
+    <div class="mt-6 border border-white/10 bg-fg-surface/30 p-6 font-data text-[13px] leading-relaxed text-fg-gray">
+      <pre class="overflow-x-auto whitespace-pre"><code>frecuencia-global/
+├── website/              # Astro 6 static site (this site)
+│   ├── src/pages/        # Routes: index, stack, podcast, articles
+│   ├── src/components/   # Reusable Astro components
+│   └── src/content/      # Markdown content collections
+├── scripts/              # Python + PowerShell automation
+│   ├── *_publish_post.py # Per-platform publishing scripts
+│   ├── activepieces_bridge.py  # REST API bridge server
+│   └── fg_daily_check.ps1      # Daily validation runner
+├── 04_Produccion/        # PublishReady markdown files
+├── 06_Assets/            # Generated images per piece
+├── 07_Operaciones/       # Operational docs and reports
+└── 08_n8n/               # Workflow definitions (JSON)</code></pre>
+    </div>
+
+    <FrequencyLine color="var(--color-pilar-p2)" />
+
+    <!-- Status -->
+    <h2 class="mt-12 font-display text-2xl tracking-wider text-fg-white">CURRENT STATUS</h2>
+    <div class="mt-6 grid gap-6 sm:grid-cols-3">
+      <div class="border border-white/10 p-5">
+        <p class="font-data text-3xl text-fg-cyan">09</p>
+        <p class="mt-2 font-data text-[11px] uppercase tracking-wider text-fg-gray">automation scripts</p>
+      </div>
+      <div class="border border-white/10 p-5">
+        <p class="font-data text-3xl text-pilar-p3">06</p>
+        <p class="mt-2 font-data text-[11px] uppercase tracking-wider text-fg-gray">platform integrations</p>
+      </div>
+      <div class="border border-white/10 p-5">
+        <p class="font-data text-3xl text-pilar-p2">05</p>
+        <p class="mt-2 font-data text-[11px] uppercase tracking-wider text-fg-gray">API endpoints</p>
+      </div>
+    </div>
+
+    <div class="mt-8 space-y-3 text-sm text-fg-gray">
+      <div class="flex items-center gap-3">
+        <span class="h-2 w-2 rounded-full bg-pilar-p3"></span>
+        <span>Daily batch validation passing on all content pieces</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="h-2 w-2 rounded-full bg-pilar-p3"></span>
+        <span>Bridge API v1.2.0 with key-based authentication</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="h-2 w-2 rounded-full bg-fg-cyan"></span>
+        <span>Multi-platform publishing: X, Threads, Instagram, LinkedIn</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="h-2 w-2 rounded-full bg-pilar-p4"></span>
+        <span>n8n Cloud workflow orchestration configured</span>
+      </div>
+    </div>
+
+    <FrequencyLine />
+
+    <div class="mt-12 border border-white/10 bg-white/[0.02] p-6">
+      <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">open source</p>
+      <p class="mt-3 text-base text-fg-gray">
+        This project is built with open-source tools and free-tier services.
+        The automation layer is designed to be reproducible and self-hosted.
+      </p>
+      <a
+        href="https://github.com/59gray"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mt-4 inline-flex items-center gap-2 font-data text-xs uppercase tracking-[0.26em] text-fg-cyan transition-colors duration-300 hover:text-fg-white"
+      >
+        github.com/59gray →
+      </a>
+    </div>
+  </section>
+  </EditorialPageShell>
+</BaseLayout>

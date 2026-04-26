@@ -13,7 +13,7 @@ const pilarNavColor: Record<PillarId, string> = {
 const navItems = [
   { label: 'Inicio', href: '/' },
   {
-    label: 'PILARES',
+    label: 'Pilares',
     href: '/pilares',
     children: PILLARS.map((p) => ({
       label: p.titleEs,
@@ -23,7 +23,7 @@ const navItems = [
   },
   { label: 'Archivo', href: '/contenido' },
   { label: 'Podcast', href: '/podcast' },
-  { label: 'SOBRE', href: '/sobre' },
+  { label: 'Sobre', href: '/sobre' },
   { label: 'Contacto', href: '/contacto' },
 ];
 
@@ -49,7 +49,7 @@ function isActive(href: string): boolean {
         <span class="hidden min-w-0 sm:block">
           <span class="inline-flex items-center gap-2 border border-fg-cyan/35 bg-black/25 px-2.5 py-1 font-data text-[10px] uppercase tracking-[0.22em] text-fg-cyan">
             <span class="h-1.5 w-1.5 rounded-full bg-fg-cyan animate-pulse"></span>
-            SEÑAL CENTRAL
+            señal central
           </span>
           <span class="mt-0.5 hidden items-center gap-2 font-data text-[10px] uppercase tracking-[0.28em] text-fg-gray lg:flex">
             <span class="text-fg-cyan">analisis internacional</span>
@@ -63,7 +63,7 @@ function isActive(href: string): boolean {
           <li class="group relative z-20 after:absolute after:left-0 after:right-0 after:top-full after:h-2 after:content-[''] hover:z-40 focus-within:z-40">
             <a
               href={item.href}
-              title={item.label === 'PILARES' ? 'Descubre los pilares editoriales' : undefined}
+              title={item.label === 'Pilares' ? 'Descubre los pilares editoriales' : undefined}
               class:list={[
                 'relative inline-flex items-center gap-1 px-3 py-2 font-data text-[11px] uppercase tracking-[0.22em] transition-colors duration-200',
                 'after:absolute after:bottom-1 after:left-3 after:h-px after:w-[calc(100%-1.5rem)] after:origin-left after:scale-x-0 after:bg-fg-cyan after:transition-transform after:duration-200',
@@ -71,7 +71,7 @@ function isActive(href: string): boolean {
                   ? isActive(item.href)
                     ? 'fg-corner-cut border border-fg-cyan bg-fg-cyan text-fg-black hover:text-fg-black'
                     : 'fg-corner-cut border border-white/20 text-fg-white hover:border-fg-cyan/60 hover:text-fg-cyan'
-                  : item.label === 'PILARES'
+                  : item.label === 'Pilares'
                     ? isActive(item.href)
                       ? 'fg-corner-cut border border-fg-cyan/70 bg-fg-cyan/10 text-fg-cyan after:scale-x-100'
                       : 'fg-corner-cut border border-fg-cyan/45 bg-fg-cyan/6 text-fg-white after:scale-x-100 hover:border-fg-cyan/75 hover:text-fg-cyan'
@@ -81,10 +81,10 @@ function isActive(href: string): boolean {
               ]}
             >
               {item.label}
-              {item.label === 'PILARES' && (
+              {item.label === 'Pilares' && (
                 <span class="hidden items-center gap-1 rounded-sm border border-fg-cyan/45 bg-fg-cyan/14 px-1.5 py-0.5 font-data text-[9px] tracking-[0.22em] text-fg-cyan md:inline-flex">
                   <span class="h-1.5 w-1.5 rounded-full bg-fg-cyan animate-pulse"></span>
-                  4 SEÑALES
+                  4 PILARES
                 </span>
               )}
               {item.children && (

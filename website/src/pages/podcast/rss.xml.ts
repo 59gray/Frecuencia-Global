@@ -23,7 +23,10 @@ function audioMimeType(url: string) {
 export async function GET(context: APIContext) {
   const episodes = await getCollection('episodes', ({ data }) => !data.draft);
   const sorted = episodes.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
-  const coverImageUrl = new URL('/images/og/fg_website_hero_20260402_v1.webp', context.site).toString();
+  const channelCover = new URL(
+    sorted[0]?.data.coverImage ?? '/images/og/fg_og_default_1200x630.png',
+    context.site,
+  ).toString();
   const feedUrl = new URL('/podcast/rss.xml', context.site).toString();
 
   return rss({
@@ -40,7 +43,7 @@ export async function GET(context: APIContext) {
       `<itunes:author>Frecuencia Global</itunes:author>` +
       `<itunes:summary>Podcast semanal con análisis internacional, cultura y tecnología en formato audio-first con videopodcast en YouTube.</itunes:summary>` +
       `<itunes:owner><itunes:name>Frecuencia Global</itunes:name><itunes:email>contact@frecuenciaglobal.org</itunes:email></itunes:owner>` +
-      `<itunes:image href="${escapeXml(coverImageUrl)}" />` +
+      `<itunes:image href="${escapeXml(channelCover)}" />` +
       `<itunes:explicit>false</itunes:explicit>` +
       `<itunes:type>episodic</itunes:type>` +
       `<itunes:category text="News"><itunes:category text="Politics" /></itunes:category>`,

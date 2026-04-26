@@ -68,8 +68,8 @@ const {
 
   <div class="relative z-10 mx-auto max-w-[1200px] px-5 sm:px-8 lg:px-12">
     <div class="pt-6 pb-1 sm:pt-9 sm:pb-2 lg:pt-11 lg:pb-3">
-      <div style="width:100%" class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
-        <div style="width:100%;min-width:0" class="flex-1">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
+        <div class="min-w-0 flex-1">
           <div class="mb-3 flex items-center gap-2">
             <SignalNode size="sm" />
             <span class="font-data text-[10px] uppercase tracking-[0.22em] text-fg-gray/90 sm:text-[11px]">
@@ -106,8 +106,7 @@ const {
           </div>
 
           <p
-            style="width:100%;max-width:720px;white-space:normal;word-break:normal;overflow-wrap:break-word"
-            class="text-base leading-relaxed text-fg-gray/95 sm:text-[1.05rem] lg:text-xl"
+            class="max-w-2xl text-base leading-relaxed text-fg-gray/95 sm:text-[1.05rem] lg:max-w-3xl lg:text-xl line-clamp-3 sm:line-clamp-none"
           >
             {subtitle}
           </p>
@@ -145,7 +144,7 @@ const {
             href={featured.href}
             class="group block rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg-cyan"
           >
-            <h2 style="white-space:normal;word-break:normal;overflow-wrap:break-word" class="text-lg font-semibold leading-snug text-fg-white transition-colors group-hover:text-fg-cyan lg:text-xl">
+            <h2 class="line-clamp-2 text-lg font-semibold leading-snug text-fg-white transition-colors group-hover:text-fg-cyan lg:line-clamp-none lg:text-xl">
               {featured.title}
             </h2>
             <span class="mt-2 inline-flex items-center gap-1 font-data text-xs uppercase tracking-[0.15em] text-fg-cyan">

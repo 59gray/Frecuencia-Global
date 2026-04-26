@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import EditorialPageShell from '../components/EditorialPageShell.astro';
 import PillarPill from '../components/PillarPill.astro';
 import FrequencyLine from '../components/FrequencyLine.astro';
 
@@ -53,7 +54,7 @@ const platformButtons = [
   platformLinks.youtube ? { label: 'YouTube', href: platformLinks.youtube } : null,
 ].filter(Boolean) as { label: string; href: string }[];
 
-const videoModeLabel = videoMode === 'editorial-visualizer' ? 'Visualizer editorial 16:9' : videoMode;
+const videoModeLabel = videoMode === 'editorial-visualizer' ? 'Editorial audiovisual 16:9' : videoMode;
 ---
 
 <BaseLayout
@@ -63,8 +64,9 @@ const videoModeLabel = videoMode === 'editorial-visualizer' ? 'Visualizer editor
   pilar={pilar}
   image={coverImage}
 >
-  <article class="mx-auto max-w-[1500px] px-md py-2xl lg:px-xl">
-    <header class="grid gap-10 border-b border-white/10 pb-xl lg:grid-cols-[minmax(0,1.2fr)_380px]">
+  <EditorialPageShell density="standard" texture="radar">
+  <article class="mx-auto max-w-[1500px] px-fg-md py-fg-2xl lg:px-fg-xl">
+    <header class="grid gap-10 border-b border-white/10 pb-fg-xl lg:grid-cols-[minmax(0,1.2fr)_380px]">
       <div>
         <div class="flex flex-wrap items-center gap-3">
           <PillarPill pilar={pilar} size="md" />
@@ -73,7 +75,7 @@ const videoModeLabel = videoMode === 'editorial-visualizer' ? 'Visualizer editor
           </span>
         </div>
 
-        <h1 class="mt-5 max-w-[12ch] font-display text-5xl leading-[0.86] tracking-[0.08em] text-fg-white sm:text-6xl">
+        <h1 class="mt-5 max-w-[20ch] font-display text-4xl sm:text-5xl tracking-wide leading-tight text-fg-white">
           {title}
         </h1>
 
@@ -84,7 +86,7 @@ const videoModeLabel = videoMode === 'editorial-visualizer' ? 'Visualizer editor
         <div class="mt-8 flex flex-wrap gap-3">
           <a
             href={`https://www.youtube.com/watch?v=${youtubeVideoId}`}
-            class="inline-flex items-center justify-center border border-fg-cyan bg-fg-cyan px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-black transition-transform duration-300 hover:-translate-y-0.5"
+            class="inline-flex items-center justify-center border border-fg-cyan bg-fg-cyan px-5 py-3 font-data text-xs uppercase tracking-[0.26em] text-fg-black transition-opacity duration-300 hover:opacity-90"
           >
             ver videopodcast
           </a>
@@ -109,7 +111,7 @@ const videoModeLabel = videoMode === 'editorial-visualizer' ? 'Visualizer editor
         </div>
       </div>
 
-      <aside class="overflow-hidden border border-white/10 bg-white/[0.03]">
+      <aside class="fg-tactical-panel fg-corner-cut overflow-hidden">
         <img src={coverImage} alt={title} class="aspect-video w-full object-cover" />
         <div class="space-y-5 px-6 py-6">
           <dl class="grid grid-cols-2 gap-4 font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray">
@@ -122,7 +124,7 @@ const videoModeLabel = videoMode === 'editorial-visualizer' ? 'Visualizer editor
               <dd class="mt-1 text-fg-white">{duration}</dd>
             </div>
             <div>
-              <dt>modo video</dt>
+              <dt>formato</dt>
               <dd class="mt-1 text-fg-white">{videoModeLabel}</dd>
             </div>
             <div>
@@ -131,19 +133,19 @@ const videoModeLabel = videoMode === 'editorial-visualizer' ? 'Visualizer editor
             </div>
           </dl>
 
-          <div class="rounded-sm border border-white/10 bg-fg-black/50 px-4 py-4">
-            <p class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray">visualizer v1</p>
+          <div class="fg-corner-cut border border-white/12 bg-fg-black/50 px-4 py-4">
+            <p class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray">version visual</p>
             <p class="mt-3 text-sm leading-relaxed text-fg-gray">
-              Este episodio se concibe como un videopodcast 16:9 con waveform, capítulos, lower thirds y branding de pilar para YouTube.
+              Edicion 16:9 lista para YouTube: narrativa lineal, transiciones sobrias y paquete visual coherente con el episodio.
             </p>
           </div>
         </div>
       </aside>
     </header>
 
-    <section class="mt-xl grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_360px]">
+    <section class="mt-fg-xl grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_360px]">
       <div>
-        <div class="aspect-video overflow-hidden border border-white/10 bg-black/50 shadow-[0_0_80px_rgba(0,229,255,0.08)]">
+        <div class="fg-corner-cut aspect-video overflow-hidden border border-white/12 bg-black/40 shadow-[0_0_48px_rgba(0,229,255,0.04)]">
           <iframe
             class="h-full w-full"
             src={`https://www.youtube.com/embed/${youtubeVideoId}`}
@@ -154,11 +156,11 @@ const videoModeLabel = videoMode === 'editorial-visualizer' ? 'Visualizer editor
           ></iframe>
         </div>
 
-        <div class="mt-lg overflow-hidden border border-white/10 bg-fg-surface/20 px-5 py-5">
+        <div class="fg-tactical-panel fg-corner-cut mt-fg-lg overflow-hidden px-5 py-5">
           <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
             <div>
-              <p class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray">audio master</p>
-              <p class="mt-1 text-sm text-fg-gray">Feed RSS, web y plataformas de podcast</p>
+              <p class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray">audio completo</p>
+              <p class="mt-1 text-sm text-fg-gray">Disponible en web y plataformas de podcast</p>
             </div>
             <span class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-cyan">{duration}</span>
           </div>
@@ -167,9 +169,11 @@ const videoModeLabel = videoMode === 'editorial-visualizer' ? 'Visualizer editor
           </audio>
         </div>
 
-        <div class="mt-xl">
+        <div class="mt-fg-xl">
           <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">show notes</p>
-          <FrequencyLine class="mt-4" />
+          <div class="mt-4">
+            <FrequencyLine />
+          </div>
           <div class="prose mt-8">
             <slot />
           </div>
@@ -177,24 +181,24 @@ const videoModeLabel = videoMode === 'editorial-visualizer' ? 'Visualizer editor
       </div>
 
       <aside class="space-y-6">
-        <div class="border border-white/10 bg-white/[0.03] px-6 py-6">
-          <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">package del episodio</p>
+        <div class="fg-tactical-panel fg-corner-cut px-6 py-6">
+          <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">edicion del episodio</p>
           <ul class="mt-5 space-y-3 text-sm leading-relaxed text-fg-gray">
-            <li>audio master listo para RSS</li>
-            <li>videopodcast largo para YouTube</li>
-            <li>chapters, CTA y metadata SEO</li>
-            <li>2-3 clips derivados para Shorts, Reels y TikTok</li>
+            <li>master de audio validado para distribucion</li>
+            <li>videopodcast largo con sincronizacion final</li>
+            <li>capitulos, resumen ejecutivo y enlaces de referencia</li>
+            <li>cortes derivados para Shorts, Reels y TikTok</li>
           </ul>
         </div>
 
-        <div class="border border-white/10 bg-white/[0.03] px-6 py-6">
-          <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">señal pública</p>
+        <div class="fg-tactical-panel fg-corner-cut px-6 py-6">
+          <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray">donde escucharlo</p>
           <ul class="mt-5 space-y-3 text-sm leading-relaxed text-fg-gray">
             <li>
               <a href="/podcast" class="text-fg-cyan hover:text-fg-white">archivo del podcast</a>
             </li>
             <li>
-              <a href="/podcast/rss.xml" class="text-fg-cyan hover:text-fg-white">feed RSS del podcast</a>
+              <a href="/podcast/rss.xml" class="text-fg-cyan hover:text-fg-white">canal RSS del podcast</a>
             </li>
             <li>
               <a href="/contenido" class="text-fg-cyan hover:text-fg-white">archivo editorial completo</a>
@@ -204,4 +208,5 @@ const videoModeLabel = videoMode === 'editorial-visualizer' ? 'Visualizer editor
       </aside>
     </section>
   </article>
+  </EditorialPageShell>
 </BaseLayout>
