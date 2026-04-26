@@ -1,0 +1,44 @@
+---
+/**
+ * Envuelve contenido interior con la misma familia visual que Home/Radar:
+ * textura ligera + weave SVG — sin competir con el contenido.
+ */
+interface Props {
+  /** Más textura base (ej. archivo / listados largos) */
+  density?: 'quiet' | 'standard';
+  /** Familia de raster de sección (distintas de Home/Radar/CTA) */
+  texture?: 'archive' | 'radar' | 'close';
+}
+
+const { density = 'quiet', texture = 'archive' } = Astro.props;
+
+const texOpacity = density === 'standard' ? 'opacity-[0.048]' : 'opacity-[0.036]';
+const weaveOpacity = 'opacity-[0.34]';
+
+const textureSrc: Record<NonNullable<typeof texture>, string> = {
+  archive: '/images/sections/fg-section-archive.png',
+  radar: '/images/sections/fg-section-radar.png',
+  close: '/images/sections/fg-section-close.png',
+};
+---
+
+<div class="relative overflow-x-hidden">
+  <div class="fg-site-atmosphere pointer-events-none absolute inset-0 opacity-[0.32]" aria-hidden="true"></div>
+  <div class:list={['pointer-events-none absolute inset-0', texOpacity]} aria-hidden="true">
+    <img
+      src={textureSrc[texture]}
+      alt=""
+      class="h-full w-full object-cover mix-blend-soft-light"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <div
+    class:list={['pointer-events-none absolute inset-0 fg-editorial-weave-bg', weaveOpacity]}
+    aria-hidden="true"
+  ></div>
+  <div class="signal-grid pointer-events-none absolute inset-0 opacity-[0.02]" aria-hidden="true"></div>
+  <div class="relative z-10">
+    <slot />
+  </div>
+</div>

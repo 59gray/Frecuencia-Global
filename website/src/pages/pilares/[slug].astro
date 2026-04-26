@@ -1,105 +1,257 @@
----
+﻿---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
+import EditorialPageShell from '../../components/EditorialPageShell.astro';
 import FrequencyLine from '../../components/FrequencyLine.astro';
 import SignalNode from '../../components/SignalNode.astro';
 import { getCollection } from 'astro:content';
+import { PILLARS, getPillarBySlug, pillarPageTitle, type PillarId } from '../../lib/pillars';
 
-interface PilarInfo {
-  id: 'p1' | 'p2' | 'p3' | 'p4';
-  title: string;
-  description: string;
-  color: string;
-  textColor: string;
-}
+const signalColor: Record<PillarId, string> = {
+  p1: 'var(--color-pilar-p1)',
+  p2: 'var(--color-pilar-p2)',
+  p3: 'var(--color-pilar-p3)',
+  p4: 'var(--color-pilar-p4)',
+};
 
-const pilarMap: Record<string, PilarInfo> = {
-  'geopolitik-drop': {
-    id: 'p1',
-    title: 'GEOPOLITIK DROP',
-    description: 'Poder, conflicto y los movimientos estratégicos que reconfiguran el mapa global. Donde la geopolítica deja de ser abstracta y se vuelve urgente.',
-    color: 'var(--color-pilar-p1)',
-    textColor: 'text-pilar-p1',
-  },
-  'bass-and-borders': {
-    id: 'p2',
-    title: 'BASS & BORDERS',
-    description: 'Música electrónica como lente para entender migración, identidad y cultura global. El sonido no conoce fronteras.',
-    color: 'var(--color-pilar-p2)',
-    textColor: 'text-pilar-p2',
-  },
-  'frecuencia-global': {
-    id: 'p3',
-    title: 'FRECUENCIA GLOBAL',
-    description: 'Tecnología, datos y las fuerzas invisibles que dan forma al mundo conectado.',
-    color: 'var(--color-pilar-p3)',
-    textColor: 'text-pilar-p3',
-  },
-  'behind-the-policy': {
-    id: 'p4',
-    title: 'BEHIND THE POLICY',
-    description: 'Lo que hay detrás de las políticas públicas que afectan tu vida diaria.',
-    color: 'var(--color-pilar-p4)',
-    textColor: 'text-pilar-p4',
-  },
+const textClass: Record<PillarId, string> = {
+  p1: 'text-pilar-p1',
+  p2: 'text-pilar-p2',
+  p3: 'text-pilar-p3',
+  p4: 'text-pilar-p4',
 };
 
 export function getStaticPaths() {
-  return [
-    { params: { slug: 'geopolitik-drop' } },
-    { params: { slug: 'bass-and-borders' } },
-    { params: { slug: 'frecuencia-global' } },
-    { params: { slug: 'behind-the-policy' } },
-  ];
+  return PILLARS.map((p) => ({ params: { slug: p.slug } }));
 }
 
 const { slug } = Astro.params;
-const pilar = pilarMap[slug!];
+const pillarDef = slug ? getPillarBySlug(slug) : undefined;
 
-if (!pilar) {
+if (!pillarDef) {
   return Astro.redirect('/pilares');
 }
 
-const articles = await getCollection('articles', ({ data }) => !data.draft && data.pilar === pilar.id);
+const articles = await getCollection(
+  'articles',
+  ({ data }) => !data.draft && data.pilar === pillarDef.id,
+);
+
 const sorted = articles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const pageTitle = pillarPageTitle(pillarDef);
+const color = signalColor[pillarDef.id];
+const titleClass = textClass[pillarDef.id];
+const metaDescription =
+  pillarDef.description.length > 155 ? `${pillarDef.description.slice(0, 152)}...` : pillarDef.description;
+const isBassBorders = pillarDef.id === 'p2';
+
+const formatCardDate = (date: Date) =>
+  date.toLocaleDateString('es-MX', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+  });
+
+const bassBordersMeta: Record<string, { label: string; supportLine: string; city: string; note: string }> = {
+  'techno-detroit-historia-musica-electronica': {
+    label: 'Matriz material',
+    city: 'Detroit',
+    supportLine: 'Ciudad-fábrica, memoria negra, circuito y máquina.',
+    note: 'El techno no entra aquí como mito retroactivo, sino como forma nacida de una ciudad que todavía carga su propia infraestructura.',
+  },
+  'berghain-politica-anonimato': {
+    label: 'Dispositivo social',
+    city: 'Berlín',
+    supportLine: 'Filtro, anonimato, prestigio y control de la imagen.',
+    note: 'El club importa menos como icono que como tecnología informal de acceso, reputación y selección.',
+  },
+};
 ---
 
-<BaseLayout title={`${pilar.title} — Frecuencia Global`} description={pilar.description} pilar={pilar.id}>
-  <section class="max-w-7xl mx-auto px-md lg:px-xl py-3xl">
-    <div class="flex items-center gap-sm mb-md">
-      <SignalNode color={pilar.color} size="lg" />
-      <h1 class:list={['font-display text-4xl sm:text-5xl tracking-wider', pilar.textColor]}>
-        {pilar.title}
-      </h1>
-    </div>
-    <p class="font-body text-fg-gray max-w-2xl mb-xl">{pilar.description}</p>
+<BaseLayout
+  title={`${pageTitle} - Frecuencia Global`}
+  description={metaDescription}
+  pilar={pillarDef.id}
+  image={`/images/og/fg_og_pilar_${pillarDef.id}.png`}
+>
+  <EditorialPageShell density="standard">
+    <section class="max-w-7xl mx-auto px-fg-md lg:px-fg-xl py-fg-3xl">
+      <p class:list={['font-data text-[11px] uppercase tracking-[0.3em] mb-2', titleClass, 'opacity-95']}>
+        Pilar editorial
+      </p>
 
-    <FrequencyLine color={pilar.color} />
-
-    {sorted.length > 0 ? (
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg mt-xl">
-        {sorted.map((article) => (
-          <ArticleCard
-            title={article.data.title}
-            description={article.data.description}
-            date={article.data.date}
-            pilar={article.data.pilar}
-            slug={article.id}
-            image={article.data.image}
-          />
-        ))}
+      <div class="flex flex-wrap items-center gap-fg-sm mb-fg-sm">
+        <SignalNode color={color} size="lg" />
+        <h1 class:list={['font-display text-3xl sm:text-4xl md:text-5xl tracking-wide', titleClass]}>{pageTitle}</h1>
       </div>
-    ) : (
-      <div class="mt-xl text-center py-3xl">
-        <p class="font-data text-sm tracking-widest text-fg-gray">[SIN SEÑAL — PRÓXIMAMENTE]</p>
-        <p class="font-body text-fg-gray mt-sm">Estamos preparando contenido para este pilar.</p>
-      </div>
-    )}
 
-    <div class="mt-xl">
-      <a href="/pilares" class="font-data text-xs tracking-widest text-fg-gray hover:text-fg-cyan transition-colors">
-        &larr; TODOS LOS PILARES
-      </a>
-    </div>
-  </section>
+      <p class:list={['font-data text-[11px] uppercase tracking-[0.22em] mb-fg-xl', titleClass, 'opacity-90']}>
+        {pillarDef.subtitleEs}
+      </p>
+
+      <p class="font-body text-fg-gray max-w-3xl leading-relaxed mb-fg-xl">{pillarDef.description}</p>
+
+      <FrequencyLine color={color} />
+
+      {sorted.length > 0 ? (
+        isBassBorders ? (
+          <div class="mt-fg-xl space-y-fg-xl">
+            <section class="relative overflow-hidden border-y border-white/10 py-8 sm:py-10">
+              <div
+                class="pointer-events-none absolute inset-0 opacity-70"
+                style="background: radial-gradient(circle at 18% 0%, rgba(124, 114, 143, 0.14), transparent 36%), linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 52%);"
+                aria-hidden="true"
+              ></div>
+
+              <div class="relative grid gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)]">
+                <div class="max-w-4xl">
+                  <p class="font-data text-[11px] uppercase tracking-[0.3em] text-pilar-p2/90">
+                    Bass & Borders // Dossier
+                  </p>
+                  <h2 class="mt-3 text-3xl font-semibold leading-tight text-fg-white sm:text-[2.6rem] lg:text-[3rem]">
+                    Detroit fabrica el pulso. Berghain administra el umbral.
+                  </h2>
+                  <p class="mt-5 text-[15px] leading-relaxed text-fg-gray sm:text-base">
+                    Bass & Borders entra cuando la música deja de ser fondo y empieza a ordenar ciudad, cuerpo y acceso.
+                    No miramos escenas para celebrar su iconografía, sino para leer qué tipo de pertenencia producen y
+                    qué reglas dejan inscritas en la noche.
+                  </p>
+                  <p class="mt-4 text-[15px] leading-relaxed text-fg-gray sm:text-base">
+                    Detroit y Berghain conviven aquí porque nombran dos operaciones distintas del mismo mapa. Detroit
+                    aparece como matriz material: ciudad-fábrica, circuito negro, máquina, ruina activa y memoria.
+                    Berghain aparece como dispositivo social: filtro, anonimato, jerarquía y control de la imagen.
+                  </p>
+                </div>
+
+                <div class="flex flex-col divide-y divide-white/10 border-l border-white/10 pl-0 lg:pl-8">
+                  <div class="pb-5">
+                    <p class="font-data text-[10px] uppercase tracking-[0.24em] text-pilar-p2/95">
+                      Qué conecta estas piezas
+                    </p>
+                    <p class="mt-2 text-sm leading-relaxed text-fg-white/88">
+                      En ambas, la música funciona como regla de pertenencia antes que como simple entretenimiento.
+                    </p>
+                  </div>
+
+                  <div class="py-5">
+                    <p class="font-data text-[10px] uppercase tracking-[0.24em] text-pilar-p2/95">Tensión central</p>
+                    <p class="mt-2 text-sm leading-relaxed text-fg-white/88">
+                      Detroit pone la raíz, la densidad histórica y la máquina; Berlín concentra el filtro, el
+                      prestigio y la administración del acceso.
+                    </p>
+                  </div>
+
+                  <div class="pt-5">
+                    <p class="font-data text-[10px] uppercase tracking-[0.24em] text-pilar-p2/95">Cómo leer el radar</p>
+                    <p class="mt-2 text-sm leading-relaxed text-fg-white/88">
+                      Detroit se lee desde circuito, memoria y ciudad-fábrica. Berghain, desde umbral, anonimato y
+                      disciplina visual.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <div class="grid grid-cols-1 gap-fg-lg xl:grid-cols-2">
+              {sorted.map((article) => {
+                const meta = bassBordersMeta[article.id] ?? {
+                  label: 'Señal activa',
+                  city: 'Bass & Borders',
+                  supportLine: 'Pieza dentro del radar.',
+                  note: 'Lectura en curso dentro del pilar.',
+                };
+
+                return (
+                  <article class="group fg-tactical-panel fg-corner-cut relative flex h-full flex-col overflow-hidden px-5 py-6 sm:px-6 sm:py-7">
+                    <div
+                      class="pointer-events-none absolute inset-0 opacity-60"
+                      style="background: radial-gradient(circle at top left, rgba(124, 114, 143, 0.12), transparent 34%), linear-gradient(180deg, rgba(255, 255, 255, 0.016), transparent 50%);"
+                      aria-hidden="true"
+                    ></div>
+
+                    <div class="relative flex items-center justify-between gap-3">
+                      <div>
+                        <p class="font-data text-[10px] uppercase tracking-[0.24em] text-pilar-p2/92">{meta.label}</p>
+                        <p class="mt-2 font-data text-[10px] uppercase tracking-[0.22em] text-fg-gray/80">{meta.city}</p>
+                      </div>
+
+                      <time
+                        class="font-data text-[10px] uppercase tracking-[0.22em] text-fg-gray"
+                        datetime={article.data.date.toISOString()}
+                      >
+                        {formatCardDate(article.data.date)}
+                      </time>
+                    </div>
+
+                    <a
+                      href={`/contenido/${article.id}`}
+                      class="fg-corner-cut relative mt-5 block aspect-[2.2/1] overflow-hidden border border-white/12 bg-fg-surface/35"
+                    >
+                      <img
+                        src={article.data.cardImage ?? article.data.image}
+                        alt={article.data.title}
+                        class="h-full w-full object-cover transition-[transform,opacity] duration-300 group-hover:scale-[1.02] group-hover:opacity-95"
+                        loading="lazy"
+                      />
+                      <div class="pointer-events-none absolute inset-0 border border-white/8" aria-hidden="true"></div>
+                    </a>
+
+                    <p class="relative mt-5 font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray/82">
+                      {meta.supportLine}
+                    </p>
+
+                    <a href={`/contenido/${article.id}`} class="relative mt-4 block">
+                      <h3 class="text-2xl font-semibold leading-tight text-fg-white transition-colors duration-300 group-hover:text-pilar-p2 sm:text-[1.95rem]">
+                        {article.data.title}
+                      </h3>
+                    </a>
+
+                    <p class="relative mt-3 text-sm leading-relaxed text-fg-gray/92 sm:text-[15px]">
+                      {article.data.description}
+                    </p>
+
+                    <p class="relative mt-4 border-t border-white/10 pt-4 text-xs leading-relaxed text-fg-gray/84 sm:text-[13px]">
+                      {meta.note}
+                    </p>
+
+                    <span class="relative mt-5 inline-flex items-center gap-2 font-data text-[10px] uppercase tracking-[0.22em] text-pilar-p2/95">
+                      <span>leer pieza</span>
+                      <span aria-hidden="true">-&gt;</span>
+                    </span>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-fg-lg mt-fg-xl">
+            {sorted.map((article) => (
+              <ArticleCard
+                title={article.data.title}
+                description={article.data.description}
+                date={article.data.date}
+                pilar={article.data.pilar}
+                slug={article.id}
+                image={article.data.cardImage ?? article.data.image}
+              />
+            ))}
+          </div>
+        )
+      ) : (
+        <div class="mt-fg-xl text-center py-fg-3xl">
+          <p class="font-data text-sm tracking-widest text-fg-gray">[SIN SEÑAL - PROXIMAMENTE]</p>
+          <p class="font-body text-fg-gray mt-fg-sm max-w-md mx-auto">
+            Aún no hay piezas publicadas en este pilar. Vuelve a la página de pilares para ver el resto del sistema.
+          </p>
+        </div>
+      )}
+
+      <div class="mt-fg-xl">
+        <a href="/pilares" class="font-data text-xs tracking-widest text-fg-gray hover:text-fg-cyan transition-colors">
+          &lt;- TODOS LOS PILARES
+        </a>
+      </div>
+    </section>
+  </EditorialPageShell>
 </BaseLayout>
