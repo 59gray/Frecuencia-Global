@@ -1,15 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HomeFold from '../components/editorial/HomeFold.astro';
-import FeaturedBlock from '../components/editorial/FeaturedBlock.astro';
 import PillarGrid from '../components/editorial/PillarGrid.astro';
-import TopicChips from '../components/editorial/TopicChips.astro';
-import RadarModule from '../components/editorial/RadarModule.astro';
 import EditorialCTA from '../components/editorial/EditorialCTA.astro';
 import SignalNode from '../components/SignalNode.astro';
 import PillarPill from '../components/PillarPill.astro';
 import { getCollection } from 'astro:content';
-import { PILLARS, pillarPath, PILLAR_BY_ID } from '../lib/pillars';
+import { PILLARS, pillarPath } from '../lib/pillars';
 
 const allArticles = await getCollection('articles', ({ data }) => !data.draft);
 const sorted = allArticles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -29,219 +26,110 @@ const pillars = PILLARS.map((p) => ({
 const latestArticle = sorted[0];
 const latestEpisode = sortedEpisodes[0];
 
-// Artículo destacado + secundarios (inspiración Dubstep FBI)
-const featuredArticleData = sorted[0];
-const secondaryArticlesData = sorted.slice(1, 4);
 
-const featuredArticle = featuredArticleData ? {
-  title: featuredArticleData.data.title,
-  description: featuredArticleData.data.description,
-  slug: featuredArticleData.id,
-  pilar: featuredArticleData.data.pilar,
-  date: featuredArticleData.data.date,
-  image: featuredArticleData.data.image,
-} : undefined;
-
-const secondaryArticles = secondaryArticlesData.map((article) => ({
-  title: article.data.title,
-  description: article.data.description,
-  slug: article.id,
-  pilar: article.data.pilar,
-  date: article.data.date,
-}));
-
-// Chips temáticos (inspiración Polymarket)
-const chipColorById = { p1: 'cyan', p2: 'magenta', p3: 'green', p4: 'blue' } as const;
-const topicChips = [
-  ...PILLARS.map((p) => ({
-    id: p.id,
-    label: p.titleEs,
-    count: sorted.filter((a) => a.data.pilar === p.id).length,
-    href: pillarPath(p.slug),
-    color: chipColorById[p.id],
-  })),
-  { id: 'all', label: 'Todo el archivo', count: sorted.length, href: '/contenido', color: 'neutral' as const },
-];
-
-// Items para Radar (inspiración EDMtrain)
-const radarItems = sorted.slice(0, 6).map((article) => ({
-  title: article.data.title,
-  meta: article.data.date.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }),
-  href: `/contenido/${article.id}`,
-  tag: PILLAR_BY_ID[article.data.pilar].subtitleEs,
-  tagColor:
-    article.data.pilar === 'p1'
-      ? ('cyan' as const)
-      : article.data.pilar === 'p2'
-        ? ('magenta' as const)
-        : article.data.pilar === 'p3'
-          ? ('green' as const)
-            : ('blue' as const),
-}));
 
 ---
 
 <BaseLayout
   title="Frecuencia Global"
-  description="Medio editorial independiente: geopolítica, escena electrónica, tecnología y economía política del entretenimiento — cuatro pilares, archivo y podcast."
+  description="Medio editorial independiente: geopolítica, escena electrónica, tecnología y economía política del entretenimiento — cuatro frecuencias editoriales, archivo y podcast."
   image="/images/og/fg_og_default_1200x630.png"
 >
-  <!-- 1. HOME FOLD: Columna única ancha, jerarquía editorial clara -->
+  <!-- 1. HOME FOLD -->
   <HomeFold
     kicker="Editorial"
     tagline="Análisis internacional con pulso electrónico."
     title="Frecuencia Global"
-    subtitle="Marca paraguas con cuatro pilares editoriales: cada uno con su enfoque — de la geopolítica visual al análisis profesional — bajo una sola señal."
+    subtitle="Marca paraguas con cuatro frecuencias editoriales: cada una con su enfoque — de la geopolítica visual al análisis profesional — bajo una sola señal."
     featured={latestArticle ? {
       title: latestArticle.data.title,
       pilar: latestArticle.data.pilar,
       href: `/contenido/${latestArticle.id}`
     } : undefined}
     ctas={{
-      primary: { label: 'Explorar pilares', href: '/pilares' },
+      primary: { label: 'Explorar frecuencias', href: '/pilares' },
       secondary: { label: 'Ver archivo', href: '/contenido' }
     }}
   />
 
-  <!-- 2. CHIPS — taxonomía con capa de sistema (textura FG v5, lectura editorial) -->
-  <div class="fg-fallout-matrix relative overflow-hidden border-b border-white/10">
-    <div class="pointer-events-none absolute inset-0 opacity-[0.045]" aria-hidden="true">
-      <img
-        src="/images/sections/fg-section-radar.png"
-        alt=""
-        class="h-full w-full object-cover mix-blend-overlay"
-        loading="lazy"
-      />
-    </div>
-    <div class="relative mx-auto max-w-[1400px] px-6 pt-4 pb-6 lg:px-12 lg:pt-5">
-      <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan mb-2">Accesos al sistema</p>
-      <p class="text-sm text-fg-gray/90 max-w-2xl mb-4 leading-relaxed">
-        Atajos al archivo por pilar: cada enlace refleja el foco de esa frecuencia.
-      </p>
-      <TopicChips topics={topicChips} variant="compact" />
-    </div>
-  </div>
-
-  <!-- 3. BLOQUE DESTACADO (inspiración Dubstep FBI: pieza fuerte, sidebar de más contenido) -->
-  {featuredArticle && (
-    <FeaturedBlock
-      label="Señal fuerte"
-      headline="Análisis destacado"
-      subheadline="Última pieza publicada; el pilar indica el enfoque editorial que la enmarca."
-      featured={featuredArticle}
-      secondary={secondaryArticles}
-    />
-  )}
-
-  <!-- 4. RADAR DE CONTENIDO (inspiración EDMtrain: utilidad, claridad, escaneable) -->
-  <RadarModule
-    title="Radar de señales"
-    subtitle="Lectura transversal del archivo: salta al pilar si quieres profundizar en su enfoque."
-    filters={[
-      { id: 'all', label: 'Todas', href: '/contenido', isActive: true },
-      ...PILLARS.map((p) => ({
-        id: p.id,
-        label: p.titleEs,
-        href: pillarPath(p.slug),
-      })),
-    ]}
-    items={radarItems}
-    href="/contenido"
-    hrefLabel="Ver archivo completo →"
-  />
-
-  <!-- 5. CUATRO PILARES -->
-  <PillarGrid pillars={pillars} />
-
-  <!-- 6. PODCAST -->
-  {latestEpisode && (
-    <section class="fg-fallout-matrix relative py-20 lg:py-28 border-t border-white/10">
-      <div class="mx-auto max-w-[1200px] px-6 lg:px-12">
-        <div class="grid gap-8 lg:grid-cols-[1fr_0.6fr] lg:gap-12 items-start">
-          <!-- Info -->
-          <div>
-            <div class="flex items-center gap-3 mb-6">
-              <SignalNode size="sm" />
-              <span class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">Podcast + Videopodcast</span>
-            </div>
-
-            <h2 class="font-display text-4xl leading-tight text-fg-white sm:text-5xl mb-4">
-              La señal en audio y video.
-            </h2>
-
-            <p class="text-lg leading-relaxed text-fg-gray max-w-2xl mb-8">
-              Cada episodio como audio-first en RSS, página canónica en el sitio y videopodcast con visualizer editorial en YouTube.
-            </p>
-
-            <!-- Episodio destacado -->
-            <div class="fg-corner-cut border-l-2 border-fg-cyan/30 bg-black/25 pl-6 pr-4 py-4 mb-8">
-              <div class="flex items-center gap-2 mb-2">
-                <PillarPill pilar={latestEpisode.data.pilar} size="sm" />
-                <span class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray">
-                  EP{String(latestEpisode.data.episodeNumber).padStart(2, '0')}
+  <!-- 2. ÚLTIMAS SEÑALES — grid compacto, sin imagen grande -->
+  {sorted.length > 0 && (
+    <section class="fg-fallout-matrix relative overflow-hidden border-b border-white/10 py-10 lg:py-14">
+      <div class="pointer-events-none absolute inset-0 opacity-[0.04]" aria-hidden="true">
+        <img src="/images/sections/fg-section-archive.png" alt="" class="h-full w-full object-cover mix-blend-soft-light" loading="lazy" decoding="async" />
+      </div>
+      <div class="relative mx-auto max-w-[1400px] px-6 lg:px-12">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-3">
+            <SignalNode size="sm" />
+            <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">Últimas señales</p>
+          </div>
+          <a href="/contenido" class="font-data text-[11px] uppercase tracking-[0.2em] text-fg-gray hover:text-fg-cyan transition-colors">Ver archivo →</a>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {sorted.slice(0, 3).map((article) => (
+            <a
+              href={`/contenido/${article.id}`}
+              class="group fg-corner-cut flex flex-col border border-white/10 bg-black/25 p-5 transition-colors hover:border-white/20 hover:bg-black/35"
+            >
+              <div class="flex items-center gap-2 mb-3">
+                <PillarPill pilar={article.data.pilar} size="sm" />
+                <span class="font-data text-[10px] text-fg-gray/60">
+                  {article.data.date.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' })}
                 </span>
               </div>
-              <h3 class="text-xl font-semibold text-fg-white mb-2">
-                {latestEpisode.data.title}
+              <h3 class="text-base font-semibold leading-snug text-fg-white transition-colors group-hover:text-fg-cyan mb-2">
+                {article.data.title}
               </h3>
-              <p class="text-sm text-fg-gray mb-3">
-                {latestEpisode.data.description}
+              <p class="text-sm text-fg-gray/80 line-clamp-2 leading-relaxed flex-1">
+                {article.data.description}
               </p>
-              <a
-                href={`/podcast/${latestEpisode.id}`}
-                class="inline-flex items-center gap-2 font-data text-xs uppercase tracking-[0.2em] text-fg-cyan hover:text-fg-white transition-colors"
-              >
-                <span>Escuchar episodio</span>
-                <span>→</span>
-              </a>
-            </div>
-
-            <!-- Links -->
-            <div class="flex flex-wrap gap-4">
-              <a href="/podcast" class="inline-flex items-center justify-center bg-fg-cyan px-6 py-3 font-data text-xs uppercase tracking-[0.2em] text-fg-black transition-all hover:bg-fg-white hover:text-fg-black">
-                Todos los episodios
-              </a>
-              <a href="/podcast/rss.xml" class="inline-flex items-center justify-center border border-white/20 px-6 py-3 font-data text-xs uppercase tracking-[0.2em] text-fg-white transition-all hover:border-fg-cyan hover:text-fg-cyan">
-                RSS Feed
-              </a>
-            </div>
-          </div>
-
-          <!-- Cover -->
-          <a href={`/podcast/${latestEpisode.id}`} class="block">
-            <div class="fg-corner-cut relative aspect-square overflow-hidden border border-fg-cyan/20">
-              <div class="absolute inset-0" aria-hidden="true">
-                <img src="/images/hero/fg-hero-atmosphere-cyan.png" alt="" class="h-full w-full object-cover opacity-45 mix-blend-screen" loading="lazy" />
-              </div>
-              <div class="absolute inset-0" aria-hidden="true">
-                <img src="/images/sections/fg-section-radar.png" alt="" class="h-full w-full object-cover opacity-55 mix-blend-soft-light" loading="lazy" />
-              </div>
-              {latestEpisode.data.coverImage ? (
-                <img
-                  src={latestEpisode.data.coverImage}
-                  alt={latestEpisode.data.title}
-                  class="relative z-10 h-full w-full object-cover opacity-92"
-                />
-              ) : (
-                <div class="relative z-10 flex h-full items-end p-5">
-                  <img src="/images/components/cards/template-featured-1200x630.svg" alt="" class="h-full w-full object-cover opacity-70" loading="lazy" />
-                </div>
-              )}
-              <div class="pointer-events-none absolute inset-0 z-20 opacity-[0.32]" aria-hidden="true">
-                <img src="/images/system/fg-overlay-article-frame.svg" alt="" class="h-full w-full object-cover" loading="lazy" />
-              </div>
-            </div>
-          </a>
+              <span class="mt-3 font-data text-xs uppercase tracking-[0.15em] text-fg-cyan">Leer →</span>
+            </a>
+          ))}
         </div>
       </div>
     </section>
   )}
 
-  <!-- 7. CTA FINAL -->
+  <!-- 3. CUATRO FRECUENCIAS -->
+  <PillarGrid pillars={pillars} />
+
+  <!-- 4. PODCAST — tarjeta compacta -->
+  {latestEpisode && (
+    <section class="fg-fallout-matrix relative border-t border-white/10 py-10 lg:py-14">
+      <div class="relative mx-auto max-w-[1400px] px-6 lg:px-12">
+        <div class="flex items-center gap-3 mb-5">
+          <SignalNode size="sm" />
+          <span class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">Podcast</span>
+        </div>
+        <div class="fg-corner-cut border border-white/12 bg-black/25 p-6 lg:p-8 max-w-3xl">
+          <div class="flex items-center gap-2 mb-3">
+            <PillarPill pilar={latestEpisode.data.pilar} size="sm" />
+            <span class="font-data text-[10px] uppercase tracking-[0.24em] text-fg-gray">
+              EP{String(latestEpisode.data.episodeNumber).padStart(2, '0')}
+            </span>
+          </div>
+          <h3 class="text-xl font-semibold text-fg-white mb-2">{latestEpisode.data.title}</h3>
+          <p class="text-sm text-fg-gray/85 mb-5 max-w-xl leading-relaxed">{latestEpisode.data.description}</p>
+          <div class="flex flex-wrap gap-3">
+            <a href={`/podcast/${latestEpisode.id}`} class="inline-flex items-center gap-2 bg-fg-cyan px-4 py-2 font-data text-xs uppercase tracking-[0.2em] text-fg-black transition-all hover:bg-fg-white">
+              Escuchar episodio →
+            </a>
+            <a href="/podcast" class="inline-flex items-center gap-2 border border-white/20 px-4 py-2 font-data text-xs uppercase tracking-[0.2em] text-fg-white transition-all hover:border-fg-cyan hover:text-fg-cyan">
+              Todos los episodios
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- 5. CTA FINAL -->
   <EditorialCTA
     label="Transmisión continua"
     title="La señal se construye en cada frecuencia."
-    description="Podcast, archivo y piezas largas bajo la misma señal — con el pilar Frecuencia Global como cadencia informativa dentro del conjunto."
+    description="Podcast, archivo y piezas largas bajo la misma señal editorial."
     primaryAction={{ label: 'Contactar', href: '/contacto' }}
     secondaryAction={{ label: 'Sobre el proyecto', href: '/sobre' }}
   />
