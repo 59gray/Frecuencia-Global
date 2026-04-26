@@ -78,7 +78,7 @@ const bassBordersMeta: Record<string, { label: string; supportLine: string; city
   <EditorialPageShell density="standard">
     <section class="max-w-7xl mx-auto px-fg-md lg:px-fg-xl py-fg-3xl">
       <p class:list={['font-data text-[11px] uppercase tracking-[0.3em] mb-2', titleClass, 'opacity-95']}>
-        Pilar editorial
+        Frecuencia de lectura
       </p>
 
       <div class="flex flex-wrap items-center gap-fg-sm mb-fg-sm">
@@ -159,7 +159,7 @@ const bassBordersMeta: Record<string, { label: string; supportLine: string; city
                   label: 'Señal activa',
                   city: 'Bass & Borders',
                   supportLine: 'Pieza dentro del radar.',
-                  note: 'Lectura en curso dentro del pilar.',
+                  note: 'Lectura en curso dentro de esta frecuencia.',
                 };
 
                 return (
@@ -216,8 +216,8 @@ const bassBordersMeta: Record<string, { label: string; supportLine: string; city
                     </p>
 
                     <span class="relative mt-5 inline-flex items-center gap-2 font-data text-[10px] uppercase tracking-[0.22em] text-pilar-p2/95">
-                      <span>leer pieza</span>
-                      <span aria-hidden="true">-&gt;</span>
+                      <span>LEER SEÑAL</span>
+                      <span aria-hidden="true">→</span>
                     </span>
                   </article>
                 );
@@ -242,14 +242,14 @@ const bassBordersMeta: Record<string, { label: string; supportLine: string; city
         <div class="mt-fg-xl text-center py-fg-3xl">
           <p class="font-data text-sm tracking-widest text-fg-gray">[SIN SEÑAL - PROXIMAMENTE]</p>
           <p class="font-body text-fg-gray mt-fg-sm max-w-md mx-auto">
-            Aún no hay piezas publicadas en este pilar. Vuelve a la página de pilares para ver el resto del sistema.
+            Aún no hay señales publicadas en esta frecuencia. Vuelve a frecuencias para explorar el resto.
           </p>
         </div>
       )}
 
       <div class="mt-fg-xl">
         <a href="/pilares" class="font-data text-xs tracking-widest text-fg-gray hover:text-fg-cyan transition-colors">
-          &lt;- TODOS LOS PILARES
+          ← TODAS LAS FRECUENCIAS
         </a>
       </div>
     </section>
