@@ -8,7 +8,7 @@ episodeNumber: 1
 duration: "18:42"
 audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
 audioBytes: 8945229
-coverImage: "/images/og/fg_website_hero_20260402_v1.webp"
+coverImage: "/images/og/fg_og_default_1200x630.png"
 youtubeVideoId: "M7lc1UVf-VE"
 videoMode: "editorial-visualizer"
 explicit: false

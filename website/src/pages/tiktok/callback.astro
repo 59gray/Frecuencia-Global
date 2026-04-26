@@ -1,0 +1,78 @@
+---
+import '../../styles/global.css';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TikTok OAuth — Frecuencia Global</title>
+  </head>
+  <body
+    class="flex min-h-screen flex-col items-center justify-center bg-fg-black px-fg-md font-body text-fg-white antialiased"
+  >
+    <div
+      id="card"
+      class="w-full max-w-lg border border-white/10 bg-fg-surface/40 px-fg-xl py-fg-2xl text-center"
+    >
+      <div
+        id="spinner"
+        class="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-white/15 border-t-fg-cyan"
+        aria-hidden="true"
+      ></div>
+      <h1 id="title" class="font-body text-lg font-semibold text-fg-white">Procesando autorización…</h1>
+      <p id="message" class="mt-3 text-sm leading-relaxed text-fg-gray">
+        Redirigiendo a la aplicación local…
+      </p>
+      <div
+        id="codeBox"
+        class="mt-4 hidden break-all rounded-sm border border-white/10 bg-black/50 px-3 py-2 font-data text-left text-xs text-fg-cyan"
+      ></div>
+    </div>
+
+    <script is:inline>
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      const state = params.get('state');
+      const error = params.get('error');
+      const errorDesc = params.get('error_description');
+
+      const title = document.getElementById('title');
+      const message = document.getElementById('message');
+      const codeBox = document.getElementById('codeBox');
+      const spinner = document.getElementById('spinner');
+
+      if (error) {
+        spinner.style.display = 'none';
+        title.textContent = 'Error de autorización';
+        title.classList.add('text-red-400');
+        message.textContent = errorDesc || error;
+      } else if (code) {
+        const localUrl = `http://localhost:8765/callback/?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state || '')}`;
+
+        title.textContent = 'Autorización exitosa';
+        title.classList.add('text-pilar-p3');
+        message.textContent = 'Redirigiendo a la aplicación local…';
+
+        setTimeout(() => {
+          window.location.href = localUrl;
+        }, 500);
+
+        setTimeout(() => {
+          spinner.style.display = 'none';
+          message.innerHTML =
+            'Si no fuiste redirigido automáticamente, copia esta URL y pégala en tu navegador:';
+          codeBox.classList.remove('hidden');
+          codeBox.textContent = localUrl;
+        }, 3000);
+      } else {
+        spinner.style.display = 'none';
+        title.textContent = 'Sin código de autorización';
+        title.classList.add('text-red-400');
+        message.textContent = 'No se recibió un código de autorización de TikTok.';
+      }
+    </script>
+  </body>
+</html>

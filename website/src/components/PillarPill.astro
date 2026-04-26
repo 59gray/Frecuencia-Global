@@ -1,20 +1,26 @@
 ---
+import { PILLAR_BY_ID, type PillarId } from '../lib/pillars';
+
 interface Props {
-  pilar: 'p1' | 'p2' | 'p3' | 'p4';
+  pilar: PillarId;
   size?: 'sm' | 'md';
 }
 
 const { pilar, size = 'sm' } = Astro.props;
 
-const pilarConfig: Record<string, { label: string; colorClass: string; bgClass: string }> = {
-  p1: { label: 'GEOPOLITIK DROP', colorClass: 'text-pilar-p1', bgClass: 'bg-pilar-p1/10 border-pilar-p1/30' },
-  p2: { label: 'BASS & BORDERS', colorClass: 'text-pilar-p2', bgClass: 'bg-pilar-p2/10 border-pilar-p2/30' },
-  p3: { label: 'FRECUENCIA GLOBAL', colorClass: 'text-pilar-p3', bgClass: 'bg-pilar-p3/10 border-pilar-p3/30' },
-  p4: { label: 'BEHIND THE POLICY', colorClass: 'text-pilar-p4', bgClass: 'bg-pilar-p4/10 border-pilar-p4/30' },
+const pilarConfig: Record<
+  PillarId,
+  { colorClass: string; bgClass: string }
+> = {
+  p1: { colorClass: 'text-pilar-p1', bgClass: 'bg-pilar-p1/10 border-pilar-p1/30' },
+  p2: { colorClass: 'text-pilar-p2', bgClass: 'bg-pilar-p2/10 border-pilar-p2/30' },
+  p3: { colorClass: 'text-pilar-p3', bgClass: 'bg-pilar-p3/10 border-pilar-p3/30' },
+  p4: { colorClass: 'text-pilar-p4', bgClass: 'bg-pilar-p4/10 border-pilar-p4/30' },
 };
 
 const config = pilarConfig[pilar];
-const sizeClass = size === 'md' ? 'px-sm py-2xs text-xs' : 'px-xs py-[2px] text-[10px]';
+const label = PILLAR_BY_ID[pilar].titleEs.toUpperCase();
+const sizeClass = size === 'md' ? 'px-fg-sm py-fg-2xs text-xs' : 'px-fg-xs py-[2px] text-[10px]';
 ---
 
 <span
@@ -25,5 +31,5 @@ const sizeClass = size === 'md' ? 'px-sm py-2xs text-xs' : 'px-xs py-[2px] text-
     sizeClass,
   ]}
 >
-  {config.label}
+  {label}
 </span>

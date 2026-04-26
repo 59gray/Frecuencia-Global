@@ -1,11 +1,11 @@
-﻿---
+---
 title: "Berghain y la política del anonimato (no es solo música)"
 description: "Berghain importa menos como club icónico que como dispositivo social: anonimato, filtro y arquitectura que convierten la escena en jerarquía."
 date: 2026-02-28
 pilar: p2
 tags: ["Berlín", "clubs", "música electrónica", "normas sociales", "escena"]
-image: "/images/articles/FG_BASS_BORDERS_BERGHAIN_CARD_v2.png"
-cardImage: "/images/articles/FG_BASS_BORDERS_BERGHAIN_CARD_v2.png"
+image: "/images/articles/berghain-reglas-no-fotos.png"
+cardImage: "/images/articles/bass-borders-berghain-card.webp"
 draft: false
 ---
 

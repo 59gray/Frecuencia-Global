@@ -1,9 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
+import EditorialPageShell from '../../components/EditorialPageShell.astro';
 import FrequencyLine from '../../components/FrequencyLine.astro';
-import PillarPill from '../../components/PillarPill.astro';
 import { getCollection } from 'astro:content';
+import { PILLARS } from '../../lib/pillars';
 
 const allArticles = await getCollection('articles', ({ data }) => !data.draft);
 const sorted = allArticles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -11,30 +12,33 @@ const sorted = allArticles.sort((a, b) => b.data.date.getTime() - a.data.date.ge
 const pilars = ['all', 'p1', 'p2', 'p3', 'p4'] as const;
 const pilarLabels: Record<string, string> = {
   all: 'TODOS',
-  p1: 'GEOPOLITIK DROP',
-  p2: 'BASS & BORDERS',
-  p3: 'FRECUENCIA GLOBAL',
-  p4: 'BEHIND THE POLICY',
+  ...Object.fromEntries(PILLARS.map((p) => [p.id, p.titleEs.toUpperCase()])),
 };
 ---
 
-<BaseLayout title="Contenido — Frecuencia Global" description="Todo el contenido de Frecuencia Global: geopolítica, música electrónica, tecnología y política pública.">
-  <section class="max-w-7xl mx-auto px-md lg:px-xl py-3xl">
-    <h1 class="font-display text-5xl sm:text-6xl tracking-wider text-fg-white mb-md">CONTENIDO</h1>
-    <p class="font-body text-fg-gray mb-xl max-w-2xl">
-      Todas las transmisiones. Filtra por pilar o explora todo.
+<BaseLayout title="Contenido — Frecuencia Global" description="Archivo del medio: piezas por pilar (Geopolitik Drop, Bass & Borders, Frecuencia Global y Behind the Policy).">
+  <EditorialPageShell density="standard">
+  <section class="fg-content-zone fg-fallout-matrix max-w-7xl mx-auto px-fg-md lg:px-fg-xl py-fg-3xl">
+    <div class="pointer-events-none absolute inset-0 opacity-[0.06]" aria-hidden="true">
+      <img src="/images/sections/fg-section-archive.png" alt="" class="h-full w-full object-cover mix-blend-screen" loading="lazy" />
+    </div>
+
+    <p class="fg-content-kicker font-data text-[11px] uppercase tracking-[0.3em] mb-2">Archivo editorial</p>
+    <h1 class="font-display text-4xl sm:text-5xl text-fg-white mb-fg-md tracking-wide">Contenido</h1>
+    <p class="font-body text-fg-gray mb-fg-xl max-w-2xl leading-relaxed">
+      Archivo completo del sitio. Cada pilar agrupa piezas según su enfoque — ver{' '}
+      <a href="/pilares" class="text-fg-green hover:text-fg-white underline-offset-2">los cuatro pilares</a>.
     </p>
 
     <!-- Filters -->
-    <div class="flex flex-wrap gap-sm mb-xl" id="pilar-filters">
+    <div class="flex flex-wrap gap-2 sm:gap-fg-sm mb-fg-xl" id="pilar-filters">
       {pilars.map((p) => (
         <button
+          type="button"
           data-pilar={p}
           class:list={[
-            'font-data text-xs tracking-widest px-md py-xs border rounded-sm transition-colors cursor-pointer pilar-filter',
-            p === 'all'
-              ? 'text-fg-cyan border-fg-cyan bg-fg-cyan/10'
-              : 'text-fg-gray border-fg-surface hover:border-fg-cyan hover:text-fg-cyan',
+            'max-w-full break-words text-left font-data text-[10px] tracking-[0.12em] px-3 py-2 sm:text-xs sm:tracking-widest sm:px-fg-md sm:py-fg-xs border rounded-sm transition-colors cursor-pointer pilar-filter leading-snug',
+            p === 'all' ? 'is-active' : '',
           ]}
         >
           {pilarLabels[p]}
@@ -45,7 +49,7 @@ const pilarLabels: Record<string, string> = {
     <FrequencyLine />
 
     <!-- Articles grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg mt-xl" id="articles-grid">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-fg-lg mt-fg-xl" id="articles-grid">
       {sorted.map((article) => (
         <div data-pilar={article.data.pilar} class="article-item">
           <ArticleCard
@@ -54,18 +58,19 @@ const pilarLabels: Record<string, string> = {
             date={article.data.date}
             pilar={article.data.pilar}
             slug={article.id}
-            image={article.data.image}
+            image={article.data.cardImage ?? article.data.image}
           />
         </div>
       ))}
     </div>
 
     {sorted.length === 0 && (
-      <div class="text-center py-3xl">
-        <p class="font-data text-sm tracking-widest text-fg-gray">[SIN SEÑAL — PRÓXIMAMENTE]</p>
+      <div class="text-center py-fg-3xl">
+        <p class="font-data text-sm tracking-widest text-fg-gray">No hay articulos publicados todavia.</p>
       </div>
     )}
   </section>
+  </EditorialPageShell>
 </BaseLayout>
 
 <script>
@@ -78,11 +83,9 @@ const pilarLabels: Record<string, string> = {
 
       // Update active filter
       filters.forEach((f) => {
-        f.classList.remove('text-fg-cyan', 'border-fg-cyan', 'bg-fg-cyan/10');
-        f.classList.add('text-fg-gray', 'border-fg-surface');
+        f.classList.remove('is-active');
       });
-      btn.classList.remove('text-fg-gray', 'border-fg-surface');
-      btn.classList.add('text-fg-cyan', 'border-fg-cyan', 'bg-fg-cyan/10');
+      btn.classList.add('is-active');
 
       // Filter articles
       items.forEach((item) => {

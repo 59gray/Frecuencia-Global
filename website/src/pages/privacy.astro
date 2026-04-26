@@ -1,155 +1,115 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import LegalLayout from '../layouts/LegalLayout.astro';
 ---
 
-<BaseLayout title="Política de Privacidad" description="Política de privacidad de Frecuencia Global. Información sobre datos, integraciones y derechos de los usuarios.">
-  <section class="max-w-3xl mx-auto px-6 py-20">
-    <h1 class="text-4xl font-bold mb-8 text-fg-cyan font-display">Política de Privacidad</h1>
-    <p class="text-fg-gray-400 text-sm mb-8">Última actualización: 7 de abril de 2026</p>
+<LegalLayout
+  title="Privacy Policy"
+  description="Privacy Policy for Frecuencia Global Publisher, including TikTok and connected platform data handling."
+  lastUpdated="April 16, 2026"
+  lang="en"
+>
+  <p>
+    <strong>Frecuencia Global Publisher</strong> is the publishing application used by Frecuencia Global to schedule and distribute editorial content to connected social media platforms. This Privacy Policy explains what data the app may receive, how that data is used, how it is protected, and how users can request access revocation or deletion.
+  </p>
 
-    <div class="space-y-6 text-fg-gray-300 leading-relaxed">
-      <h2 class="text-xl font-semibold text-fg-white mt-8">1. Responsable del tratamiento</h2>
-      <div class="border-l-2 border-fg-cyan pl-6 py-2 bg-white/2">
-        <p class="text-fg-white font-semibold">Frecuencia Global</p>
-        <p>Proyecto editorial independiente dedicado al análisis internacional.</p>
-        <p class="mt-2">
-          <span class="text-fg-gray">Correo de contacto:</span><br>
-          <a href="mailto:contacto@frecuenciaglobal.org" class="text-fg-cyan hover:underline">contacto@frecuenciaglobal.org</a>
-        </p>
-      </div>
+  <h2>1. Scope and Controller</h2>
+  <p>
+    This Policy applies to data processed through the Frecuencia Global Publisher app and the website
+    <a href="https://frecuenciaglobal.org">frecuenciaglobal.org</a>.
+  </p>
+  <ul>
+    <li><strong>Project:</strong> Frecuencia Global</li>
+    <li><strong>Contact email:</strong> <a href="mailto:contacto@frecuenciaglobal.org">contacto@frecuenciaglobal.org</a></li>
+    <li><strong>Contact page:</strong> <a href="/contacto">frecuenciaglobal.org/contacto</a></li>
+  </ul>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">2. Qué datos recopilamos</h2>
-      <p>Frecuencia Global recopila datos mínimos y necesarios para su operación editorial:</p>
+  <h2>2. Data We May Receive</h2>
+  <p>
+    Depending on the connected platform and granted permissions, Frecuencia Global Publisher may receive the following data:
+  </p>
+  <ul>
+    <li><strong>Connected account identifiers:</strong> account handle, platform user ID, and basic profile metadata needed for publishing.</li>
+    <li><strong>Authorization data:</strong> OAuth access and refresh tokens, token expiration data, and granted scopes.</li>
+    <li><strong>Publishing data:</strong> captions, media references, post IDs, publish timestamps, and publication status returned by platform APIs.</li>
+    <li><strong>Operational logs:</strong> technical logs required for reliability, security, and troubleshooting.</li>
+    <li><strong>Website contact data:</strong> name, email, and message content submitted through the contact channel.</li>
+  </ul>
+  <p>
+    We do not intentionally collect private messages, passwords, payment card data, or special category personal data through Frecuencia Global Publisher.
+  </p>
 
-      <h3 class="text-lg font-semibold text-fg-white mt-6">2.1 Datos de navegación (automáticos)</h3>
-      <ul class="list-disc list-inside space-y-2 ml-4">
-        <li>Dirección IP (anonimizada)</li>
-        <li>Tipo de navegador y dispositivo</li>
-        <li>Páginas visitadas y tiempo de permanencia</li>
-        <li>Origen del tráfico (referente)</li>
-      </ul>
-      <p class="text-sm text-fg-gray-400 mt-2">Estos datos son procesados por nuestro proveedor de hosting (Cloudflare Pages) para operación técnica del sitio.</p>
+  <h2>3. Platform-Specific Notes (TikTok and Others)</h2>
+  <p>
+    For TikTok and other connected social platforms, Frecuencia Global Publisher processes only the data necessary to authenticate, publish content from official Frecuencia Global accounts, and confirm publication outcomes.
+  </p>
+  <p>
+    Any data directly controlled by each platform remains subject to that platform's own privacy terms and developer policies.
+  </p>
 
-      <h3 class="text-lg font-semibold text-fg-white mt-6">2.2 Datos proporcionados voluntariamente</h3>
-      <ul class="list-disc list-inside space-y-2 ml-4">
-        <li>Nombre y correo electrónico (al usar el formulario de contacto)</li>
-        <li>Contenido del mensaje enviado</li>
-      </ul>
+  <h2>4. How We Use Data</h2>
+  <ul>
+    <li>Authenticate platform connections and maintain active publishing permissions.</li>
+    <li>Create, schedule, and publish editorial content to authorized social accounts.</li>
+    <li>Monitor publication delivery status and resolve technical failures.</li>
+    <li>Maintain security, prevent abuse, and audit access to internal systems.</li>
+    <li>Respond to user requests and legal/privacy inquiries.</li>
+  </ul>
 
-      <h3 class="text-lg font-semibold text-fg-white mt-6">2.3 Datos de integraciones con plataformas sociales</h3>
-      <p>Para publicar contenido en nuestras cuentas oficiales de redes sociales, utilizamos APIs oficiales que requieren tokens de autenticación. Estos tokens:</p>
-      <ul class="list-disc list-inside space-y-2 ml-4">
-        <li>Son exclusivos para nuestras cuentas oficiales de Frecuencia Global</li>
-        <li>No acceden a datos de usuarios de esas plataformas</li>
-        <li>Se almacenan de forma segura en variables de entorno</li>
-        <li>Nunca se incluyen en código público ni repositorios</li>
-      </ul>
+  <h2>5. Storage and Data Protection</h2>
+  <ul>
+    <li>Data is stored using protected infrastructure and restricted operational access.</li>
+    <li>Credentials and API tokens are stored as secured environment secrets, not in public code repositories.</li>
+    <li>Access to production credentials is limited to authorized project operators.</li>
+    <li>Transport-level encryption (HTTPS/TLS) is used for data in transit.</li>
+    <li>We apply periodic credential rotation and operational security reviews.</li>
+  </ul>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">3. Cómo usamos la información</h2>
-      <ul class="list-disc list-inside space-y-2 ml-4">
-        <li><strong>Operación del sitio:</strong> Mantener el servicio web disponible y funcional</li>
-        <li><strong>Distribución editorial:</strong> Publicar contenido en nuestras cuentas oficiales de redes sociales (X/Twitter, Instagram, LinkedIn, TikTok, Threads)</li>
-        <li><strong>Atención a usuarios:</strong> Responder consultas enviadas a través del formulario de contacto</li>
-        <li><strong>Análisis anónimo:</strong> Comprender tendencias de uso agregadas para mejorar el contenido</li>
-      </ul>
+  <h2>6. Data Retention</h2>
+  <ul>
+    <li><strong>OAuth and integration records:</strong> retained while a platform connection is active and only for operational needs.</li>
+    <li><strong>Technical logs:</strong> retained for a limited period required for security and troubleshooting.</li>
+    <li><strong>Contact requests:</strong> retained for follow-up and compliance purposes, then removed when no longer required.</li>
+  </ul>
+  <p>
+    We minimize retained data and delete or anonymize records when they are no longer necessary for the stated purposes.
+  </p>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">4. Integraciones con plataformas de terceros</h2>
-      <p>Frecuencia Global opera cuentas oficiales en las siguientes plataformas y utiliza sus APIs para publicar contenido editorial:</p>
+  <h2>7. User Rights</h2>
+  <p>Where applicable by law, users may request:</p>
+  <ul>
+    <li>Access to personal data we hold about them.</li>
+    <li>Correction of inaccurate or outdated information.</li>
+    <li>Deletion of personal data.</li>
+    <li>Restriction or objection to specific processing activities.</li>
+  </ul>
 
-      <div class="grid gap-4 sm:grid-cols-2 mt-4">
-        <div class="border border-white/10 p-4">
-          <p class="font-semibold text-fg-white">X (Twitter)</p>
-          <p class="text-sm text-fg-gray-400">@frec_global</p>
-          <p class="text-xs text-fg-gray-500 mt-1">Publicación de contenido editorial</p>
-        </div>
-        <div class="border border-white/10 p-4">
-          <p class="font-semibold text-fg-white">Instagram</p>
-          <p class="text-sm text-fg-gray-400">@globalfrequency.es</p>
-          <p class="text-xs text-fg-gray-500 mt-1">Publicación de contenido visual</p>
-        </div>
-        <div class="border border-white/10 p-4">
-          <p class="font-semibold text-fg-white">LinkedIn</p>
-          <p class="text-sm text-fg-gray-400">Frecuencia Global (Company Page)</p>
-          <p class="text-xs text-fg-gray-500 mt-1">Publicación de análisis profesional</p>
-        </div>
-        <div class="border border-white/10 p-4">
-          <p class="font-semibold text-fg-white">TikTok</p>
-          <p class="text-sm text-fg-gray-400">@frecuenciaglobal</p>
-          <p class="text-xs text-fg-gray-500 mt-1">Contenido audiovisual corto</p>
-        </div>
-        <div class="border border-white/10 p-4">
-          <p class="font-semibold text-fg-white">Threads</p>
-          <p class="text-sm text-fg-gray-400">@globalfrequency.es</p>
-          <p class="text-xs text-fg-gray-500 mt-1">Publicaciones de texto</p>
-        </div>
-        <div class="border border-white/10 p-4">
-          <p class="font-semibold text-fg-white">YouTube</p>
-          <p class="text-sm text-fg-gray-400">@FrecuenciaGlobal</p>
-          <p class="text-xs text-fg-gray-500 mt-1">Videopodcast</p>
-        </div>
-      </div>
+  <h2>8. Revoking Access and Data Deletion Requests</h2>
+  <p>
+    To revoke platform access, remove Frecuencia Global Publisher from your connected platform settings (for example, TikTok app permissions) and notify us by email.
+  </p>
+  <p>
+    To request deletion of data associated with Frecuencia Global Publisher, follow the formal process in
+    <a href="/data-deletion">Data Deletion Request</a>.
+  </p>
+  <p>
+    You can also email <a href="mailto:contacto@frecuenciaglobal.org">contacto@frecuenciaglobal.org</a> with your request details.
+  </p>
 
-      <p class="mt-4 text-sm">
-        <strong>Nota importante:</strong> Estas integraciones son unidireccionales. Publicamos contenido desde nuestra plataforma hacia estas redes, pero no recopilamos ni almacenamos datos personales de los usuarios de dichas plataformas. Cada plataforma tiene su propia política de privacidad que rige los datos de sus usuarios.
-      </p>
+  <h2>9. Third-Party Services</h2>
+  <p>
+    We may rely on third-party infrastructure providers for hosting, form processing, and content delivery. Those providers process limited technical data under their own policies.
+  </p>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">5. Servicios de terceros</h2>
-      <p>Utilizamos los siguientes servicios para operar nuestro sitio:</p>
-      <ul class="list-disc list-inside space-y-2 ml-4">
-        <li><strong>Cloudflare Pages:</strong> Hosting y distribución del sitio web</li>
-        <li><strong>Formspree:</strong> Procesamiento de formularios de contacto (cuando esté configurado)</li>
-        <li><strong>Plataformas sociales:</strong> X, Instagram, LinkedIn, TikTok, Threads, YouTube (para distribución de contenido)</li>
-      </ul>
+  <h2>10. Changes to This Policy</h2>
+  <p>
+    We may update this Privacy Policy to reflect legal, technical, or operational changes. Updated versions are published on this page with a revised last updated date.
+  </p>
 
-      <h2 class="text-xl font-semibold text-fg-white mt-8">6. Seguridad de la información</h2>
-      <p>Implementamos las siguientes medidas de seguridad:</p>
-      <ul class="list-disc list-inside space-y-2 ml-4">
-        <li>Conexión HTTPS encriptada para todo el sitio</li>
-        <li>Tokens de API almacenados en variables de entorno seguras</li>
-        <li>Acceso restringido a credenciales (únicamente administradores del proyecto)</li>
-        <li>Sin almacenamiento de contraseñas de usuarios (no tenemos sistema de login público)</li>
-        <li>Revisión regular de integraciones y permisos de APIs</li>
-      </ul>
-
-      <h2 class="text-xl font-semibold text-fg-white mt-8">7. Cookies y tecnologías similares</h2>
-      <p>Utilizamos únicamente cookies esenciales para el funcionamiento técnico del sitio. No utilizamos:</p>
-      <ul class="list-disc list-inside space-y-2 ml-4">
-        <li>Cookies de seguimiento de terceros</li>
-        <li>Publicidad comportamental</li>
-        <li>Análisis invasivos de navegación</li>
-        <li>Trackers de redes sociales embebidos</li>
-      </ul>
-
-      <h2 class="text-xl font-semibold text-fg-white mt-8">8. Tus derechos</h2>
-      <p>Como usuario, tienes derecho a:</p>
-      <ul class="list-disc list-inside space-y-2 ml-4">
-        <li><strong>Acceso:</strong> Solicitar qué información tenemos sobre ti</li>
-        <li><strong>Rectificación:</strong> Corregir información inexacta</li>
-        <li><strong>Eliminación:</strong> Solicitar la eliminación de tus datos</li>
-        <li><strong>Portabilidad:</strong> Recibir tus datos en formato legible</li>
-        <li><strong>Oposición:</strong> Oponerte al tratamiento de tus datos</li>
-      </ul>
-      <p class="mt-4">
-        Para ejercer cualquiera de estos derechos, contáctanos en <a href="mailto:contacto@frecuenciaglobal.org" class="text-fg-cyan hover:underline">contacto@frecuenciaglobal.org</a>.
-        También puedes consultar nuestra página específica de <a href="/data-deletion" class="text-fg-cyan hover:underline">Eliminación de Datos</a>.
-      </p>
-
-      <h2 class="text-xl font-semibold text-fg-white mt-8">9. Retención de datos</h2>
-      <ul class="list-disc list-inside space-y-2 ml-4">
-        <li><strong>Correos de contacto:</strong> Conservamos los mensajes durante el tiempo necesario para responder y dar seguimiento, típicamente 12 meses.</li>
-        <li><strong>Datos de navegación:</strong> Los logs de servidor se conservan según las políticas de Cloudflare (generalmente hasta 90 días).</li>
-        <li><strong>Tokens de API:</strong> Se mantienen activos mientras sean necesarios para la operación editorial y se rotan periódicamente.</li>
-      </ul>
-
-      <h2 class="text-xl font-semibold text-fg-white mt-8">10. Cambios en esta política</h2>
-      <p>Podemos actualizar esta política ocasionalmente para reflejar cambios en nuestros servicios o requisitos legales. Los cambios se publicarán en esta página con fecha de actualización visible.</p>
-
-      <h2 class="text-xl font-semibold text-fg-white mt-8">11. Contacto</h2>
-      <p>Para preguntas sobre esta política de privacidad o el tratamiento de tus datos:</p>
-      <div class="border border-fg-cyan/30 p-4 mt-4 bg-fg-cyan/5">
-        <p class="font-data text-xs uppercase tracking-widest text-fg-gray mb-1">Correo oficial</p>
-        <a href="mailto:contacto@frecuenciaglobal.org" class="text-fg-cyan font-semibold hover:underline">contacto@frecuenciaglobal.org</a>
-      </div>
-    </div>
-  </section>
-</BaseLayout>
+  <h2>11. Contact</h2>
+  <div class="contact-box">
+    <p>
+      <strong>Email:</strong> <a href="mailto:contacto@frecuenciaglobal.org">contacto@frecuenciaglobal.org</a><br>
+      <strong>Contact page:</strong> <a href="/contacto">frecuenciaglobal.org/contacto</a>
+    </p>
+  </div>
+</LegalLayout>

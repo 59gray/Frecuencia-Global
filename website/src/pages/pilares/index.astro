@@ -1,72 +1,88 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import EditorialPageShell from '../../components/EditorialPageShell.astro';
 import SignalNode from '../../components/SignalNode.astro';
 import FrequencyLine from '../../components/FrequencyLine.astro';
+import { PILLARS, pillarPath, type PillarId } from '../../lib/pillars';
 
-const pilars = [
-  {
-    id: 'p1',
-    title: 'GEOPOLITIK DROP',
-    description: 'Poder, conflicto y los movimientos estratégicos que reconfiguran el mapa global. Donde la geopolítica deja de ser abstracta y se vuelve urgente.',
-    href: '/pilares/geopolitik-drop',
-    color: 'var(--color-pilar-p1)',
-    textColor: 'text-pilar-p1',
-  },
-  {
-    id: 'p2',
-    title: 'BASS & BORDERS',
-    description: 'Música electrónica como lente para entender migración, identidad y cultura global. El sonido no conoce fronteras — nosotros te mostramos por qué.',
-    href: '/pilares/bass-and-borders',
-    color: 'var(--color-pilar-p2)',
-    textColor: 'text-pilar-p2',
-  },
-  {
-    id: 'p3',
-    title: 'FRECUENCIA GLOBAL',
-    description: 'Tecnología, datos y las fuerzas invisibles que dan forma al mundo conectado. Cables, algoritmos, infraestructura — lo que nadie ve pero todos usan.',
-    href: '/pilares/frecuencia-global',
-    color: 'var(--color-pilar-p3)',
-    textColor: 'text-pilar-p3',
-  },
-  {
-    id: 'p4',
-    title: 'BEHIND THE POLICY',
-    description: 'Lo que hay detrás de las políticas públicas que afectan tu vida diaria. Regulaciones, tratados y decisiones que se toman lejos pero impactan cerca.',
-    href: '/pilares/behind-the-policy',
-    color: 'var(--color-pilar-p4)',
-    textColor: 'text-pilar-p4',
-  },
-];
+const signalColor: Record<PillarId, string> = {
+  p1: 'var(--color-pilar-p1)',
+  p2: 'var(--color-pilar-p2)',
+  p3: 'var(--color-pilar-p3)',
+  p4: 'var(--color-pilar-p4)',
+};
+const textColor: Record<PillarId, string> = {
+  p1: 'text-pilar-p1',
+  p2: 'text-pilar-p2',
+  p3: 'text-pilar-p3',
+  p4: 'text-pilar-p4',
+};
+
+const pillarRows = PILLARS.map((p) => ({
+  ...p,
+  href: pillarPath(p.slug),
+  color: signalColor[p.id],
+  textClass: textColor[p.id],
+  titleUpper: p.titleEs.toUpperCase(),
+}));
 ---
 
-<BaseLayout title="Pilares — Frecuencia Global" description="Los cuatro pilares editoriales de Frecuencia Global: geopolítica, cultura musical, tecnología y política pública.">
-  <section class="max-w-4xl mx-auto px-md lg:px-xl py-3xl">
-    <h1 class="font-display text-5xl sm:text-6xl tracking-wider text-fg-white mb-md">PILARES</h1>
-    <p class="font-body text-fg-gray mb-xl max-w-2xl">
-      Cuatro frecuencias. Cuatro formas de leer el mundo. Cada pilar es un lente editorial que analiza la realidad global desde un ángulo distinto.
-    </p>
+<BaseLayout
+  title="Pilares — Frecuencia Global"
+  description="Cuatro pilares editoriales bajo una sola marca: Geopolitik Drop, Bass & Borders, Frecuencia Global y Behind the Policy."
+>
+  <EditorialPageShell>
+  <section class="mx-auto max-w-[1100px] px-fg-md lg:px-fg-xl py-fg-3xl">
+    <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan mb-3">Sistema editorial</p>
+    <h1 class="text-4xl sm:text-5xl text-fg-white mb-fg-md font-display tracking-wide">Cuatro pilares</h1>
+
+    <div class="space-y-fg-md font-body text-fg-gray leading-relaxed max-w-3xl mb-fg-xl">
+      <p class="text-lg text-fg-white/95">
+        <strong class="text-fg-cyan font-semibold">Frecuencia Global</strong> es la marca paraguas: cuatro pilares con foco y tono distintos.
+      </p>
+      <p class="text-fg-gray/95 border-l-2 border-pilar-p3/40 pl-fg-md">
+        Cada pilar funciona como una mirada editorial concreta para evitar mezclar enfoques y mantener claridad en el archivo.
+      </p>
+    </div>
 
     <FrequencyLine />
 
-    <div class="mt-xl space-y-xl">
-      {pilars.map((p) => (
+    <h2 class="mt-fg-xl font-display text-2xl sm:text-3xl text-fg-white tracking-wide mb-fg-sm">
+      Cuatro frecuencias, misma señal
+    </h2>
+    <p class="font-body text-fg-gray text-sm max-w-2xl mb-fg-xl">
+      Cada bloque resume qué aporta el pilar. El enlace abre el archivo filtrado de ese pilar.
+    </p>
+
+    <div class="mt-fg-lg space-y-fg-lg">
+      {pillarRows.map((row) => (
         <a
-          href={p.href}
-          class="block group bg-fg-surface/30 border border-fg-surface rounded-sm p-lg hover:border-current transition-colors"
-          style={`--tw-border-opacity: 0.3;`}
+          href={row.href}
+          class="block group bg-fg-surface/30 border border-fg-surface rounded-sm p-fg-lg hover:border-white/20 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg-cyan"
         >
-          <div class="flex items-center gap-sm mb-sm">
-            <SignalNode color={p.color} size="lg" />
-            <h2 class:list={['font-display text-2xl tracking-wider', p.textColor]}>{p.title}</h2>
+          <div class="flex flex-wrap items-start gap-fg-md gap-y-fg-sm">
+            <div class="flex items-center gap-fg-sm min-w-0">
+              <SignalNode color={row.color} size="lg" />
+              <div>
+                <p class:list={['font-display text-xl sm:text-2xl tracking-wide', row.textClass]}>{row.titleUpper}</p>
+                <p class:list={['font-data text-[11px] uppercase tracking-[0.2em] mt-1', row.textClass, 'opacity-90']}>
+                  {row.subtitleEs}
+                </p>
+              </div>
+            </div>
+            <span class="font-data text-2xl tabular-nums text-fg-gray/40 shrink-0 sm:ml-auto">{row.number}</span>
           </div>
-          <p class="font-body text-fg-gray group-hover:text-fg-white transition-colors">
-            {p.description}
+
+          <p class="mt-fg-md text-sm leading-relaxed text-fg-gray group-hover:text-fg-gray/95 transition-colors">
+            {row.description}
           </p>
-          <span class="inline-block mt-sm font-data text-xs tracking-widest text-fg-gray group-hover:text-fg-cyan transition-colors">
-            VER CONTENIDO &rarr;
+
+          <span class="inline-block mt-fg-md font-data text-xs tracking-widest text-fg-gray group-hover:text-fg-cyan transition-colors">
+            Ver piezas de este pilar →
           </span>
         </a>
       ))}
     </div>
   </section>
+  </EditorialPageShell>
 </BaseLayout>

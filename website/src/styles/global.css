@@ -1,57 +1,100 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 @import "@fontsource/bebas-neue/400.css";
 @import "@fontsource/space-grotesk/400.css";
 @import "@fontsource/space-grotesk/500.css";
 @import "@fontsource/space-grotesk/700.css";
 @import "@fontsource-variable/jetbrains-mono";
+@source "../**/*.{astro,html,js,jsx,ts,tsx,md,mdx}";
 
-/* Design tokens */
+/* Design tokens - command deck / phosphor terminal (FG v6) */
 @theme {
-  --color-fg-black: #0a0a0f;
-  --color-fg-surface: #1a1a2e;
-  --color-fg-cyan: #00e5ff;
-  --color-fg-magenta: #ff00e5;
-  --color-fg-green: #b8ff00;
-  --color-fg-blue: #4a6bff;
-  --color-fg-white: #ffffff;
-  --color-fg-gray: #a0a0b8;
+  /* Backgrounds - steel HUD + bunker */
+  --color-bg-obsidiana: #06080c;
+  --color-bg-carbon: #0a0e14;
+  --color-bg-acero-frio: #121a22;
+  --color-bg-hielo: #d9e2f2;
 
-  --color-pilar-p1: #00e5ff;
-  --color-pilar-p2: #ff00e5;
-  --color-pilar-p3: #b8ff00;
-  --color-pilar-p4: #4a6bff;
+  /* Text */
+  --color-text-primary: #f2f4f8;
+  --color-text-secondary: #9aa3b2;
+  --color-text-blanco-senal: #f5f7fb;
 
+  /* Accents */
+  --color-accent-cyan: #79afbf;
+  --color-accent-magenta: #7c728f;
+  --color-accent-green: #7f8f73;
+  --color-accent-amber: #8f8573;
+  --color-accent-blue: #6b7ca3;
+
+  /* Phosphor / terminal (second read over HUD) */
+  --color-fg-phosphor: #d4a84b;
+  --color-fg-phosphor-dim: #9a7a38;
+
+  /* Pillar Colors (LOCKED) */
+  --color-pilar-p1: #79afbf;
+  --color-pilar-p2: #7c728f;
+  --color-pilar-p3: #7f8f73;
+  --color-pilar-p4: #6b7ca3;
+
+  /* Backwards compatibility aliases */
+  --color-fg-black: #06080c;
+  --color-fg-surface: #0c1018;
+  --color-fg-cyan: #79afbf;
+  --color-fg-magenta: #7c728f;
+  --color-fg-green: #7f8f73;
+  --color-fg-deep: #6b7ca3;
+  --color-fg-white: #f5f7fb;
+  --color-fg-gray: #9aa3b2;
+
+  /* Typography */
   --font-display: "Bebas Neue", "Impact", sans-serif;
   --font-body: "Space Grotesk", "Inter", sans-serif;
   --font-data: "JetBrains Mono Variable", "JetBrains Mono", monospace;
 
-  --spacing-2xs: 4px;
-  --spacing-xs: 8px;
-  --spacing-sm: 12px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-  --spacing-2xl: 48px;
-  --spacing-3xl: 64px;
+  /* Spacing (unchanged) */
+  --spacing-fg-2xs: 4px;
+  --spacing-fg-xs: 8px;
+  --spacing-fg-sm: 12px;
+  --spacing-fg-md: 16px;
+  --spacing-fg-lg: 24px;
+  --spacing-fg-xl: 32px;
+  --spacing-fg-2xl: 48px;
+  --spacing-fg-3xl: 64px;
 }
 
 html {
-  background-color: var(--color-fg-black);
-  color: var(--color-fg-white);
+  background-color: var(--color-bg-obsidiana);
+  color: var(--color-text-primary);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+  overflow-x: clip;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 body {
   min-height: 100vh;
   line-height: 1.6;
-  background-color: var(--color-fg-black);
+  overflow-x: clip;
+  background-color: var(--color-bg-obsidiana);
   background-image:
-    radial-gradient(circle at 14% 16%, rgba(0, 229, 255, 0.12), transparent 24%),
-    radial-gradient(circle at 80% 12%, rgba(255, 0, 229, 0.08), transparent 20%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 220px);
+    radial-gradient(ellipse 90% 50% at 10% -10%, rgba(121, 175, 191, 0.06), transparent 42%),
+    radial-gradient(ellipse 70% 45% at 92% 8%, rgba(143, 133, 115, 0.05), transparent 38%),
+    radial-gradient(circle at 50% 120%, rgba(74, 107, 255, 0.05), transparent 45%),
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.018) 0,
+      rgba(255, 255, 255, 0.018) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(180deg, rgba(18, 26, 34, 0.35), transparent 240px);
 }
 
 img {
@@ -59,26 +102,48 @@ img {
   max-width: 100%;
 }
 
+/* Base headings - legible by default */
 h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-body);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* Brand/Display style - for hero and branding only */
+.heading-brand {
   font-family: var(--font-display);
   text-transform: uppercase;
   letter-spacing: 0.03em;
   line-height: 0.95;
+  font-weight: 400;
 }
 
-a {
-  color: var(--color-fg-cyan);
-  text-decoration: none;
-  transition: color 0.2s ease;
+/* Body-style headings - for content readability */
+.heading-body {
+  font-family: var(--font-body);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-transform: none;
 }
 
-a:hover {
-  color: var(--color-fg-white);
+/* Must live in @layer base so utilities (e.g. text-fg-black on solid cyan buttons) win. */
+@layer base {
+  a {
+    color: var(--color-accent-cyan);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: var(--color-text-primary);
+  }
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-fg-cyan) 30%, transparent);
-  color: var(--color-fg-white);
+  background: color-mix(in srgb, var(--color-fg-phosphor) 28%, transparent);
+  color: var(--color-text-primary);
 }
 
 ::-webkit-scrollbar {
@@ -86,29 +151,211 @@ a:hover {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-fg-black);
+  background: var(--color-bg-obsidiana);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-fg-surface);
-  border-radius: 3px;
+  background: color-mix(in srgb, var(--color-fg-cyan) 22%, var(--color-bg-acero-frio));
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-fg-gray);
+  background: var(--color-text-secondary);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-fg-cyan);
+  outline: 2px solid var(--color-accent-cyan);
   outline-offset: 2px;
 }
 
 .signal-grid {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 72px 72px;
-  mask-image: linear-gradient(180deg, rgba(255, 255, 255, 0.85), transparent 92%);
+    linear-gradient(to right, rgba(121, 175, 191, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  -webkit-mask-image: linear-gradient(180deg, rgba(255, 255, 255, 0.88), transparent 92%);
+  mask-image: linear-gradient(180deg, rgba(255, 255, 255, 0.88), transparent 92%);
+}
+
+/* Marco HUD editorial (recortes angulares suaves) */
+.fg-hud-chrome {
+  box-shadow:
+    inset 0 1px 0 rgba(121, 175, 191, 0.1),
+    inset 0 -1px 0 rgba(143, 133, 115, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.fg-site-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.fg-site-atmosphere {
+  background-image:
+    radial-gradient(ellipse 74% 58% at 16% -8%, rgba(121, 175, 191, 0.07), transparent 52%),
+    radial-gradient(ellipse 56% 42% at 88% 6%, rgba(143, 133, 115, 0.06), transparent 46%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.012), transparent 260px);
+}
+
+.fg-site-vignette {
+  background:
+    radial-gradient(ellipse 90% 72% at 50% 50%, transparent 54%, rgba(0, 0, 0, 0.46) 100%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.28) 100%);
+}
+
+.fg-tactical-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(160deg, rgba(12, 16, 24, 0.94) 0%, rgba(10, 14, 20, 0.88) 55%, rgba(8, 11, 18, 0.94) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(143, 133, 115, 0.07),
+    0 16px 38px rgba(0, 0, 0, 0.34);
+}
+
+.fg-tactical-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(121, 175, 191, 0.06), transparent 40%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.012) 0,
+      rgba(255, 255, 255, 0.012) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  opacity: 0.55;
+}
+
+.fg-nav-shell {
+  overflow: visible;
+}
+
+.fg-tactical-panel--nav {
+  overflow: visible;
+}
+
+.fg-dropdown-panel {
+  position: absolute;
+  overflow: visible;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(160deg, rgba(12, 16, 24, 0.98) 0%, rgba(10, 14, 20, 0.95) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 20px 36px rgba(0, 0, 0, 0.4);
+}
+
+.fg-dropdown-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(121, 175, 191, 0.06), transparent 42%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.012) 0,
+      rgba(255, 255, 255, 0.012) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  opacity: 0.6;
+}
+
+.fg-corner-cut {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+}
+
+.fg-divider-hairline {
+  position: relative;
+}
+
+.fg-divider-hairline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(121, 175, 191, 0.28), transparent);
+}
+
+.fg-fallout-matrix {
+  position: relative;
+  overflow: hidden;
+}
+
+.fg-fallout-matrix::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(121, 175, 191, 0.06) 0,
+      rgba(121, 175, 191, 0.06) 1px,
+      transparent 1px,
+      transparent 22px
+    ),
+    linear-gradient(180deg, rgba(121, 175, 191, 0.05) 0%, transparent 34%);
+  opacity: 0.28;
+}
+
+.fg-fallout-matrix::after {
+  content: "";
+  position: absolute;
+  inset: -120% 0 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(121, 175, 191, 0.08) 0,
+    rgba(121, 175, 191, 0.08) 2px,
+    transparent 2px,
+    transparent 14px
+  );
+  opacity: 0.1;
+  animation: fg-matrix-fall 14s linear infinite;
+}
+
+.fg-content-zone {
+  --fg-content-accent: var(--color-fg-cyan);
+  --fg-content-glow: rgba(121, 175, 191, 0.28);
+}
+
+.fg-content-zone .fg-content-kicker {
+  color: var(--fg-content-accent);
+}
+
+.fg-content-zone .pilar-filter {
+  border-color: rgba(121, 175, 191, 0.26);
+  color: rgba(187, 204, 214, 0.9);
+  background: rgba(121, 175, 191, 0.05);
+}
+
+.fg-content-zone .pilar-filter:hover {
+  border-color: rgba(121, 175, 191, 0.44);
+  color: var(--color-fg-white);
+  background: rgba(121, 175, 191, 0.11);
+}
+
+.fg-content-zone .pilar-filter.is-active {
+  border-color: rgba(121, 175, 191, 0.78);
+  color: #0f151b;
+  background: rgba(171, 198, 209, 0.9);
+  box-shadow: 0 0 20px -8px var(--fg-content-glow);
+}
+
+/* Fondo compartido páginas editoriales (weave + capas en Astro) */
+.fg-editorial-weave-bg {
+  background-image: url("/images/system/fg-overlay-section-weave.svg");
+  background-size: cover;
+  background-position: center top;
 }
 
 .signal-marquee-track {
@@ -151,6 +398,40 @@ a:hover {
   }
 }
 
+@keyframes fg-matrix-fall {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(56%);
+  }
+}
+
+.fg-hero-scanline::after {
+  content: "";
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  top: -30%;
+  height: 45%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--color-fg-cyan) 9%, transparent) 38%,
+    color-mix(in srgb, var(--color-fg-phosphor) 4%, transparent) 52%,
+    color-mix(in srgb, var(--color-fg-cyan) 3%, transparent) 58%,
+    transparent 100%
+  );
+  opacity: 0.36;
+  filter: blur(0.5px);
+  animation: fg-hero-scan 9s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+.fg-hero-scan-img {
+  animation: signal-drift 18s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -158,8 +439,32 @@ a:hover {
 
   .signal-marquee-track,
   .signal-scan,
-  .signal-drift {
+  .signal-drift,
+  .fg-hero-scan-img,
+  .fg-fallout-matrix::after {
     animation: none;
+  }
+
+  .fg-hero-scanline::after {
+    animation: none;
+    opacity: 0.18;
+  }
+
+  .signal-grid,
+  .fg-tactical-panel::before {
+    background-image: none;
+  }
+}
+
+@keyframes fg-hero-scan {
+  0%,
+  100% {
+    transform: translate3d(0, -12%, 0);
+    opacity: 0.22;
+  }
+  50% {
+    transform: translate3d(0, 72%, 0);
+    opacity: 0.38;
   }
 }
 
@@ -167,23 +472,31 @@ a:hover {
   font-family: var(--font-body);
   font-size: 1.125rem;
   line-height: 1.75;
-  color: color-mix(in srgb, var(--color-fg-white) 90%, transparent);
+  color: rgba(242, 244, 248, 0.9);
 }
 
 .prose h2 {
-  font-family: var(--font-display);
-  font-size: 2rem;
+  font-family: var(--font-body);
+  font-size: 1.875rem;
+  font-weight: 700;
   color: var(--color-fg-white);
   margin-top: 2.5rem;
   margin-bottom: 1rem;
+  text-transform: none;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
 }
 
 .prose h3 {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 1.5rem;
+  font-weight: 600;
   color: var(--color-fg-white);
   margin-top: 2rem;
   margin-bottom: 0.75rem;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 
 .prose p {
@@ -196,7 +509,7 @@ a:hover {
 }
 
 .prose blockquote {
-  border-left: 3px solid var(--color-fg-cyan);
+  border-left: 3px solid rgba(0, 229, 255, 0.72);
   padding-left: 1.25rem;
   margin: 1.5rem 0;
   color: var(--color-fg-gray);
@@ -249,306 +562,6 @@ a:hover {
   margin: 1.5rem 0;
 }
 
-.prose hr {
-  border: none;
-  border-top: 1px solid var(--color-fg-surface);
-  margin: 2rem 0;
-}
-
-.prose h2:first-child {
-  margin-top: 0;
-}
-
-/* === REPAIR_STACK_20260425: editorial system from backup ===
- * Append-only block. Adds utility classes (fg-tactical-panel, fg-corner-cut, fg-fallout-matrix,
- * fg-hero-scanline, fg-site-shell, etc.) that ArticleLayout, BaseLayout, [slug].astro and the
- * editorial/* components reference. Does NOT modify @theme (palette stays neon-vibrant) nor any
- * existing rule above this marker. To revert: delete everything between this marker and END.
- * Source: D:\FrecuenciaGlobal\backups\FG_PRE_REPAIR_20260425_123256\website\src\styles\global.css
- */
-
-/* Extra design tokens (non-conflicting; merged with @theme above by Tailwind v4) */
-@theme {
-  --color-fg-phosphor: #d4a84b;
-  --color-fg-phosphor-dim: #9a7a38;
-
-  --spacing-fg-2xs: 4px;
-  --spacing-fg-xs: 8px;
-  --spacing-fg-sm: 12px;
-  --spacing-fg-md: 16px;
-  --spacing-fg-lg: 24px;
-  --spacing-fg-xl: 32px;
-  --spacing-fg-2xl: 48px;
-  --spacing-fg-3xl: 64px;
-}
-
-/* Heading utilities */
-.heading-brand {
-  font-family: var(--font-display);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  line-height: 0.95;
-  font-weight: 400;
-}
-
-.heading-body {
-  font-family: var(--font-body);
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
-  text-transform: none;
-}
-
-/* Site shell + ambient layers */
-.fg-site-shell {
-  position: relative;
-  isolation: isolate;
-}
-
-.fg-site-atmosphere {
-  background-image:
-    radial-gradient(ellipse 74% 58% at 16% -8%, rgba(0, 229, 255, 0.06), transparent 52%),
-    radial-gradient(ellipse 56% 42% at 88% 6%, rgba(255, 0, 229, 0.05), transparent 46%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.012), transparent 260px);
-}
-
-.fg-site-vignette {
-  background:
-    radial-gradient(ellipse 90% 72% at 50% 50%, transparent 54%, rgba(0, 0, 0, 0.46) 100%),
-    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.28) 100%);
-}
-
-.fg-hud-chrome {
-  box-shadow:
-    inset 0 1px 0 rgba(0, 229, 255, 0.1),
-    inset 0 -1px 0 rgba(212, 168, 75, 0.06),
-    0 0 0 1px rgba(255, 255, 255, 0.06);
-}
-
-/* Tactical panels (cards, frames) */
-.fg-tactical-panel {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background:
-    linear-gradient(160deg, rgba(12, 16, 24, 0.94) 0%, rgba(10, 14, 20, 0.88) 55%, rgba(8, 11, 18, 0.94) 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    inset 0 -1px 0 rgba(212, 168, 75, 0.07),
-    0 16px 38px rgba(0, 0, 0, 0.34);
-}
-
-.fg-tactical-panel::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(0, 229, 255, 0.06), transparent 40%),
-    repeating-linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0.012) 0,
-      rgba(255, 255, 255, 0.012) 1px,
-      transparent 1px,
-      transparent 4px
-    );
-  opacity: 0.55;
-}
-
-.fg-nav-shell {
-  overflow: visible;
-}
-
-.fg-tactical-panel--nav {
-  overflow: visible;
-}
-
-.fg-dropdown-panel {
-  position: absolute;
-  overflow: visible;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: linear-gradient(160deg, rgba(12, 16, 24, 0.98) 0%, rgba(10, 14, 20, 0.95) 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 20px 36px rgba(0, 0, 0, 0.4);
-}
-
-.fg-dropdown-panel::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(0, 229, 255, 0.06), transparent 42%),
-    repeating-linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0.012) 0,
-      rgba(255, 255, 255, 0.012) 1px,
-      transparent 1px,
-      transparent 4px
-    );
-  opacity: 0.6;
-}
-
-.fg-corner-cut {
-  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
-}
-
-.fg-divider-hairline {
-  position: relative;
-}
-
-.fg-divider-hairline::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.28), transparent);
-}
-
-/* Fallout matrix bg (used by hero / radar) */
-.fg-fallout-matrix {
-  position: relative;
-  overflow: hidden;
-}
-
-.fg-fallout-matrix::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    repeating-linear-gradient(
-      90deg,
-      rgba(0, 229, 255, 0.06) 0,
-      rgba(0, 229, 255, 0.06) 1px,
-      transparent 1px,
-      transparent 22px
-    ),
-    linear-gradient(180deg, rgba(0, 229, 255, 0.05) 0%, transparent 34%);
-  opacity: 0.28;
-}
-
-.fg-fallout-matrix::after {
-  content: "";
-  position: absolute;
-  inset: -120% 0 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    180deg,
-    rgba(0, 229, 255, 0.08) 0,
-    rgba(0, 229, 255, 0.08) 2px,
-    transparent 2px,
-    transparent 14px
-  );
-  opacity: 0.1;
-  animation: fg-matrix-fall 14s linear infinite;
-}
-
-/* Content-zone scoped accents */
-.fg-content-zone {
-  --fg-content-accent: var(--color-fg-cyan);
-  --fg-content-glow: rgba(0, 229, 255, 0.28);
-}
-
-.fg-content-zone .fg-content-kicker {
-  color: var(--fg-content-accent);
-}
-
-.fg-content-zone .pilar-filter {
-  border-color: rgba(0, 229, 255, 0.26);
-  color: rgba(187, 204, 214, 0.9);
-  background: rgba(0, 229, 255, 0.05);
-}
-
-.fg-content-zone .pilar-filter:hover {
-  border-color: rgba(0, 229, 255, 0.44);
-  color: var(--color-fg-white);
-  background: rgba(0, 229, 255, 0.11);
-}
-
-.fg-content-zone .pilar-filter.is-active {
-  border-color: rgba(0, 229, 255, 0.78);
-  color: #0f151b;
-  background: rgba(171, 215, 230, 0.9);
-  box-shadow: 0 0 20px -8px var(--fg-content-glow);
-}
-
-/* Editorial weave bg (optional asset; no-op if image missing) */
-.fg-editorial-weave-bg {
-  background-image: url("/images/system/fg-overlay-section-weave.svg");
-  background-size: cover;
-  background-position: center top;
-}
-
-/* Hero scanline (animated overlay) */
-.fg-hero-scanline::after {
-  content: "";
-  position: absolute;
-  left: -20%;
-  right: -20%;
-  top: -30%;
-  height: 45%;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    color-mix(in srgb, var(--color-fg-cyan) 9%, transparent) 38%,
-    color-mix(in srgb, var(--color-fg-phosphor) 4%, transparent) 52%,
-    color-mix(in srgb, var(--color-fg-cyan) 3%, transparent) 58%,
-    transparent 100%
-  );
-  opacity: 0.36;
-  filter: blur(0.5px);
-  animation: fg-hero-scan 9s ease-in-out infinite;
-  mix-blend-mode: screen;
-}
-
-.fg-hero-scan-img {
-  animation: signal-drift 18s ease-in-out infinite;
-}
-
-/* Keyframes added by repair stack */
-@keyframes fg-matrix-fall {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(56%);
-  }
-}
-
-@keyframes fg-hero-scan {
-  0%,
-  100% {
-    transform: translate3d(0, -12%, 0);
-    opacity: 0.22;
-  }
-  50% {
-    transform: translate3d(0, 72%, 0);
-    opacity: 0.38;
-  }
-}
-
-/* Reduced motion handling for new animations */
-@media (prefers-reduced-motion: reduce) {
-  .fg-hero-scan-img,
-  .fg-fallout-matrix::after {
-    animation: none;
-  }
-
-  .fg-hero-scanline::after {
-    animation: none;
-    opacity: 0.18;
-  }
-
-  .fg-tactical-panel::before {
-    background-image: none;
-  }
-}
-
-/* Prose extensions used by article body components */
 .prose .article-inline-figure {
   margin: 2.25rem 0;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -588,8 +601,8 @@ a:hover {
 .prose .article-context-callout {
   margin: 1.85rem 0 2rem;
   padding: 1rem 1rem 1.05rem;
-  border: 1px solid rgba(0, 229, 255, 0.22);
-  border-left: 3px solid rgba(0, 229, 255, 0.72);
+  border: 1px solid rgba(121, 175, 191, 0.22);
+  border-left: 3px solid rgba(121, 175, 191, 0.72);
   border-radius: 4px;
   background:
     linear-gradient(155deg, rgba(12, 16, 24, 0.9) 0%, rgba(8, 11, 18, 0.94) 100%);
@@ -608,7 +621,7 @@ a:hover {
   font-size: 0.68rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(0, 229, 255, 0.92);
+  color: rgba(121, 175, 191, 0.92);
 }
 
 .prose .article-context-title {
@@ -651,4 +664,12 @@ a:hover {
   color: rgba(181, 190, 205, 0.9);
 }
 
-/* === END REPAIR_STACK === */
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--color-fg-surface);
+  margin: 2rem 0;
+}
+
+.prose h2:first-child {
+  margin-top: 0;
+}

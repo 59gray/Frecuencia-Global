@@ -1,0 +1,270 @@
+---
+import '../styles/global.css';
+import EditorialPageShell from '../components/EditorialPageShell.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  lastUpdated: string;
+  lang?: string;
+  lastUpdatedLabel?: string;
+  ogLocale?: string;
+}
+
+const {
+  title,
+  description = 'Documentos legales de Frecuencia Global.',
+  lastUpdated,
+  lang = 'es',
+  lastUpdatedLabel = lang === 'en' ? 'Last updated' : 'Ultima actualizacion',
+  ogLocale = lang === 'en' ? 'en_US' : 'es_ES',
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const fullTitle = `${title} — Frecuencia Global`;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon-v2.svg" />
+    <link rel="canonical" href={canonicalURL} />
+
+    <title>{fullTitle}</title>
+    <meta name="title" content={fullTitle} />
+    <meta name="description" content={description} />
+    <meta name="author" content="Frecuencia Global" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content={ogLocale} />
+
+    <meta property="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@frec_global" />
+
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body class="fg-site-shell min-h-screen bg-fg-black text-fg-white">
+    <div class="fg-site-atmosphere pointer-events-none fixed inset-0 z-0" aria-hidden="true"></div>
+    <div class="signal-grid pointer-events-none fixed inset-0 z-0 opacity-[0.03]" aria-hidden="true"></div>
+    <div class="fg-site-vignette pointer-events-none fixed inset-0 z-0" aria-hidden="true"></div>
+
+    <div class="relative z-10 flex min-h-screen flex-col">
+      <Header />
+      <main class="flex-1">
+        <EditorialPageShell texture="close">
+          <article class="legal-document">
+            <header class="legal-header">
+              <h1 class="legal-title">{title}</h1>
+              <p class="legal-date">{lastUpdatedLabel}: {lastUpdated}</p>
+            </header>
+            <div class="legal-content">
+              <slot />
+            </div>
+          </article>
+        </EditorialPageShell>
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>
+
+<style>
+  .legal-document {
+    position: relative;
+    overflow: hidden;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background:
+      linear-gradient(160deg, rgba(12, 16, 24, 0.92) 0%, rgba(10, 14, 20, 0.87) 55%, rgba(8, 11, 18, 0.94) 100%);
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.07),
+      inset 0 -1px 0 rgba(212, 168, 75, 0.08),
+      0 20px 40px rgba(0, 0, 0, 0.34);
+  }
+
+  .legal-document::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(0, 229, 255, 0.08), transparent 42%),
+      repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.012) 0,
+        rgba(255, 255, 255, 0.012) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+    opacity: 0.55;
+  }
+
+  @media (min-width: 640px) {
+    .legal-document {
+      padding: 64px 40px 96px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .legal-document {
+      padding: 80px 48px 120px;
+    }
+  }
+
+  .legal-header {
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    padding-bottom: 32px;
+    margin-bottom: 40px;
+  }
+
+  .legal-header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.4), transparent);
+  }
+
+  .legal-title {
+    font-family: var(--font-display);
+    font-size: 2.3rem;
+    font-weight: 400;
+    color: var(--color-fg-white);
+    line-height: 0.95;
+    margin: 0 0 16px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  @media (min-width: 640px) {
+    .legal-title {
+      font-size: 2.8rem;
+    }
+  }
+
+  .legal-date {
+    font-family: var(--font-data);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: var(--color-fg-gray);
+    margin: 0;
+  }
+
+  .legal-content {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--color-fg-white) 92%, transparent);
+  }
+
+  @media (min-width: 640px) {
+    .legal-content {
+      font-size: 1.0625rem;
+      line-height: 1.75;
+    }
+  }
+
+  .legal-content :global(h2) {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-fg-white);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    text-transform: none;
+    letter-spacing: normal;
+    line-height: 1.3;
+  }
+
+  @media (min-width: 640px) {
+    .legal-content :global(h2) {
+      font-size: 1.375rem;
+    }
+  }
+
+  .legal-content :global(h3) {
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-fg-white);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .legal-content :global(p) {
+    margin-bottom: 1.25rem;
+  }
+
+  .legal-content :global(strong) {
+    color: var(--color-fg-white);
+    font-weight: 600;
+  }
+
+  .legal-content :global(a) {
+    color: var(--color-fg-cyan);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .legal-content :global(a:hover) {
+    color: var(--color-fg-white);
+  }
+
+  .legal-content :global(ul),
+  .legal-content :global(ol) {
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .legal-content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .legal-content :global(.placeholder) {
+    display: inline-block;
+    background: rgba(255, 0, 229, 0.15);
+    border: 1px dashed rgba(255, 0, 229, 0.5);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: var(--font-data);
+    font-size: 0.85em;
+    color: var(--color-fg-magenta);
+  }
+
+  .legal-content :global(.contact-box) {
+    background: rgba(0, 229, 255, 0.05);
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 1.5rem 0;
+  }
+
+  .legal-content :global(.contact-box p) {
+    margin: 0;
+  }
+
+  .legal-content :global(.note) {
+    font-size: 0.9375rem;
+    color: var(--color-fg-gray);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 16px 20px;
+    border-left: 3px solid var(--color-fg-cyan);
+    margin: 1.5rem 0;
+  }
+</style>
