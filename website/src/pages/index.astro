@@ -41,7 +41,8 @@ const recentArticles = latestArticle
     featured={latestArticle ? {
       title: latestArticle.data.title,
       pilar: latestArticle.data.pilar,
-      href: `/contenido/${latestArticle.id}`
+      href: `/contenido/${latestArticle.id}`,
+      image: latestArticle.data.image ?? latestArticle.data.cardImage
     } : undefined}
     ctas={{
       primary: { label: 'Explorar frecuencias', href: '/pilares' },

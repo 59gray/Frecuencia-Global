@@ -11,6 +11,7 @@ interface Props {
     title: string;
     pilar: 'p1' | 'p2' | 'p3' | 'p4';
     href: string;
+    image?: string;
   };
   ctas?: {
     primary: { label: string; href: string };
@@ -135,24 +136,40 @@ const {
       )}
 
       {featured && (
-        <div class="mt-4 max-w-3xl border-l-2 border-l-fg-phosphor/60 border-t border-white/12 bg-black/20 pl-5 pr-4 pt-5 pb-4 shadow-[0_0_35px_-24px_rgba(0,229,255,0.5)] sm:mt-5 sm:pl-6 sm:pt-7 sm:pb-5 lg:mt-6 lg:pt-8">
-          <div class="mb-2 flex items-center gap-2 lg:mb-3">
-            <PillarPill pilar={featured.pilar} size="sm" />
-            <span class="font-data text-[10px] uppercase tracking-[0.2em] text-fg-gray/85">Señal destacada</span>
+        <a
+          href={featured.href}
+          class="group mt-4 sm:mt-5 lg:mt-6 block max-w-3xl overflow-hidden border border-white/12 border-l-2 border-l-fg-phosphor/60 bg-black/25 shadow-[0_0_35px_-24px_rgba(0,229,255,0.5)] transition-colors hover:border-white/20 hover:bg-black/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg-cyan"
+        >
+          <div class="flex flex-col sm:flex-row">
+            {/* Columna izquierda: labels + título + CTA */}
+            <div class="flex flex-col justify-between gap-3 p-5 sm:flex-1 sm:p-6 lg:p-7">
+              <div class="flex items-center gap-2">
+                <PillarPill pilar={featured.pilar} size="sm" />
+                <span class="font-data text-[10px] uppercase tracking-[0.2em] text-fg-gray/85">Señal destacada</span>
+              </div>
+              <h2 class="text-base font-semibold leading-snug text-fg-white transition-colors group-hover:text-fg-cyan sm:text-lg lg:text-xl">
+                {featured.title}
+              </h2>
+              <span class="inline-flex items-center gap-1 font-data text-xs uppercase tracking-[0.15em] text-fg-cyan">
+                <span>Leer análisis</span>
+                <span class="transition-transform group-hover:translate-x-1">→</span>
+              </span>
+            </div>
+            {/* Columna derecha: imagen con overlay */}
+            {featured.image && (
+              <div class="relative h-36 shrink-0 overflow-hidden sm:h-auto sm:w-44 lg:w-56">
+                <img
+                  src={featured.image}
+                  alt={featured.title}
+                  class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+                  loading="eager"
+                  decoding="async"
+                />
+                <div class="absolute inset-0 bg-linear-to-l from-transparent via-black/10 to-black/60 sm:bg-linear-to-r sm:from-transparent sm:via-black/5 sm:to-transparent" aria-hidden="true"></div>
+              </div>
+            )}
           </div>
-          <a
-            href={featured.href}
-            class="group block rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg-cyan"
-          >
-            <h2 class="line-clamp-2 text-lg font-semibold leading-snug text-fg-white transition-colors group-hover:text-fg-cyan lg:line-clamp-none lg:text-xl">
-              {featured.title}
-            </h2>
-            <span class="mt-2 inline-flex items-center gap-1 font-data text-xs uppercase tracking-[0.15em] text-fg-cyan">
-              <span>Leer análisis</span>
-              <span class="transition-transform group-hover:translate-x-1">→</span>
-            </span>
-          </a>
-        </div>
+        </a>
       )}
     </div>
   </div>
