@@ -24,11 +24,13 @@ WORKFLOW = {
         "class_type": "CLIPTextEncode",
         "inputs": {
             "text": (
-                "Detroit at night, techno music, industrial city skyline, "
-                "neon cyan and magenta lights, electronic circuit board patterns, "
-                "dark atmospheric fog, club music visual, signal frequency waves, "
-                "cyberpunk aesthetic, cinematic photography, dramatic lighting, "
-                "no text, no logos, no people"
+                "dark industrial city at night, massive factory tower, "
+                "green and cyan volumetric light beams rising from below, "
+                "dramatic storm clouds, deep shadows, neon green glow, "
+                "cyberpunk dystopian atmosphere, cinematic composition, "
+                "metal pipes and machinery, fog and mist, high contrast, "
+                "moody dramatic lighting, no text, no logos, no people, "
+                "concept art, digital painting, 4k"
             ),
             "clip": ["1", 1]
         }
@@ -51,9 +53,9 @@ WORKFLOW = {
             "positive": ["2", 0],
             "negative": ["3", 0],
             "latent_image": ["4", 0],
-            "seed": 20260426,
-            "steps": 28,
-            "cfg": 7.5,
+            "seed": 77749302,
+            "steps": 32,
+            "cfg": 9.0,
             "sampler_name": "dpmpp_2m",
             "scheduler": "karras",
             "denoise": 1.0
