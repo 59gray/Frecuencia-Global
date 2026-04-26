@@ -1,0 +1,49 @@
+---
+interface Topic {
+  id: string;
+  label: string;
+  count?: number;
+  href: string;
+  color?: 'cyan' | 'magenta' | 'green' | 'blue' | 'neutral';
+}
+
+interface Props {
+  title?: string;
+  topics: Topic[];
+  variant?: 'full' | 'compact';
+}
+
+const { 
+  title = 'Explorar por temas',
+  topics,
+  variant = 'full'
+} = Astro.props;
+
+const colorStyles = {
+  cyan: 'bg-fg-cyan/8 text-fg-cyan border-fg-cyan/22 hover:bg-fg-cyan/14',
+  magenta: 'bg-fg-magenta/8 text-fg-magenta border-fg-magenta/22 hover:bg-fg-magenta/14',
+  green: 'bg-fg-green/8 text-fg-green border-fg-green/22 hover:bg-fg-green/14',
+  blue: 'bg-fg-deep/8 text-fg-deep border-fg-deep/22 hover:bg-fg-deep/14',
+  neutral: 'bg-white/5 text-fg-gray border-white/10 hover:bg-white/10 hover:text-fg-white',
+};
+---
+
+<div class:list={[variant === 'full' && 'py-8 border-b border-white/10']}>
+  {variant === 'full' && (
+    <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-gray mb-4">{title}</p>
+  )}
+  
+  <div class="flex flex-wrap gap-3 sm:gap-4">
+    {topics.map((topic) => (
+      <a
+        href={topic.href}
+        class={`inline-flex max-w-full items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 border font-data text-[10px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.15em] transition-all duration-300 break-words ${colorStyles[topic.color || 'neutral']}`}
+      >
+        <span class="break-words text-left leading-snug">{topic.label}</span>
+        {topic.count !== undefined && (
+          <span class="inline-flex min-w-[1.6rem] items-center justify-center rounded-full bg-black/25 px-1.5 py-0.5 text-[10px] opacity-75">{topic.count}</span>
+        )}
+      </a>
+    ))}
+  </div>
+</div>

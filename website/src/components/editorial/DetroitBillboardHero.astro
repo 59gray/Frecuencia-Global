@@ -1,0 +1,210 @@
+---
+interface Props {
+  dateFormatted: string;
+  pillarSubtitle: string;
+}
+
+const { dateFormatted, pillarSubtitle } = Astro.props;
+---
+
+<header class="relative border-b border-white/10">
+  <div class="detroit-hero fg-fallout-matrix fg-hero-scanline relative isolate overflow-hidden">
+    <div class="absolute inset-0" aria-hidden="true">
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_88%_62%_at_50%_-6%,rgba(124,114,143,0.18),transparent_54%),radial-gradient(ellipse_42%_36%_at_78%_18%,rgba(121,175,191,0.12),transparent_60%),linear-gradient(180deg,rgba(10,14,20,0.96),rgba(7,9,13,0.98))]"></div>
+      <img src="/images/hero/fg-hero-atmosphere-grid.png" alt="" class="h-full w-full object-cover opacity-[0.22] mix-blend-screen" />
+    </div>
+
+    <div class="pointer-events-none absolute inset-0 opacity-[0.18] mix-blend-screen" aria-hidden="true">
+      <img src="/images/system/fg-overlay-hero-master.svg" alt="" class="fg-hero-scan-img h-full w-full object-cover object-center" />
+    </div>
+    <div class="signal-grid pointer-events-none absolute inset-0 opacity-[0.05]" aria-hidden="true"></div>
+
+    <div class="detroit-hero__billboard-wrap absolute inset-x-3 top-3 sm:inset-x-5 sm:top-5 md:inset-x-8 md:top-6 lg:inset-x-12">
+      <div class="detroit-hero__billboard fg-corner-cut relative overflow-hidden border border-white/14 bg-[#1a1d28]/94 px-4 pb-5 pt-4 sm:px-6 sm:pb-6 sm:pt-5 md:px-8 md:pb-7 md:pt-6">
+        <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),transparent_34%),radial-gradient(circle_at_20%_12%,rgba(121,175,191,0.12),transparent_22%),radial-gradient(circle_at_84%_16%,rgba(124,114,143,0.22),transparent_28%)]" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute inset-y-0 right-[16%] w-px bg-white/10" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute bottom-5 left-4 right-4 h-px bg-gradient-to-r from-transparent via-fg-cyan/45 to-transparent sm:left-6 sm:right-6 md:left-8 md:right-8" aria-hidden="true"></div>
+
+        <div class="relative z-10">
+          <span class="mb-3 inline-flex items-center gap-2 font-data text-[10px] uppercase tracking-[0.28em] text-fg-phosphor/88 sm:text-[11px]">
+            <span class="inline-block h-px w-6 bg-fg-phosphor/55"></span>
+            Detroit origin signal
+          </span>
+
+          <p class="font-display text-[2.2rem] uppercase leading-[0.88] tracking-[0.04em] text-fg-white sm:text-[2.9rem] md:max-w-[22ch] md:text-[3.55rem] lg:text-[4.15rem]">
+            <span class="block detroit-hero__headline-glow md:whitespace-nowrap">Detroit is the birthplace</span>
+            <span class="block detroit-hero__headline-glow md:whitespace-nowrap">of techno music.</span>
+          </p>
+
+          <div class="mt-4 flex items-center gap-3 text-fg-gray/78 sm:mt-5">
+            <span class="font-data text-[10px] uppercase tracking-[0.3em] sm:text-[11px]">Bass & Borders</span>
+            <span class="h-px flex-1 bg-gradient-to-r from-fg-cyan/45 via-fg-phosphor/24 to-transparent"></span>
+            <span class="hidden font-data text-[10px] uppercase tracking-[0.22em] text-fg-gray/72 md:inline">Archive 1980s</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detroit-hero__supports pointer-events-none absolute inset-x-0 bottom-[17%] top-[34%]" aria-hidden="true">
+      <div class="detroit-hero__support detroit-hero__support--left"></div>
+      <div class="detroit-hero__support detroit-hero__support--center"></div>
+      <div class="detroit-hero__support detroit-hero__support--right"></div>
+    </div>
+
+    <div class="detroit-hero__factory absolute inset-x-0 bottom-0 h-[42%]" aria-hidden="true">
+      <div class="detroit-hero__roofline absolute inset-x-0 top-0 h-[10px]"></div>
+      <div class="detroit-hero__windowband absolute inset-x-[12%] top-[18%] h-[16%]"></div>
+      <div class="detroit-hero__windowband detroit-hero__windowband--lower absolute inset-x-[6%] bottom-[18%] h-[20%]"></div>
+      <div class="detroit-hero__door absolute bottom-0 right-[10%] h-[62%] w-[12%] sm:w-[10%]"></div>
+    </div>
+
+    <div
+      class="pointer-events-none absolute bottom-0 left-0 right-0 flex min-h-[2.5rem] flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-white/10 bg-black/45 px-4 py-2 backdrop-blur-sm md:px-8"
+      aria-hidden="true"
+    >
+      <span class="font-data text-[10px] uppercase tracking-[0.35em] text-fg-cyan/90">
+        [{pillarSubtitle}]
+      </span>
+      <span class="hidden font-data text-[10px] uppercase tracking-[0.28em] text-fg-gray/90 sm:inline">
+        SIGNAL · INFRASTRUCTURE · ARCHIVE
+      </span>
+      <span class="font-data text-[10px] tabular-nums tracking-wide text-fg-gray/78">
+        {dateFormatted}
+      </span>
+    </div>
+  </div>
+</header>
+
+<style>
+  .detroit-hero {
+    min-height: 19rem;
+  }
+
+  .detroit-hero__billboard-wrap {
+    bottom: 31%;
+  }
+
+  .detroit-hero__billboard {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 -1px 0 rgba(121, 175, 191, 0.06),
+      0 26px 60px rgba(0, 0, 0, 0.34);
+  }
+
+  .detroit-hero__headline-glow {
+    text-shadow:
+      0 0 18px rgba(121, 175, 191, 0.07),
+      0 0 30px rgba(124, 114, 143, 0.08);
+  }
+
+  .detroit-hero__support {
+    position: absolute;
+    bottom: 0;
+    width: 1.2%;
+    min-width: 6px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(9, 11, 16, 0.9)),
+      linear-gradient(90deg, rgba(121, 175, 191, 0.2), rgba(255, 255, 255, 0.02));
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.04),
+      0 0 18px rgba(0, 0, 0, 0.22);
+  }
+
+  .detroit-hero__support--left {
+    left: 18%;
+    height: 66%;
+  }
+
+  .detroit-hero__support--center {
+    left: 49%;
+    height: 82%;
+  }
+
+  .detroit-hero__support--right {
+    right: 16%;
+    height: 70%;
+  }
+
+  .detroit-hero__factory {
+    background:
+      linear-gradient(180deg, rgba(120, 66, 74, 0.28), rgba(33, 21, 28, 0.78) 14%, rgba(10, 14, 20, 0.95) 100%);
+  }
+
+  .detroit-hero__factory::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.07) 0,
+        rgba(255, 255, 255, 0.07) 2px,
+        transparent 2px,
+        transparent 7.5%
+      ),
+      repeating-linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.065) 0,
+        rgba(255, 255, 255, 0.065) 2px,
+        transparent 2px,
+        transparent 21%
+      );
+    opacity: 0.34;
+  }
+
+  .detroit-hero__factory::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, transparent 0 11%, rgba(214, 221, 232, 0.18) 11% 12.2%, transparent 12.2% 34%, rgba(214, 221, 232, 0.18) 34% 35.2%, transparent 35.2% 58%, rgba(214, 221, 232, 0.18) 58% 59.2%, transparent 59.2% 82%, rgba(214, 221, 232, 0.18) 82% 83.2%, transparent 83.2% 100%);
+    opacity: 0.2;
+  }
+
+  .detroit-hero__roofline {
+    background:
+      linear-gradient(90deg, transparent, rgba(184, 107, 161, 0.82) 12%, rgba(121, 175, 191, 0.38) 50%, rgba(184, 107, 161, 0.72) 88%, transparent);
+    box-shadow: 0 0 16px rgba(124, 114, 143, 0.18);
+  }
+
+  .detroit-hero__windowband,
+  .detroit-hero__windowband--lower {
+    background:
+      linear-gradient(90deg, rgba(245, 247, 251, 0.12), rgba(121, 175, 191, 0.22) 46%, rgba(245, 247, 251, 0.08) 100%);
+    filter: blur(0.2px);
+    opacity: 0.54;
+  }
+
+  .detroit-hero__windowband--lower {
+    opacity: 0.4;
+  }
+
+  .detroit-hero__door {
+    background:
+      linear-gradient(180deg, rgba(110, 44, 46, 0.9), rgba(62, 18, 28, 0.95)),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 46%);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+
+  @media (min-width: 640px) {
+    .detroit-hero {
+      min-height: 23rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .detroit-hero {
+      min-height: 24.5rem;
+    }
+
+    .detroit-hero__billboard-wrap {
+      bottom: 27%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .detroit-hero {
+      min-height: 26rem;
+    }
+  }
+</style>

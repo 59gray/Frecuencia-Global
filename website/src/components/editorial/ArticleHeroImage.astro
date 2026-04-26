@@ -1,0 +1,121 @@
+---
+interface Props {
+  image: string;
+  title: string;
+  pillarSubtitle: string;
+  dateFormatted: string;
+  pilar: 'p1' | 'p2' | 'p3' | 'p4';
+  heroDek?: string;
+  /** Valor CSS para object-position (p. ej. center 70% para bajar el encuadre). */
+  heroImagePosition?: string;
+  /** WebP opcional (misma composición que `image`); PNG sigue como fallback. */
+  heroImageWebp?: string;
+}
+
+const { image, title, pillarSubtitle, dateFormatted, pilar, heroDek, heroImagePosition, heroImageWebp } =
+  Astro.props;
+
+const isTechnoDetroitCover = image.includes('techno-detroit-hero');
+
+const hudBorder: Record<Props['pilar'], string> = {
+  p1: 'border-l-pilar-p1',
+  p2: 'border-l-pilar-p2',
+  p3: 'border-l-pilar-p3',
+  p4: 'border-l-pilar-p4',
+};
+---
+
+<header class="relative border-b border-white/10">
+  <div
+    class="article-hero-img relative isolate w-full min-h-[220px] overflow-hidden aspect-[16/9] md:min-h-0 md:aspect-[16/5] lg:aspect-[18/5]"
+  >
+    {
+      heroImageWebp ? (
+        <picture class="absolute inset-0 block">
+          <source srcset={heroImageWebp} type="image/webp" />
+          <img
+            src={image}
+            alt={title}
+            class:list={[
+              'absolute inset-0 h-full w-full object-cover',
+              isTechnoDetroitCover && 'grayscale contrast-[1.15] saturate-0',
+            ]}
+            style={heroImagePosition ? { objectPosition: heroImagePosition } : undefined}
+            loading="eager"
+            decoding="async"
+          />
+        </picture>
+      ) : (
+        <img
+          src={image}
+          alt={title}
+          class:list={[
+            'absolute inset-0 h-full w-full object-cover',
+            isTechnoDetroitCover && 'grayscale contrast-[1.15] saturate-0',
+          ]}
+          style={heroImagePosition ? { objectPosition: heroImagePosition } : undefined}
+          loading="eager"
+          decoding="async"
+        />
+      )
+    }
+
+    {
+      isTechnoDetroitCover && (
+        <div class="pointer-events-none absolute right-0 top-0 z-[6] h-[42%] w-[38%] bg-[radial-gradient(circle_at_100%_0%,rgba(0,229,255,0.92),rgba(0,229,255,0.34)_26%,rgba(255,0,229,0.18)_56%,transparent_80%)] opacity-80 mix-blend-screen" aria-hidden="true"></div>
+      )
+    }
+
+    <!-- Lectura desde abajo: sin mix-blend-screen sobre ilustraciones saturadas -->
+    <div
+      class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(6,8,12,0)_0%,rgba(6,8,12,0.06)_42%,rgba(6,8,12,0.72)_82%,rgba(7,9,13,0.94)_100%)]"
+      aria-hidden="true"
+    ></div>
+    <div
+      class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_95%_70%_at_50%_112%,rgba(9,11,17,0.82),transparent_52%)]"
+      aria-hidden="true"
+    ></div>
+
+    <div class="signal-grid pointer-events-none absolute inset-0 opacity-[0.038]" aria-hidden="true"></div>
+
+    <div
+      class="pointer-events-none absolute inset-[10px] rounded-[2px] border border-white/[0.085] sm:inset-3 md:inset-[14px] lg:inset-4"
+      aria-hidden="true"
+    ></div>
+
+    <div class="fg-hero-scanline pointer-events-none absolute inset-0 overflow-hidden opacity-[0.85]" aria-hidden="true"></div>
+
+    <!-- Opcional: entrada editorial (solo si viene en frontmatter; sin placeholder vacío) -->
+    <div class="absolute inset-x-0 bottom-0 z-[5] flex flex-col justify-end">
+      {
+        heroDek && (
+          <div class="px-4 pb-3 sm:px-6 md:px-8 lg:px-12">
+            <p
+              class:list={[
+                'max-w-[42rem] border-l-2 bg-black/52 px-4 py-3 text-sm leading-snug text-fg-gray shadow-[0_14px_48px_rgba(0,0,0,0.42)] backdrop-blur-[8px] sm:text-base md:leading-relaxed',
+                hudBorder[pilar],
+              ]}
+            >
+              {heroDek}
+            </p>
+          </div>
+        )
+      }
+
+      <div
+        class="pointer-events-none flex min-h-[2.5rem] flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-white/10 bg-black/50 px-4 py-2 backdrop-blur-sm md:px-8"
+        aria-hidden="true"
+      >
+        <span class="font-data text-[10px] uppercase tracking-[0.35em] text-fg-cyan/92">
+          [{pillarSubtitle}]
+        </span>
+        <span class="hidden font-data text-[10px] uppercase tracking-[0.28em] text-fg-gray/90 sm:inline">
+          SEÑAL · RUTA · ARCHIVO
+        </span>
+        <span class="font-data text-[10px] tabular-nums tracking-wide text-fg-gray/78">
+          {dateFormatted}
+        </span>
+      </div>
+    </div>
+  </div>
+</header>

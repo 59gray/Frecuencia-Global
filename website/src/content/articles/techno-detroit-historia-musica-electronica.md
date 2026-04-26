@@ -5,7 +5,11 @@ date: 2026-04-06
 pilar: p2
 tags: ["música electrónica", "Detroit", "techno", "cultura", "migración", "globalización"]
 image: "/images/articles/FG_DETROIT_FEATURED_REDESIGN_v1.png"
-cardImage: "/images/articles/FG_BASS_BORDERS_DETROIT_THUMB_v1.png"
+cardImage: "/images/articles/FG_BASS_BORDERS_DETROIT_CARD_v2.png"
+heroVariant: "detroit-billboard"
+heroDek: "De Belleville a Berlín: cómo Detroit inventó el futuro sonoro del mundo."
+heroImageWebp: "/images/articles/FG_DETROIT_BILLBOARD_MANGA_WEBP_v1.webp"
+enableXEmbeds: true
 ---
 
 ## El sonido que salió de las fábricas

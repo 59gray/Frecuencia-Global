@@ -1,0 +1,117 @@
+---
+import SignalNode from '../SignalNode.astro';
+
+interface Filter {
+  id: string;
+  label: string;
+  href: string;
+  isActive?: boolean;
+}
+
+interface ContentItem {
+  title: string;
+  meta: string;
+  href: string;
+  tag?: string;
+  tagColor?: 'cyan' | 'magenta' | 'green' | 'blue';
+}
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+  filters: Filter[];
+  items: ContentItem[];
+  href?: string;
+  hrefLabel?: string;
+}
+
+const { 
+  title = 'Radar de contenido',
+  subtitle = 'Explorar por formato y fecha',
+  filters,
+  items,
+  href,
+  hrefLabel = 'Ver todo →'
+} = Astro.props;
+
+const tagColors = {
+  cyan: 'text-fg-cyan',
+  magenta: 'text-pilar-p2',
+  green: 'text-pilar-p3',
+  blue: 'text-pilar-p4',
+};
+---
+
+<section class="fg-fallout-matrix relative overflow-hidden border-b border-white/10 py-16 lg:py-20">
+  <div class="pointer-events-none absolute inset-0 opacity-[0.05]" aria-hidden="true">
+    <img
+      src="/images/sections/fg-section-radar.png"
+      alt=""
+      class="h-full w-full object-cover mix-blend-soft-light"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <div class="pointer-events-none absolute inset-0 bg-[url('/images/system/fg-overlay-section-weave.svg')] bg-cover opacity-[0.36]" aria-hidden="true"></div>
+  <div class="relative mx-auto max-w-[1400px] px-6 lg:px-12">
+    <!-- Header -->
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8 pb-6 border-b border-white/10">
+      <div>
+        <div class="flex items-center gap-3 mb-3">
+          <SignalNode size="sm" />
+          <span class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan">Explorar</span>
+        </div>
+        <h2 class="font-display text-3xl text-fg-white sm:text-4xl">{title}</h2>
+        {subtitle && <p class="mt-2 text-fg-gray">{subtitle}</p>}
+      </div>
+      
+      {href && (
+        <a href={href} class="font-data text-xs uppercase tracking-[0.2em] text-fg-cyan hover:text-fg-white transition-colors">
+          {hrefLabel}
+        </a>
+      )}
+    </div>
+    
+    <!-- Filtros estilo utilitario -->
+    <div class="flex flex-wrap gap-2 mb-8">
+      {filters.map((filter) => (
+        <a
+          href={filter.href}
+          class={`fg-corner-cut max-w-full break-words px-3 py-1.5 text-center font-data text-[10px] uppercase tracking-[0.1em] transition-all duration-300 sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.15em] ${
+            filter.isActive 
+              ? 'bg-fg-cyan text-fg-black' 
+              : 'bg-white/5 text-fg-gray border border-white/10 hover:bg-white/10 hover:text-fg-white'
+          }`}
+        >
+          {filter.label}
+        </a>
+      ))}
+    </div>
+    
+    <!-- Lista de contenido tipo utilidad -->
+    <div class="divide-y divide-white/10">
+      {items.map((item) => (
+        <a 
+          href={item.href}
+          class="fg-corner-cut group flex flex-col gap-2 border border-transparent py-4 transition-colors hover:border-fg-cyan/18 hover:bg-white/[0.02] -mx-4 px-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+        >
+          <div class="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
+            {item.tag && (
+              <span class={`shrink-0 font-data text-[10px] uppercase tracking-[0.2em] ${tagColors[item.tagColor || 'cyan']}`}>
+                {item.tag}
+              </span>
+            )}
+            <h3 class="min-w-0 break-words text-base font-medium leading-snug text-fg-white group-hover:text-fg-cyan transition-colors">
+              {item.title}
+            </h3>
+          </div>
+          
+          <div class="flex shrink-0 items-center justify-between gap-4 sm:justify-end">
+            <span class="font-data text-[11px] text-fg-gray/70 sm:block">{item.meta}</span>
+            <span class="text-fg-gray/50 group-hover:text-fg-cyan transition-colors" aria-hidden="true">→</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

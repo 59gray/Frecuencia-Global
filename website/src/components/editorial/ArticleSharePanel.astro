@@ -1,0 +1,153 @@
+---
+interface ShareLink {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  title: string;
+  url: string;
+}
+
+const { title, url } = Astro.props;
+
+const shareTitle = `${title} — Frecuencia Global`;
+const encodedUrl = encodeURIComponent(url);
+const encodedTitle = encodeURIComponent(shareTitle);
+const encodedBody = encodeURIComponent(`${shareTitle}\n\n${url}`);
+
+const shareLinks: ShareLink[] = [
+  {
+    label: 'X',
+    href: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
+  },
+  {
+    label: 'WhatsApp',
+    href: `https://wa.me/?text=${encodeURIComponent(`${shareTitle} ${url}`)}`,
+  },
+  {
+    label: 'Telegram',
+    href: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
+  },
+  {
+    label: 'LinkedIn',
+    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+  },
+  {
+    label: 'Facebook',
+    href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+  },
+  {
+    label: 'Email',
+    href: `mailto:?subject=${encodedTitle}&body=${encodedBody}`,
+  },
+];
+---
+
+<section
+  class="article-share-panel mt-fg-xl"
+  data-share-panel
+  data-share-url={url}
+  data-share-title={shareTitle}
+  aria-label="Opciones para compartir este artículo"
+>
+  <div class="fg-corner-cut border border-white/10 bg-white/[0.02] px-3 py-3 sm:px-4">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-center gap-3">
+        <p class="font-data text-[10px] uppercase tracking-[0.26em] text-fg-gray">compartir</p>
+        <span class="hidden h-px w-8 bg-white/10 sm:block" aria-hidden="true"></span>
+        <p class="hidden text-xs text-fg-gray sm:block">lleva esta pieza a otra conversación</p>
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        {shareLinks.map((link) => (
+          <a
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="fg-corner-cut inline-flex items-center justify-center border border-white/12 bg-white/[0.02] px-2.5 py-1.5 font-data text-[10px] uppercase tracking-[0.16em] text-fg-gray transition-colors hover:border-fg-cyan/55 hover:text-fg-cyan"
+          >
+            {link.label}
+          </a>
+        ))}
+
+        <button
+          type="button"
+          data-share-copy
+          class="fg-corner-cut inline-flex items-center justify-center border border-white/12 bg-white/[0.02] px-2.5 py-1.5 font-data text-[10px] uppercase tracking-[0.16em] text-fg-gray transition-colors hover:border-fg-cyan/55 hover:text-fg-cyan"
+        >
+          Copiar Link
+        </button>
+
+        <button
+          type="button"
+          data-share-native
+          hidden
+          class="fg-corner-cut inline-flex items-center justify-center border border-fg-cyan/22 bg-fg-cyan/8 px-2.5 py-1.5 font-data text-[10px] uppercase tracking-[0.16em] text-fg-cyan transition-colors hover:border-fg-cyan/60 hover:text-fg-white"
+        >
+          Compartir
+        </button>
+      </div>
+    </div>
+
+    <p class="mt-2 min-h-[0.9rem] font-data text-[9px] uppercase tracking-[0.16em] text-fg-gray/80" data-share-feedback aria-live="polite"></p>
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const panels = document.querySelectorAll('[data-share-panel]');
+
+    panels.forEach((panel) => {
+      if (panel.dataset.bound === 'true') return;
+      panel.dataset.bound = 'true';
+
+      const url = panel.dataset.shareUrl ?? window.location.href;
+      const title = panel.dataset.shareTitle ?? document.title;
+      const feedback = panel.querySelector('[data-share-feedback]');
+      const copyButton = panel.querySelector('[data-share-copy]');
+      const nativeButton = panel.querySelector('[data-share-native]');
+
+      const setFeedback = (message) => {
+        if (feedback) feedback.textContent = message;
+      };
+
+      if (nativeButton && navigator.share) {
+        nativeButton.hidden = false;
+        nativeButton.addEventListener('click', async () => {
+          try {
+            await navigator.share({ title, text: title, url });
+            setFeedback('Compartido');
+          } catch (error) {
+            if (error && error.name !== 'AbortError') {
+              setFeedback('No se pudo compartir');
+            }
+          }
+        });
+      }
+
+      if (copyButton) {
+        copyButton.addEventListener('click', async () => {
+          try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              await navigator.clipboard.writeText(url);
+            } else {
+              const helper = document.createElement('textarea');
+              helper.value = url;
+              helper.setAttribute('readonly', '');
+              helper.style.position = 'absolute';
+              helper.style.left = '-9999px';
+              document.body.appendChild(helper);
+              helper.select();
+              document.execCommand('copy');
+              document.body.removeChild(helper);
+            }
+            setFeedback('Link copiado');
+          } catch {
+            setFeedback('No se pudo copiar');
+          }
+        });
+      }
+    });
+  })();
+</script>

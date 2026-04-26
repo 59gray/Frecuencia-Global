@@ -4,8 +4,8 @@ description: "Berghain importa menos como club icónico que como dispositivo soc
 date: 2026-02-28
 pilar: p2
 tags: ["Berlín", "clubs", "música electrónica", "normas sociales", "escena"]
-image: "/images/articles/FG_BASS_BORDERS_BERGHAIN_THUMB_v1.png"
-cardImage: "/images/articles/FG_BASS_BORDERS_BERGHAIN_THUMB_v1.png"
+image: "/images/articles/FG_BASS_BORDERS_BERGHAIN_CARD_v2.png"
+cardImage: "/images/articles/FG_BASS_BORDERS_BERGHAIN_CARD_v2.png"
 draft: false
 ---
 

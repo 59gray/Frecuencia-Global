@@ -1,0 +1,75 @@
+---
+import SignalNode from '../SignalNode.astro';
+
+interface Props {
+  label?: string;
+  title: string;
+  description: string;
+  primaryAction?: { label: string; href: string };
+  secondaryAction?: { label: string; href: string };
+}
+
+const {
+  label = 'Sigue la señal',
+  title,
+  description,
+  primaryAction,
+  secondaryAction
+} = Astro.props;
+---
+
+<section class="fg-fallout-matrix relative overflow-hidden py-16 sm:py-20 lg:py-24 border-t border-white/10">
+  <div class="pointer-events-none absolute inset-0 opacity-[0.035]" aria-hidden="true">
+    <img src="/images/sections/fg-section-close.png" alt="" class="h-full w-full object-cover mix-blend-soft-light" loading="lazy" decoding="async" />
+  </div>
+  <div class="pointer-events-none absolute inset-0 fg-editorial-weave-bg opacity-[0.28]" aria-hidden="true"></div>
+  <div class="relative z-10 mx-auto max-w-[1400px] px-5 sm:px-6 lg:px-12">
+    <div class="fg-corner-cut relative border border-white/10 bg-gradient-to-br from-white/[0.03] to-transparent px-6 sm:px-8 lg:px-12 py-10 sm:py-12 lg:py-14 backdrop-blur-[2px]">
+      <!-- Línea de acento -->
+      <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-fg-cyan/40 to-transparent"></div>
+      <div class="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-fg-cyan/40 to-transparent"></div>
+
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-12">
+        <div class="flex-1">
+          <div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <SignalNode size="sm" />
+            <span class="font-data text-[10px] sm:text-[11px] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-fg-gray">{label}</span>
+          </div>
+
+          <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-5xl leading-tight text-fg-white max-w-3xl">
+            {title}
+          </h2>
+
+          <p class="mt-3 sm:mt-4 text-base sm:text-lg leading-relaxed text-fg-gray max-w-2xl">
+            {description}
+          </p>
+        </div>
+
+        <div class="pointer-events-none absolute -right-12 -bottom-10 hidden w-[380px] opacity-[0.26] lg:block" aria-hidden="true">
+          <img src="/images/components/cards/template-featured-1200x630.svg" alt="" class="h-auto w-full object-contain" loading="lazy" decoding="async" />
+        </div>
+
+        {(primaryAction || secondaryAction) && (
+          <div class="flex flex-col sm:flex-row lg:flex-col gap-3 lg:items-end lg:min-w-[200px]">
+            {primaryAction && (
+              <a
+                href={primaryAction.href}
+                class="inline-flex items-center justify-center bg-fg-cyan px-6 sm:px-8 py-3 sm:py-4 font-data text-xs sm:text-sm uppercase tracking-[0.2em] text-fg-black transition-all duration-300 hover:bg-fg-white hover:text-fg-black whitespace-nowrap"
+              >
+                {primaryAction.label}
+              </a>
+            )}
+            {secondaryAction && (
+              <a
+                href={secondaryAction.href}
+                class="inline-flex items-center justify-center border border-white/20 px-6 sm:px-8 py-3 sm:py-4 font-data text-xs sm:text-sm uppercase tracking-[0.2em] text-fg-white transition-all duration-300 hover:border-fg-cyan hover:text-fg-cyan whitespace-nowrap"
+              >
+                {secondaryAction.label}
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</section>

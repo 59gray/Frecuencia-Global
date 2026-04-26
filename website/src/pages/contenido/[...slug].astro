@@ -12,15 +12,22 @@ export async function getStaticPaths() {
 
 const { article } = Astro.props;
 const { Content } = await render(article);
+const d = article.data as any;
 ---
 
 <ArticleLayout
-  title={article.data.title}
-  description={article.data.description}
-  date={article.data.date}
-  pilar={article.data.pilar}
-  tags={article.data.tags}
-  image={article.data.image}
+  title={d.title}
+  description={d.description}
+  date={d.date}
+  pilar={d.pilar}
+  tags={d.tags}
+  image={d.image}
+  ogImage={d.ogImage}
+  heroVariant={d.heroVariant}
+  heroDek={d.heroDek}
+  heroImagePosition={d.heroImagePosition}
+  heroImageWebp={d.heroImageWebp}
+  enableXEmbeds={d.enableXEmbeds ?? false}
 >
   <Content />
 </ArticleLayout>

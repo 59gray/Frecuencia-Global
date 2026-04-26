@@ -1,7 +1,12 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import EditorialPageShell from '../components/EditorialPageShell.astro';
 import PillarPill from '../components/PillarPill.astro';
 import FrequencyLine from '../components/FrequencyLine.astro';
+import DetroitBillboardHero from '../components/editorial/DetroitBillboardHero.astro';
+import ArticleHeroImage from '../components/editorial/ArticleHeroImage.astro';
+import ArticleSharePanel from '../components/editorial/ArticleSharePanel.astro';
+import { PILLAR_BY_ID } from '../lib/pillars';
 
 interface Props {
   title: string;
@@ -10,22 +15,38 @@ interface Props {
   pilar: 'p1' | 'p2' | 'p3' | 'p4';
   tags?: string[];
   image?: string;
+  ogImage?: string;
+  heroVariant?: 'detroit-billboard';
+  heroDek?: string;
+  heroImagePosition?: string;
+  heroImageWebp?: string;
+  enableXEmbeds?: boolean;
 }
 
-const { title, description, date, pilar, tags, image } = Astro.props;
-
-const pilarNames: Record<string, string> = {
-  p1: 'Geopolitik Drop',
-  p2: 'Bass & Borders',
-  p3: 'Frecuencia Global',
-  p4: 'Behind the Policy',
-};
+const {
+  title,
+  description,
+  date,
+  pilar,
+  tags,
+  image,
+  ogImage,
+  heroVariant,
+  heroDek,
+  heroImagePosition,
+  heroImageWebp,
+  enableXEmbeds = false,
+} = Astro.props;
 
 const dateFormatted = date.toLocaleDateString('es-ES', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
 });
+
+const pillarMeta = PILLAR_BY_ID[pilar];
+const hasHero = Boolean(image || heroVariant);
+const shareUrl = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
 <BaseLayout
@@ -33,55 +54,97 @@ const dateFormatted = date.toLocaleDateString('es-ES', {
   description={description}
   type="article"
   pilar={pilar}
-  image={image}
+  image={ogImage ?? image}
+  enableXEmbeds={enableXEmbeds}
 >
-  <article class="max-w-3xl mx-auto px-md py-2xl">
-    <!-- Article Header -->
-    <header class="mb-2xl">
-      <div class="flex items-center gap-sm mb-lg">
-        <PillarPill pilar={pilar} />
-        <time class="font-data text-sm text-fg-gray" datetime={date.toISOString()}>
-          [{dateFormatted}]
-        </time>
+  <EditorialPageShell density="quiet">
+    <article class="relative">
+      {
+        heroVariant === 'detroit-billboard' ? (
+          <DetroitBillboardHero dateFormatted={dateFormatted} pillarSubtitle={pillarMeta.subtitleEs} />
+        ) : (
+          image && (
+            <ArticleHeroImage
+              image={image}
+              title={title}
+              pillarSubtitle={pillarMeta.subtitleEs}
+              dateFormatted={dateFormatted}
+              pilar={pilar}
+              heroDek={heroDek}
+              heroImagePosition={heroImagePosition}
+              heroImageWebp={heroImageWebp}
+            />
+          )
+        )
+      }
+
+      <div
+        class:list={[
+          'mx-auto max-w-4xl px-fg-md',
+          hasHero
+            ? 'relative z-10 pb-fg-2xl pt-fg-xl md:pt-fg-2xl'
+            : 'py-fg-2xl',
+        ]}
+      >
+        <div class="fg-tactical-panel fg-corner-cut border-white/12 px-fg-md py-fg-xl sm:px-fg-xl">
+          <header class:list={['mb-fg-2xl', hasHero && '-mt-1']}>
+            <div class="mb-fg-lg flex flex-wrap items-center gap-fg-sm">
+              <PillarPill pilar={pilar} />
+              {!hasHero && (
+                <time class="font-data text-sm uppercase tracking-[0.2em] text-fg-gray" datetime={date.toISOString()}>
+                  [{dateFormatted}]
+                </time>
+              )}
+            </div>
+
+            <h1 class="mb-fg-lg max-w-[20ch] font-display text-4xl leading-[0.95] tracking-[0.04em] text-fg-white md:text-5xl lg:text-6xl">
+              {title}
+            </h1>
+
+            <div
+              class:list={[
+                'border-l-2 pl-fg-md',
+                pilar === 'p1' && 'border-pilar-p1',
+                pilar === 'p2' && 'border-pilar-p2',
+                pilar === 'p3' && 'border-pilar-p3',
+                pilar === 'p4' && 'border-pilar-p4',
+              ]}
+            >
+              <p class="text-lg leading-relaxed text-fg-gray">{description}</p>
+            </div>
+
+            <FrequencyLine class="mt-fg-lg" />
+          </header>
+
+          {
+            tags && tags.length > 0 && (
+              <div class="mb-fg-xl flex flex-wrap gap-fg-xs">
+                {tags.map((tag: string) => (
+                  <span class="fg-corner-cut border border-white/12 bg-white/[0.04] px-fg-sm py-fg-2xs font-data text-xs uppercase tracking-[0.14em] text-fg-gray">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )
+          }
+
+          <div class="prose">
+            <slot />
+          </div>
+
+          <ArticleSharePanel title={title} url={shareUrl} />
+
+          <footer class="mt-fg-2xl border-t border-white/12 pt-fg-xl">
+            <FrequencyLine />
+            <div class="mt-fg-lg flex flex-wrap items-center justify-between gap-4">
+              <a href="/contenido" class="font-data text-xs uppercase tracking-[0.24em] text-fg-cyan transition-colors hover:text-fg-white">
+                &larr; volver al archivo
+              </a>
+              <span class="font-data text-sm text-fg-gray">{pillarMeta.titleEs}</span>
+            </div>
+          </footer>
+        </div>
       </div>
-
-      <h1 class="font-display text-4xl md:text-5xl lg:text-6xl text-fg-white leading-none tracking-wide mb-lg">
-        {title}
-      </h1>
-
-      <p class="text-lg text-fg-gray leading-relaxed">
-        {description}
-      </p>
-
-      <FrequencyLine class="mt-lg" />
-    </header>
-
-    {tags && tags.length > 0 && (
-      <div class="flex flex-wrap gap-xs mb-xl">
-        {tags.map((tag: string) => (
-          <span class="font-data text-xs text-fg-gray bg-fg-surface px-xs py-2xs rounded-sm">
-            [{tag}]
-          </span>
-        ))}
-      </div>
-    )}
-
-    <!-- Article Body -->
-    <div class="prose">
-      <slot />
-    </div>
-
-    <!-- Article Footer -->
-    <footer class="mt-2xl pt-xl border-t border-fg-surface">
-      <FrequencyLine />
-      <div class="mt-lg flex items-center justify-between">
-        <a href="/contenido" class="font-body text-fg-cyan hover:text-fg-white transition-colors">
-          ← Volver a contenido
-        </a>
-        <span class="font-data text-sm text-fg-gray">
-          {pilarNames[pilar]}
-        </span>
-      </div>
-    </footer>
-  </article>
+    </article>
+  </EditorialPageShell>
 </BaseLayout>

@@ -9,17 +9,24 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   pilar?: 'p1' | 'p2' | 'p3' | 'p4';
+  enableXEmbeds?: boolean;
 }
 
 const {
   title,
-  description = 'Geopolítica, cultura y tecnología contadas con rigor editorial y energía de club nocturno. Cuatro pilares, una señal.',
-  image = '/images/logo/fg_isotipo_512.png',
+  description = 'Análisis internacional con pulso electrónico. Cuatro pilares editoriales, una señal.',
+  image = '/images/og/fg_og_default_1200x630.png',
   type = 'website',
+  enableXEmbeds = false,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const fullTitle = title === 'Inicio' ? 'Frecuencia Global' : `${title} — Frecuencia Global`;
+const fullTitle =
+  title === 'Inicio'
+    ? 'Frecuencia Global'
+    : Astro.url.pathname === '/' && title === 'Frecuencia Global'
+      ? 'Frecuencia Global — Análisis internacional con pulso electrónico'
+      : `${title} — Frecuencia Global`;
 ---
 
 <!doctype html>
@@ -27,7 +34,10 @@ const fullTitle = title === 'Inicio' ? 'Frecuencia Global' : `${title} — Frecu
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/images/logos/fg_monogram_fg_32.svg" />
+    <link rel="icon" type="image/svg+xml" sizes="32x32" href="/images/logos/fg_monogram_fg_32.svg" />
+    <link rel="icon" type="image/svg+xml" sizes="16x16" href="/images/logos/fg_monogram_fg_16.svg" />
+    <link rel="apple-touch-icon" href="/images/logos/fg_monogram_fg_32.svg" />
     <link rel="canonical" href={canonicalURL} />
 
     <!-- Primary Meta Tags -->
@@ -58,11 +68,23 @@ const fullTitle = title === 'Inicio' ? 'Frecuencia Global' : `${title} — Frecu
 
     <meta name="generator" content={Astro.generator} />
   </head>
-  <body class="flex flex-col min-h-screen bg-fg-black text-fg-white">
-    <Header />
-    <main class="flex-1">
-      <slot />
-    </main>
-    <Footer />
+  <body class="fg-site-shell min-h-screen bg-fg-black text-fg-white">
+    <div class="fg-site-atmosphere pointer-events-none fixed inset-0 z-0" aria-hidden="true"></div>
+    <div class="signal-grid pointer-events-none fixed inset-0 z-0 opacity-[0.03]" aria-hidden="true"></div>
+    <div class="fg-site-vignette pointer-events-none fixed inset-0 z-0" aria-hidden="true"></div>
+
+    <div class="relative z-10 flex min-h-screen flex-col">
+      <Header />
+      <main class="flex-1">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+
+    {
+      enableXEmbeds && (
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+      )
+    }
   </body>
 </html>
