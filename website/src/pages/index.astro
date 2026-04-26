@@ -5,7 +5,6 @@ import FeaturedBlock from '../components/editorial/FeaturedBlock.astro';
 import PillarGrid from '../components/editorial/PillarGrid.astro';
 import TopicChips from '../components/editorial/TopicChips.astro';
 import RadarModule from '../components/editorial/RadarModule.astro';
-import EditorialCTA from '../components/editorial/EditorialCTA.astro';
 import SignalNode from '../components/SignalNode.astro';
 import PillarPill from '../components/PillarPill.astro';
 import { getCollection } from 'astro:content';
@@ -236,13 +235,4 @@ const radarItems = sorted.slice(0, 6).map((article) => ({
       </div>
     </section>
   )}
-
-  <!-- 7. CTA FINAL -->
-  <EditorialCTA
-    label="Transmisión continua"
-    title="La señal se construye en cada frecuencia."
-    description="Podcast, archivo y piezas largas bajo la misma señal — con el pilar Frecuencia Global como cadencia informativa dentro del conjunto."
-    primaryAction={{ label: 'Contactar', href: '/contacto' }}
-    secondaryAction={{ label: 'Sobre el proyecto', href: '/sobre' }}
-  />
 </BaseLayout>
