@@ -22,36 +22,36 @@ export const PILLARS: readonly PillarDefinition[] = [
     slug: 'geopolitik-drop',
     number: '01',
     titleEs: 'Geopolitik Drop',
-    subtitleEs: 'Conflictos y tendencias globales',
+    subtitleEs: 'Conflictos y poder global',
     description:
-      'Lectura directa de conflictos, alianzas y movimientos de poder global para entender lo que cambia el equilibrio internacional.',
+      'Lecturas directas sobre alianzas, crisis y movimientos que cambian el equilibrio internacional.',
   },
   {
     id: 'p2',
     slug: 'bass-and-borders',
     number: '02',
     titleEs: 'Bass & Borders',
-    subtitleEs: 'Música, cultura e identidad',
+    subtitleEs: 'Música, cultura y territorio',
     description:
-      'La escena cultural como mapa político: ciudades, circuitos y fronteras donde la música revela identidad, pertenencia y cambio social.',
+      'La escena electrónica como mapa de identidad, pertenencia, frontera y cambio social.',
   },
   {
     id: 'p3',
     slug: 'frecuencia-global',
     number: '03',
     titleEs: 'Frecuencia Global',
-    subtitleEs: 'Noticias rápidas 60-90s',
+    subtitleEs: 'Radar rápido 60–90s',
     description:
-      'Resumen ágil de lo más relevante: claves internacionales y contexto esencial en piezas cortas, claras y accionables.',
+      'Señales breves para entender noticias internacionales sin perder contexto.',
   },
   {
     id: 'p4',
     slug: 'behind-the-policy',
     number: '04',
     titleEs: 'Behind the Policy',
-    subtitleEs: 'Política pública e implicaciones',
+    subtitleEs: 'Decisiones públicas y consecuencias',
     description:
-      'Análisis formal de decisiones públicas, regulación e impacto real sobre instituciones, mercados y ciudadanía.',
+      'Políticas, regulación e instituciones explicadas por su impacto real.',
   },
 ] as const;
 
