@@ -163,17 +163,17 @@ const {
             </div>
             {/* Columna derecha: imagen — 28% aprox en desktop */}
             {featured.image && (
-              <div class="relative h-40 shrink-0 overflow-hidden border-l border-fg-cyan/15 sm:h-auto sm:w-48 lg:w-60">
+              <div class="relative h-52 shrink-0 overflow-hidden border-l border-fg-cyan/20 sm:h-auto sm:w-1/2">
                 <img
                   src={featured.image}
                   alt=""
                   aria-hidden="true"
-                  class="h-full w-full object-cover object-[center_40%] transition-transform duration-500 group-hover:scale-[1.03]"
+                  class="h-full w-full object-cover object-[center_35%] transition-transform duration-500 group-hover:scale-[1.03]"
                   loading="eager"
                   decoding="async"
                 />
-                <div class="absolute inset-0 bg-linear-to-l from-transparent via-black/5 to-black/40 sm:bg-linear-to-r sm:from-transparent sm:via-transparent sm:to-transparent" aria-hidden="true"></div>
-                <div class="absolute inset-0 shadow-[inset_0_0_0_1px_rgba(0,229,255,0.08)]" aria-hidden="true"></div>
+                <div class="absolute inset-0 bg-linear-to-l from-transparent via-black/5 to-black/30 sm:bg-linear-to-r sm:from-black/20 sm:via-transparent sm:to-transparent" aria-hidden="true"></div>
+                <div class="absolute inset-0 shadow-[inset_0_0_0_1px_rgba(0,229,255,0.14),inset_-1px_0_12px_rgba(0,229,255,0.06)]" aria-hidden="true"></div>
               </div>
             )}
           </div>
