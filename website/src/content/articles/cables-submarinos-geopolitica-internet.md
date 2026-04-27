@@ -5,6 +5,7 @@ date: 2026-03-30
 pilar: p1
 tags: ["geopolítica", "infraestructura", "cables submarinos", "China", "EEUU", "internet"]
 image: "/images/articles/cables-submarinos.png"
+cardImage: "/images/articles/cables-submarinos-geopolitica-internet.png"
 draft: false
 ---
 

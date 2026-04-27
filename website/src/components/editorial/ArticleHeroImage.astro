@@ -15,7 +15,8 @@ interface Props {
 const { image, title, pillarSubtitle, dateFormatted, pilar, heroDek, heroImagePosition, heroImageWebp } =
   Astro.props;
 
-const isTechnoDetroitCover = image.includes('techno-detroit-hero');
+const isTechnoDetroitCover =
+  image.includes('techno-detroit-hero') || image.includes('FG_DETROIT_P2_IMG_HERO_WEB');
 
 const hudBorder: Record<Props['pilar'], string> = {
   p1: 'border-l-pilar-p1',

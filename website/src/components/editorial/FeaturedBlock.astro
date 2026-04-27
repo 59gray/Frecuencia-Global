@@ -38,7 +38,10 @@ const pillarTop = {
   p4: 'border-t-pilar-p4/55',
 } as const;
 
-const isTechnoDetroitCover = featured.image.includes('techno-detroit-hero');
+const isTechnoDetroitCover =
+  featured.image.includes('techno-detroit-hero') ||
+  featured.image.includes('FG_DETROIT_P2') ||
+  featured.image.includes('techno-detroit-featured');
 ---
 
 <section class="fg-fallout-matrix relative overflow-hidden border-b border-white/10 pt-10 pb-16 lg:pt-12 lg:pb-24">

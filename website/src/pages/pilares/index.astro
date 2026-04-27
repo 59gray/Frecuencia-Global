@@ -28,37 +28,37 @@ const pillarRows = PILLARS.map((p) => ({
 ---
 
 <BaseLayout
-  title="Pilares — Frecuencia Global"
-  description="Cuatro pilares editoriales bajo una sola marca: Geopolitik Drop, Bass & Borders, Frecuencia Global y Behind the Policy."
+  title="Frecuencias — Frecuencia Global"
+  description="Cuatro frecuencias editoriales: Geopolitik Drop, Bass & Borders, Frecuencia Global y Behind the Policy."
 >
   <EditorialPageShell>
   <section class="mx-auto max-w-[1100px] px-fg-md lg:px-fg-xl py-fg-3xl">
-    <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan mb-3">Sistema editorial</p>
-    <h1 class="text-4xl sm:text-5xl text-fg-white mb-fg-md font-display tracking-wide">Cuatro pilares</h1>
+    <p class="font-data text-[11px] uppercase tracking-[0.3em] text-fg-cyan mb-3">Señal editorial</p>
+    <h1 class="text-4xl sm:text-5xl text-fg-white mb-fg-md font-display tracking-wide">Cuatro frecuencias</h1>
 
-    <div class="space-y-fg-md font-body text-fg-gray leading-relaxed max-w-3xl mb-fg-xl">
+    <div class="space-y-fg-md font-body text-fg-gray leading-relaxed max-w-2xl mb-fg-xl">
       <p class="text-lg text-fg-white/95">
-        <strong class="text-fg-cyan font-semibold">Frecuencia Global</strong> es la marca paraguas: cuatro pilares con foco y tono distintos.
+        <strong class="text-fg-cyan font-semibold">Frecuencia Global</strong> organiza sus lecturas en cuatro frecuencias: geopolítica, escena electrónica, tecnología y poder público.
       </p>
       <p class="text-fg-gray/95 border-l-2 border-pilar-p3/40 pl-fg-md">
-        Cada pilar funciona como una mirada editorial concreta para evitar mezclar enfoques y mantener claridad en el archivo.
+        Cada frecuencia abre una ruta distinta para leer conflictos, cultura, plataformas y decisiones que moldean la vida global.
       </p>
     </div>
 
     <FrequencyLine />
 
     <h2 class="mt-fg-xl font-display text-2xl sm:text-3xl text-fg-white tracking-wide mb-fg-sm">
-      Cuatro frecuencias, misma señal
+      Cuatro formas de leer la señal
     </h2>
     <p class="font-body text-fg-gray text-sm max-w-2xl mb-fg-xl">
-      Cada bloque resume qué aporta el pilar. El enlace abre el archivo filtrado de ese pilar.
+      Cada bloque reúne piezas con un ángulo propio. El enlace abre el archivo filtrado por esa frecuencia.
     </p>
 
     <div class="mt-fg-lg space-y-fg-lg">
       {pillarRows.map((row) => (
         <a
           href={row.href}
-          class="block group bg-fg-surface/30 border border-fg-surface rounded-sm p-fg-lg hover:border-white/20 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg-cyan"
+          class="block group bg-fg-surface/30 border border-fg-surface rounded-sm p-fg-lg hover:border-white/30 hover:bg-fg-surface/50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg-cyan"
         >
           <div class="flex flex-wrap items-start gap-fg-md gap-y-fg-sm">
             <div class="flex items-center gap-fg-sm min-w-0">
@@ -78,7 +78,7 @@ const pillarRows = PILLARS.map((p) => ({
           </p>
 
           <span class="inline-block mt-fg-md font-data text-xs tracking-widest text-fg-gray group-hover:text-fg-cyan transition-colors">
-            Ver piezas de este pilar →
+            Ver señales →
           </span>
         </a>
       ))}

@@ -33,7 +33,7 @@ export const PILLARS: readonly PillarDefinition[] = [
     titleEs: 'Bass & Borders',
     subtitleEs: 'Música, cultura y territorio',
     description:
-      'La escena electrónica como mapa de identidad, pertenencia, frontera y cambio social.',
+      'Música como infraestructura: cómo las escenas electrónicas organizan acceso, cuerpo y ciudad.',
   },
   {
     id: 'p3',
