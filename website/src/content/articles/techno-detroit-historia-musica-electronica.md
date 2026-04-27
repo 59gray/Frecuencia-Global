@@ -7,7 +7,7 @@ tags: ["música electrónica", "Detroit", "techno", "cultura", "memoria", "globa
 image: "/images/articles/FG_DETROIT_P2_IMG_HERO_WEB_v01_20260502_CANONICAL.png"
 heroImagePosition: "center 76%"
 cardImage: "/images/articles/FG_DETROIT_P2_IMG_CARD_SOCIAL_v01_20260502_CANONICAL.png"
-ogImage: "/images/articles/FG_DETROIT_P2_IMG_OG_v01_20260502_CANONICAL.png"
+ogImage: "/images/articles/FG_DETROIT_P2_IMG_OG_v02_BILLBOARD_CANONICAL.png"
 heroDek: "Detroit fue la matriz del techno; Berlín concentró visibilidad global. Recuperar esa diferencia cambia cómo se narra, se recuerda y se proyecta el género."
 enableXEmbeds: true
 draft: false

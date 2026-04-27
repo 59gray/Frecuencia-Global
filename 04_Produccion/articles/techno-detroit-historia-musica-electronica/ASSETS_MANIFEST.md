@@ -8,6 +8,12 @@
 
 ---
 
+## OG social (2026-05-04)
+
+- **ogImage activo:** `website/public/images/articles/FG_DETROIT_P2_IMG_OG_v02_BILLBOARD_CANONICAL.png` (1200×630). Derivación: crop superior + resize desde `FG_DETROIT_P2_IMG_INLINE_MANGA02_v01_20260502_CANONICAL.png` (panel “Welcome to Detroit”). `FG_DETROIT_P2_IMG_OG_v01_20260502_CANONICAL.png` permanece en repo sin borrar.
+
+---
+
 ## Assets referenciados en frontmatter
 
 Rutas exactas que el artículo espera encontrar:
