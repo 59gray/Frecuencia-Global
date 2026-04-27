@@ -79,6 +79,133 @@ ogImage:   "/images/articles/{slug}-social-1200x630.png"
 
 ---
 
+## Método Serena → ComfyUI para visuales editoriales
+
+**Introducción:** A partir de 2026-04-26, el método oficial para generar imágenes de dossiers, artículos destacados y thumbnails es la integración de **Serena** (análisis semántico) con **ComfyUI** (generación AI).
+
+Este método garantiza que cada imagen derive del contenido verificado, no de intuición estética.
+
+### Paso 1: Análisis semántico (SERENA)
+
+**Crear archivo:**
+```
+04_Produccion/dossiers/{DOSSIER}/SERENA_VISUAL_EXTRACTION.md
+OR
+04_Produccion/articles/{ARTICLE}/SERENA_VISUAL_EXTRACTION.md
+```
+
+**Serena extrae del contenido:**
+- Conceptos núcleo (tesis central, tensiones, entidades)
+- Entidades visuales permitidas (qué objetos son válidos)
+- Metáforas visuales válidas (opciones de composición)
+- Metáforas prohibidas (qué evitar absoluto)
+- Símbolos concretos (nucleares y secundarios)
+- Atmósfera (tiempo, temperatura, densidad, ritmo, volumen, futuro)
+- Composición (ratio, profundidad, punto focal, distribución de luz)
+- Paleta (colors vinculados a contenido, no genéricos)
+- Prompt atoms (bloques constructivos para ComfyUI)
+
+### Paso 2: Generar ComfyUI Prompt
+
+**Crear archivo:**
+```
+04_Produccion/dossiers/{DOSSIER}/COMFYUI_DOSSIER_PROMPT.md
+OR
+04_Produccion/articles/{ARTICLE}/COMFYUI_ARTICLE_PROMPT.md
+```
+
+**Secciones:**
+- **Intent:** Propósito de la imagen
+- **Positive prompt:** Derivado de Serena atoms (100-150 palabras)
+- **Negative prompt:** Qué prohibir (80-100 palabras)
+- **Technical:** Model (SDXL 1.0 recomendado), Sampler (DPM++ 2M Karras), Steps (32), CFG (8.0), Resolution, Seed, Format (PNG)
+- **Quality gates:** Checklist de validación (no text, no people, landmarks abstractos, paleta, composición, contraste, formato)
+- **Generation plan:** Hasta 2 intentos máximo
+
+### Paso 3: Generar con ComfyUI
+
+**Script Python:**
+```
+scripts/comfyui_{dossier|article}_{name}.py
+```
+
+**Flujo:**
+1. Verificar ComfyUI disponible (`GET /system_stats`)
+2. Construir workflow (CheckpointLoader → CLIP → KSampler → VAEDecode → SaveImage)
+3. Queue prompt (`POST /prompt`)
+4. Poll history (`GET /history/{prompt_id}`)
+5. Copiar output de ComfyUI a ruta exacta: `website/public/images/dossiers|articles/{slug}.png`
+6. Registrar metadata: seed, steps, CFG, timestamp
+
+**Si ComfyUI no responde:**
+- STOP — no generar fallback
+- Reportar BLOQUEADO
+- No usar Pillow, SVG, CSS como asset final creativo
+
+### Paso 4: Integrar en HTML
+
+**Patrón Astro:**
+```astro
+<img 
+  src="/images/dossiers/{dossier-slug}.png"
+  alt="[Alt text descriptivo en español]"
+  class="w-full h-full object-cover"
+  onerror="this.style.display='none'"
+/>
+<!-- SVG fallback debajo si existe -->
+```
+
+### Paso 5: Validar
+
+```bash
+cd website
+npm run build
+```
+
+**Checklist:**
+- [ ] Build PASS
+- [ ] Imagen existe en `dist/images/`
+- [ ] PNG válido (>1MB)
+- [ ] Preview local: imagen cargada, sin 404
+- [ ] Visible en desktop y mobile
+
+### Paso 6: Documentar
+
+**Crear/actualizar:**
+```
+04_Produccion/dossiers|articles/{SLUG}/ASSETS_MANIFEST.md
+```
+
+**Tabla:**
+| Asset | Path | Source Method | Content Basis | Status | Validation |
+|---|---|---|---|---|---|
+| Visual | `website/public/images/...` | ComfyUI | SERENA extraction + COMFYUI prompt | ✅ | PNG, dimensiones, seed |
+| Serena | `.../SERENA_VISUAL_EXTRACTION.md` | Análisis semántico | Briefs verificados | ✅ | Conceptos, entidades, metáforas |
+| Prompt | `.../COMFYUI_PROMPT.md` | Derivado de Serena | Positive/negative atoms | ✅ | Reproducible |
+
+### Ejemplo: Bass & Borders Dossier (2026-04-26)
+
+1. **Serena:** SERENA_VISUAL_EXTRACTION.md (Detroit raíz material, Berghain umbral, señal como objeto, sin clichés)
+2. **Prompt:** COMFYUI_DOSSIER_PROMPT.md (industrial city, signal wave, concrete, cyan/magenta, no text/people/logos)
+3. **Generación:** 1 intento, seed 2026, SDXL, 1920×1080, 32 steps, CFG 8.0
+4. **Deploy:** `website/public/images/dossiers/bass-borders-detroit-berghain-dossier.png`
+5. **Integración:** `website/src/pages/pilares/[slug].astro`
+6. **Build:** ✅ PASS
+7. **Result:** Imagen visible, metafóricamente coherente, libre de clichés
+
+### Para futuros pilares
+
+1. Copiar estructura: `scripts/comfyui_dossier_bass_borders.py` → `scripts/comfyui_dossier_p1_p3_p4.py`
+2. Crear Serena extraction para cada pilar
+3. Derivar ComfyUI prompt
+4. Generar y validar
+5. Documentar en ASSETS_MANIFEST.md
+6. Integrar en template `.astro`
+
+**Método replicable y auditable. Cada asset traceable a su origen semántico.**
+
+---
+
 ## Thumbnails por frecuencia
 
 ### Convención de nombres

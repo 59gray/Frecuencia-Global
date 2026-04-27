@@ -97,61 +97,140 @@ const bassBordersMeta: Record<string, { label: string; supportLine: string; city
       {sorted.length > 0 ? (
         isBassBorders ? (
           <div class="mt-fg-xl space-y-fg-xl">
-            <section class="relative overflow-hidden border-y border-white/10 py-8 sm:py-10">
+            <section class="relative overflow-hidden border-y border-white/10 px-5 py-12 sm:px-7 sm:py-14 lg:px-10">
               <div
                 class="pointer-events-none absolute inset-0 opacity-70"
-                style="background: radial-gradient(circle at 18% 0%, rgba(124, 114, 143, 0.14), transparent 36%), linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 52%);"
+                style="background: radial-gradient(circle at 18% 0%, rgba(0, 229, 255, 0.13), transparent 34%), radial-gradient(circle at 82% 18%, rgba(255, 43, 214, 0.1), transparent 32%), linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 52%);"
                 aria-hidden="true"
               ></div>
 
-              <div class="relative grid gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)]">
-                <div class="max-w-4xl">
-                  <p class="font-data text-[11px] uppercase tracking-[0.3em] text-pilar-p2/90">
-                    Bass & Borders // Dossier
+              <div class="relative grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(340px,0.8fr)] lg:gap-20">
+                <div class="max-w-[720px]">
+                  <p class="font-data text-[11px] uppercase tracking-[0.32em] text-pilar-p2/95">
+                    DOSSIER BASS & BORDERS
                   </p>
-                  <h2 class="mt-3 text-3xl font-semibold leading-tight text-fg-white sm:text-[2.6rem] lg:text-[3rem]">
-                    Detroit fabrica el pulso. Berghain administra el umbral.
+                  <h2 class="mt-5 max-w-[760px] text-3xl font-semibold leading-[1.12] text-fg-white sm:text-[2.75rem] lg:text-[3.2rem]">
+                    Detroit fabrica el pulso. Berghain administra la puerta.
                   </h2>
-                  <p class="mt-5 text-[15px] leading-relaxed text-fg-gray sm:text-base">
-                    Bass & Borders entra cuando la música deja de ser fondo y empieza a ordenar ciudad, cuerpo y acceso.
-                    No miramos escenas para celebrar su iconografía, sino para leer qué tipo de pertenencia producen y
-                    qué reglas dejan inscritas en la noche.
+                  <p class="mt-7 text-[15px] leading-relaxed text-fg-gray sm:text-base">
+                    Este dossier no compara dos ciudades de club. Lee dos formas de poder nocturno: Detroit convierte fábrica, radio y memoria negra en una señal nueva; Berghain convierte puerta, silencio y selección en autoridad cultural.
                   </p>
                   <p class="mt-4 text-[15px] leading-relaxed text-fg-gray sm:text-base">
-                    Detroit y Berghain conviven aquí porque nombran dos operaciones distintas del mismo mapa. Detroit
-                    aparece como matriz material: ciudad-fábrica, circuito negro, máquina, ruina activa y memoria.
-                    Berghain aparece como dispositivo social: filtro, anonimato, jerarquía y control de la imagen.
+                    La pregunta no es cuál escena “importa más”. La pregunta es qué hace cada escena con la música: una produce origen; la otra administra acceso.
                   </p>
                 </div>
 
-                <div class="flex flex-col divide-y divide-white/10 border-l border-white/10 pl-0 lg:pl-8">
-                  <div class="pb-5">
+                <div class="flex flex-col divide-y divide-white/10 border border-white/10 bg-black/18 p-6 shadow-[0_0_60px_rgba(0,229,255,0.05)] sm:p-7 lg:p-8">
+                  <div class="pb-6">
                     <p class="font-data text-[10px] uppercase tracking-[0.24em] text-pilar-p2/95">
-                      Qué conecta estas piezas
+                      QUÉ UNE ESTAS PIEZAS
                     </p>
                     <p class="mt-2 text-sm leading-relaxed text-fg-white/88">
-                      En ambas, la música funciona como regla de pertenencia antes que como simple entretenimiento.
-                    </p>
-                  </div>
-
-                  <div class="py-5">
-                    <p class="font-data text-[10px] uppercase tracking-[0.24em] text-pilar-p2/95">Tensión central</p>
-                    <p class="mt-2 text-sm leading-relaxed text-fg-white/88">
-                      Detroit pone la raíz, la densidad histórica y la máquina; Berlín concentra el filtro, el
-                      prestigio y la administración del acceso.
+                      La música electrónica aparece como tecnología social: organiza cuerpos, reputación, archivo y territorio.
                     </p>
                   </div>
 
-                  <div class="pt-5">
-                    <p class="font-data text-[10px] uppercase tracking-[0.24em] text-pilar-p2/95">Cómo leer el radar</p>
+                  <div class="py-6">
+                    <p class="font-data text-[10px] uppercase tracking-[0.24em] text-pilar-p2/95">TENSIÓN CENTRAL</p>
                     <p class="mt-2 text-sm leading-relaxed text-fg-white/88">
-                      Detroit se lee desde circuito, memoria y ciudad-fábrica. Berghain, desde umbral, anonimato y
-                      disciplina visual.
+                      Detroit funciona como raíz productiva: máquina, transmisión, comunidad y futuro negro.
+                      Berghain funciona como umbral: fila, anonimato, puerta y legitimidad.
+                    </p>
+                  </div>
+
+                  <div class="pt-6">
+                    <p class="font-data text-[10px] uppercase tracking-[0.24em] text-pilar-p2/95">CÓMO LEERLO</p>
+                    <p class="mt-2 text-sm leading-relaxed text-fg-white/88">
+                      Detroit explica de dónde sale la señal.
+                      Berghain muestra quién puede atravesarla.
                     </p>
                   </div>
                 </div>
               </div>
             </section>
+
+            <div class="relative min-h-[320px] overflow-hidden border border-white/12 bg-[#05070c] shadow-[0_0_80px_rgba(0,229,255,0.08)]">
+              <div class="absolute inset-0 flex items-center justify-center bg-black/20">
+                <img 
+                  src="/images/dossiers/bass-borders-detroit-berghain-dossier.png"
+                  alt="Bass & Borders: Detroit y Berghain como dualidad del poder electrónico"
+                  class="w-full h-full object-cover"
+                  onerror="this.style.display='none'"
+                />
+              </div>
+              <div
+                class="pointer-events-none absolute inset-0"
+                style="background: radial-gradient(circle at 18% 50%, rgba(0, 229, 255, 0.18), transparent 26%), radial-gradient(circle at 82% 45%, rgba(255, 43, 214, 0.15), transparent 24%), linear-gradient(90deg, rgba(0, 229, 255, 0.08), rgba(255, 216, 107, 0.035) 50%, rgba(255, 43, 214, 0.08));"
+                aria-hidden="true"
+              ></div>
+              <svg
+                class="absolute inset-0 h-full w-full"
+                viewBox="0 0 1200 360"
+                preserveAspectRatio="none"
+                role="img"
+                aria-labelledby="bassBordersVisualTitle bassBordersVisualDesc"
+              >
+                <title id="bassBordersVisualTitle">Mapa visual Detroit Berghain</title>
+                <desc id="bassBordersVisualDesc">Panel abstracto con señal industrial a la izquierda, frecuencia al centro y umbral de acceso a la derecha.</desc>
+                <defs>
+                  <linearGradient id="bassBordersSignal" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.82" />
+                    <stop offset="50%" stop-color="#ffd86b" stop-opacity="0.72" />
+                    <stop offset="100%" stop-color="#ff2bd6" stop-opacity="0.76" />
+                  </linearGradient>
+                  <filter id="bassBordersGlow">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                  <pattern id="bassBordersGrid" width="44" height="44" patternUnits="userSpaceOnUse">
+                    <path d="M 44 0 L 0 0 0 44" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+                  </pattern>
+                </defs>
+
+                <rect width="1200" height="360" fill="url(#bassBordersGrid)" opacity="0.65" />
+                <path d="M0 262 C120 236 192 302 284 254 S456 116 560 178 706 262 812 214 996 94 1200 124" fill="none" stroke="url(#bassBordersSignal)" stroke-width="3" filter="url(#bassBordersGlow)" />
+                <path d="M0 286 C180 252 236 324 354 276 S524 146 612 202 746 290 864 238 1032 126 1200 158" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="6 12" />
+
+                <g opacity="0.9">
+                  <rect x="84" y="188" width="150" height="94" fill="rgba(0,229,255,0.08)" stroke="rgba(0,229,255,0.46)" />
+                  <rect x="110" y="152" width="36" height="130" fill="rgba(0,229,255,0.08)" stroke="rgba(0,229,255,0.36)" />
+                  <rect x="160" y="124" width="42" height="158" fill="rgba(0,229,255,0.07)" stroke="rgba(0,229,255,0.34)" />
+                  <path d="M101 152 V98 M178 124 V72" stroke="rgba(255,216,107,0.65)" stroke-width="3" />
+                  <circle cx="101" cy="92" r="6" fill="#ffd86b" />
+                  <circle cx="178" cy="66" r="6" fill="#ffd86b" />
+                  <path d="M72 98 C112 64 164 56 212 84" fill="none" stroke="rgba(0,229,255,0.48)" stroke-width="2" />
+                  <path d="M54 76 C120 20 198 18 260 66" fill="none" stroke="rgba(0,229,255,0.24)" stroke-width="2" />
+                </g>
+
+                <g filter="url(#bassBordersGlow)">
+                  <circle cx="384" cy="243" r="7" fill="#00e5ff" />
+                  <circle cx="574" cy="184" r="6" fill="#ffd86b" />
+                  <circle cx="788" cy="224" r="7" fill="#ff2bd6" />
+                </g>
+
+                <g opacity="0.92">
+                  <rect x="950" y="86" width="132" height="208" fill="rgba(255,43,214,0.08)" stroke="rgba(255,43,214,0.52)" />
+                  <rect x="982" y="122" width="68" height="172" fill="rgba(5,7,12,0.75)" stroke="rgba(255,216,107,0.5)" />
+                  <path d="M982 122 H1050" stroke="rgba(255,43,214,0.6)" stroke-width="6" />
+                  <path d="M904 122 H940 M904 178 H940 M904 234 H940" stroke="rgba(255,255,255,0.18)" stroke-width="2" />
+                  <path d="M1092 142 H1154 M1092 198 H1154 M1092 254 H1154" stroke="rgba(255,255,255,0.18)" stroke-width="2" />
+                </g>
+              </svg>
+
+              <div class="relative z-10 flex min-h-[320px] items-end justify-between gap-4 p-6 sm:p-8">
+                <div class="max-w-[220px] border-l border-cyan-300/45 pl-4">
+                  <p class="font-data text-[10px] uppercase tracking-[0.28em] text-cyan-200/90">Origen</p>
+                  <p class="mt-2 text-xs leading-relaxed text-fg-gray/82">fábrica, radio, señal, memoria</p>
+                </div>
+                <div class="max-w-[220px] border-r border-fuchsia-300/45 pr-4 text-right">
+                  <p class="font-data text-[10px] uppercase tracking-[0.28em] text-fuchsia-200/90">Umbral</p>
+                  <p class="mt-2 text-xs leading-relaxed text-fg-gray/82">puerta, filtro, acceso, autoridad</p>
+                </div>
+              </div>
+            </div>
 
             <div class="grid grid-cols-1 gap-fg-lg xl:grid-cols-2">
               {sorted.map((article) => {
