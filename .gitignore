@@ -68,3 +68,24 @@ logs/
 scripts/tiktok_before_verify.png
 .sixth/
 .venv/
+
+# === D15 — Ruido local (tooling, IDE embebido, backups de reparación, artefactos de ejecución)
+# No incluye fuente del producto ni 07_Operaciones/*.md|csv (siguen versionables según política ops).
+.claude/
+.cursor/
+.vs/
+.pytest_cache/
+
+# Snapshot de emergencia tras corrupción de índice Git (solo disco local).
+.git_corrupto_backup_*/
+
+# Copias de trabajo y bundles de rescate (no fuente).
+**/backups/
+_repair_backups/
+
+# Perfiles de navegador / seguridad local (no versionar).
+BrowserProfiles/
+Security/
+
+# Logs de desarrollo y ejecución (no sustituye logs/ ya ignorado arriba).
+*.log
