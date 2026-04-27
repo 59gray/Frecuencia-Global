@@ -20,20 +20,50 @@ Generar imagen de dossier visual para Bass & Borders que:
 
 ---
 
+## TRADUCCIÓN VISUAL DESDE SERENA (GATE PREVIO)
+
+### Izquierda — Detroit (origen/producción)
+- Nave fabril de chapa corrugada
+- Poste/antena de transmisión
+- Cables/líneas de señal en diagonal
+- Asfalto húmedo con reflejo cyan
+- Vapor industrial de ducto lateral
+
+### Derecha — Berghain (filtro/acceso)
+- Muro de hormigón armado
+- Puerta metálica maciza cerrada
+- Corredor de concreto en fuga
+- Luz puntual restringida magenta/violeta
+- Barrera de control frente al umbral
+
+### Relación visual obligatoria
+- Línea de señal cyan conectando ambos lados y comprimiéndose en el umbral derecho (transición clara, no mezcla).
+
+### Composición obligatoria
+- División o conexión por línea de señal.
+- Transición visual clara (sin fusión literal).
+- Tensión legible entre apertura (Detroit) y restricción (Berghain).
+
+---
+
 ## POSITIVE PROMPT (DERIVADO DE SERENA)
 
 ```
-industrial city at night, abstract signal wave transmission, dark concrete corridor with single light,
+industrial city at night, corrugated factory hall on the left, transmission pole and overhead signal cables,
+wet asphalt with cyan reflections and side steam duct, concrete massive wall on the right,
+closed heavy metal door and narrow corridor perspective, restricted magenta violet point light on threshold,
+cyan signal line crossing from left to right and compressing at the entrance,
+clear split composition, no literal fusion, tension between open production and controlled access,
 electric cyan frequency glow, magenta accent light beam, metal infrastructure textures,
 high contrast film grain cinematic still, no text no people no logos,
 dark background near black, techno aesthetic without festival clichés, threshold as power concept,
 signal as architecture connecting two urban nodes, wide format 16:9, mature cinematic mood,
 Afrofuturism inspired, future active not nostalgic, concrete and metal materiality,
-city skyline distant and abstracted not recognizable, antenna transmission visual, 
+city skyline distant and abstracted not recognizable, antenna transmission visual,
 cool temperature with warm magenta counterpoint, asphalt texture vapor mist,
 geometric no figurative, editorial starkness, no EDM festival no crowd no hands up,
 refined composition balanced asymmetric, no Berghain facade no Detroit landmarks,
-no pastel no cartoon no stock photo, cyberpunk dark academia blend
+no pastel no cartoon no stock photo look, no vaporwave cliché, cyberpunk dark academia blend
 ```
 
 ---
@@ -48,9 +78,12 @@ Berlin Brandenburg gate Detroit Renaissance Center Berghain facade recognizable 
 pastel colors cartoon illustration overexposed low contrast generic stock,
 blurry low resolution deformed anatomy extra limbs distorted,
 club scene explicit party scene DJ turntable,
+DJ, DJs, performer booth, dancefloor action,
 ruin industrial collapse melancholy passive nostalgia,
 bright saturated candy colors pastoral peaceful,
-watermark artifact compression error pixelated
+watermark artifact compression error pixelated,
+vaporwave grid sunset retro synthwave poster style,
+generic skyline wallpaper stock image look
 ```
 
 ---
@@ -139,6 +172,18 @@ watermark artifact compression error pixelated
 |---------|------|------|--------|-------|
 | v1 | 2026-04-26 | [PENDIENTE] | [PENDIENTE] | First generation attempt |
 | v2 | — | — | — | Refinement if v1 fails |
+
+---
+
+## VALIDACIÓN PRE-GENERACIÓN (OBLIGATORIA)
+
+- **¿La imagen representa una tensión?**
+  **Sí.** La composición separa origen productivo (Detroit) y filtro de acceso (Berghain), unidos por una señal que cambia de estado.
+
+- **¿Puede alguien entender la diferencia sin leer texto?**
+  **Sí.** Los objetos físicos de cada lado son inequívocos (fábrica/cables/vapor vs muro/puerta/corredor/luz restringida).
+
+Resultado de gate: ✅ **APROBADO PARA EJECUTAR COMFYUI**.
 
 ---
 

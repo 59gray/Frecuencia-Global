@@ -15,7 +15,8 @@ COMFYUI_URL = "http://127.0.0.1:8000"
 CKPT = "sdxl\\sd_xl_base_1.0.safetensors"
 
 # Target output
-WEBSITE_ROOT = Path(__file__).parent.parent.parent / "website"
+# Script lives in repo/scripts, so repo root is parent.parent
+WEBSITE_ROOT = Path(__file__).parent.parent / "website"
 TARGET_DIR = WEBSITE_ROOT / "public" / "images" / "dossiers"
 TARGET_FILE = "bass-borders-detroit-berghain-dossier.png"
 
@@ -24,30 +25,38 @@ TARGET_DIR.mkdir(parents=True, exist_ok=True)
 
 # Prompts from COMFYUI_DOSSIER_PROMPT.md
 POSITIVE = (
-    "industrial city at night, abstract signal wave transmission, dark concrete corridor with single light, "
+    "cinematic industrial city at night, corrugated factory hall on the left, transmission pole and overhead signal cables, "
+    "wet asphalt with cyan reflections and side steam duct, concrete massive wall on the right, "
+    "closed heavy metal door and narrow corridor perspective, restricted magenta violet point light on threshold, "
+    "cyan signal line crossing from left to right and compressing at the entrance, "
+    "clear split composition, no literal fusion, tension between open production and controlled access, "
     "electric cyan frequency glow, magenta accent light beam, metal infrastructure textures, "
     "high contrast film grain cinematic still, no text no people no logos, "
-    "dark background near black, techno aesthetic without festival clichés, threshold as power concept, "
+    "dark background near black, realistic environment scene, threshold as power concept, "
     "signal as architecture connecting two urban nodes, wide format 16:9, mature cinematic mood, "
     "Afrofuturism inspired, future active not nostalgic, concrete and metal materiality, "
     "city skyline distant and abstracted not recognizable, antenna transmission visual, "
     "cool temperature with warm magenta counterpoint, asphalt texture vapor mist, "
-    "geometric no figurative, editorial starkness, no EDM festival no crowd no hands up, "
+    "geometric no figurative, pure environmental scene, no signage no typography no labels, no EDM festival no crowd no hands up, "
     "refined composition balanced asymmetric, no Berghain facade no Detroit landmarks, "
-    "no pastel no cartoon no stock photo, cyberpunk dark academia blend"
+    "no pastel no cartoon no stock photo look, no vaporwave cliché"
 )
 
 NEGATIVE = (
-    "text watermark logo brand name, "
+    "text watermark logo brand name letters words typography subtitles captions title card, "
+    "ORIGEN UMBRAL fabrica radio senal memoria puerta filtro acceso autoridad, "
     "person face crowd hands up identifiable celebrity, "
     "festival confetti colorful neon generic EDM party, "
     "Berlin Brandenburg gate Detroit Renaissance Center Berghain facade recognizable landmark, "
     "pastel colors cartoon illustration overexposed low contrast generic stock, "
     "blurry low resolution deformed anatomy extra limbs distorted, "
-    "club scene explicit party scene DJ turntable, "
+    "club scene explicit party scene DJ turntable DJs performer booth dancefloor action, "
     "ruin industrial collapse melancholy passive nostalgia, "
     "bright saturated candy colors pastoral peaceful, "
-    "watermark artifact compression error pixelated"
+    "watermark artifact compression error pixelated, "
+    "vaporwave grid sunset retro synthwave poster style, "
+    "ui overlay hud lower third infographic labels annotations street signs billboards, "
+    "generic skyline wallpaper stock image look"
 )
 
 
@@ -173,8 +182,8 @@ def main():
         print("BLOCKED — No fallback. Exiting.")
         sys.exit(1)
 
-    # Generate with seed 2026 (year reference for reproducibility)
-    seed = 2026
+    # Second allowed attempt with stricter anti-text negatives
+    seed = 2046
     width, height = 1920, 1080
 
     print(f"\n[BUILD] Workflow: {width}x{height}, seed={seed}")

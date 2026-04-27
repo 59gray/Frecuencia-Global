@@ -23,6 +23,31 @@ La imagen debe activar la **tensión operativa** sin fusionarlos literalmente ni
 
 ---
 
+## EXTRACCIÓN OPERATIVA (OBLIGATORIA PARA GENERACIÓN)
+
+### 5 objetos visuales concretos — Detroit (izquierda)
+1. **Nave fabril de chapa corrugada** con ventanas altas opacas.
+2. **Poste/antena de transmisión** con cableado tenso visible.
+3. **Líneas de señal/cables aéreos** cruzando en diagonal.
+4. **Piso de asfalto húmedo** con reflejo cyan intermitente.
+5. **Salida de vapor industrial** desde ducto metálico lateral.
+
+### 5 objetos visuales concretos — Berghain (derecha)
+1. **Muro de hormigón armado** de gran masa y textura áspera.
+2. **Puerta metálica maciza** cerrada, de acceso frontal.
+3. **Corredor estrecho de concreto** en perspectiva de fuga.
+4. **Luz puntual restringida** (magenta/violeta) sobre el umbral.
+5. **Barricada/barra de control de acceso** delante de la puerta.
+
+### Relación visual única entre ambos
+- **Una línea de señal cyan** nace en el cableado industrial de Detroit y se comprime al llegar al umbral de Berghain, cambiando a magenta/violeta para representar el paso de **apertura productiva** a **restricción de acceso**.
+
+### Verificación de concreción
+- Los 11 elementos anteriores son objetos físicos o trazos físicos representables (no conceptos abstractos puros).
+- **Resultado:** ✅ Apto para construir prompt ComfyUI.
+
+---
+
 ## ENTIDADES VISUALES PERMITIDAS
 
 | Entidad | Función | Restricción | Ejemplo |
