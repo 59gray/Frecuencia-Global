@@ -89,3 +89,21 @@ Security/
 
 # Logs de desarrollo y ejecución (no sustituye logs/ ya ignorado arriba).
 *.log
+
+# === D16 — Cola residual (post D15): incidentes, artefactos de job, previews locales
+# Evita staging accidental de bundles Git y escaneos de secretos (solo rutas; no se lee contenido).
+incident_response/
+
+# Copias retiradas y manifests de backup puntual en ops.
+07_Operaciones/_retired_artifacts/
+07_Operaciones/D__ARTIFACT_BACKUP_manifest_*.json
+07_Operaciones/FG_PROD_SNAPSHOT_AFTER_DEPLOY_*.html
+
+# Salidas de jobs en raíz (no editorial).
+/D07_outputs.json
+/D07_job_ids.json
+/asks_fg_*.csv
+
+# Capturas de preview fuera de public/ (ruido local).
+website/bass-borders-preview.png
+website/bass-borders-preview-full.png
