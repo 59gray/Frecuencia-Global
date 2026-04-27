@@ -5,7 +5,8 @@
 - **Title:** El techno nació en Detroit, no en Berlín
 - **Slug:** techno-detroit-historia-musica-electronica
 - **Frequency:** p2 — Bass & Borders
-- **Source file:** website/src/content/articles/techno-detroit-historia-musica-electronica.md
+- **Source file:** `website/src/content/articles/techno-detroit-historia-musica-electronica.md`
+- **Rol de la pieza:** **piloto web P2** (flujo editorial-visual y assets canónicos en repo); **no** se define aquí como pieza de campaña inmediata en redes.
 
 ---
 
@@ -20,6 +21,12 @@ El artículo argumenta que Detroit fue la matriz material del techno —no un mi
 Detroit no como ruina industrial ni postal nostálgica, sino como ciudad-fábrica negra donde sintetizadores, radio nocturna y deseo de futuro se cruzaron activamente para producir algo nuevo. El marco es el Afrofuturismo: escapismo positivo hacia el futuro, no reflejo mecánico del colapso.
 
 > Actualizado 2026-04-26 con hallazgos de investigación factual (SOURCE_LEDGER + CLAIM_LEDGER).
+
+---
+
+## Serena en el flujo (criterio estructural)
+
+Serena entra como **herramienta de ordenación del flujo** FG —extracción de tensión útil, símbolos/atoms para prompts, continuidad con el dossier Bass & Borders— tal como describe `DETROIT_CANON_PACK.md`. No sustituye la tesis ni el texto: sirve para alinear claims, escenas, bloques y relación texto–imagen en iteraciones futuras (voz/video incluido). El artículo Detroit **no** la posiciona como protagonista narrativa.
 
 ---
 
@@ -89,12 +96,22 @@ Detroit no como ruina industrial ni postal nostálgica, sino como ciudad-fábric
 
 ---
 
-## Asset uses
+## Asset table — canónico repo (D40)
 
-| Asset | Ruta | Ratio | Estado |
-|---|---|---|---|
-| Featured card | techno-detroit-historia-musica-electronica-featured-card.png | 16:9 | PENDIENTE |
-| Thumbnail | techno-detroit-historia-musica-electronica-thumbnail.png | 16:9 | PENDIENTE |
-| Social preview | techno-detroit-historia-musica-electronica-social-1200x630.png | 1200x630 | FUTURO |
+Rutas web tal como están en `website/public/images/articles/`. Estado según verificación local de archivos.
 
-> Nota: Existe `techno-detroit-featured-card.png` en `/images/articles/` pero NO sigue la convención de slug completo. Evaluar si reutilizar o reemplazar con asset derivado del brief.
+| Nombre / rol | Ruta real (web) | Uso editorial | Estado | Observación breve |
+|--------------|-----------------|---------------|--------|-------------------|
+| Hero web | `/images/articles/FG_DETROIT_P2_IMG_HERO_WEB_v01_20260502_CANONICAL.png` | Hero del artículo (`image`), atmósfera + marca | CANONICAL en repo | 16:9; overlay legible |
+| Card social | `/images/articles/FG_DETROIT_P2_IMG_CARD_SOCIAL_v01_20260502_CANONICAL.png` | `cardImage`; home destacada alineada (index) | CANONICAL en repo | Misma pieza para card y señal home |
+| OG v01 | `/images/articles/FG_DETROIT_P2_IMG_OG_v01_20260502_CANONICAL.png` | `ogImage` en frontmatter actual | CANONICAL en repo | Alternativa baseline OG |
+| OG v02 billboard | `/images/articles/FG_DETROIT_P2_IMG_OG_v02_BILLBOARD_CANONICAL.png` | Crop 1200×630 para estrategia OG documentada (ops) | CANONICAL en repo | Derivado manga02; ver `ASSETS_MANIFEST` si frontmatter pasa a v02 |
+| Inline open still | `/images/articles/FG_DETROIT_P2_IMG_INLINE_OPEN_STILL_v01_20260502_CANONICAL.png` | Primera figura — arquitectura / contraluz | CANONICAL en repo | Puente al párrafo de “señal” |
+| Inline manga 02 | `/images/articles/FG_DETROIT_P2_IMG_INLINE_MANGA02_v01_20260502_CANONICAL.png` | Segunda figura — Welcome to Detroit | CANONICAL en repo | Base documentada del crop OG v02 |
+| Inline manga 03 | `/images/articles/FG_DETROIT_P2_IMG_INLINE_MANGA03_v01_20260502_CANONICAL.png` | Tercera figura — bóveda / multitud | CANONICAL en repo | Memoria y custodia del relato |
+
+---
+
+## Nota de alcance
+
+Los nombres tipo `techno-detroit-historia-musica-electronica-featured-card.png` en prompts históricos (`ASSET_PROMPTS.md`) son convenciones de **generación** previas; la pieza consumida en web usa **únicamente** los `FG_DETROIT_P2_*_CANONICAL` anteriores. Actualizar prompts en un ticket futuro si se exige paridad literal de nombres.

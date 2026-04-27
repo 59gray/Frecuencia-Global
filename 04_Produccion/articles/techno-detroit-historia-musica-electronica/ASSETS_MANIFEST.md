@@ -2,79 +2,60 @@
 
 ## Article
 
-- **Slug:** techno-detroit-historia-musica-electronica
-- **Source:** website/src/content/articles/techno-detroit-historia-musica-electronica.md
+- **Slug:** `techno-detroit-historia-musica-electronica`
+- **Source:** `website/src/content/articles/techno-detroit-historia-musica-electronica.md`
 - **Frequency:** p2 — Bass & Borders
+- **Alcance editorial:** piloto web P2 (calibración flujo investigación → web → assets); **no** tratado aquí como paquete de redes.
 
 ---
 
-## OG social (2026-05-04)
+## Inventario canónico en repo
 
-- **ogImage activo:** `website/public/images/articles/FG_DETROIT_P2_IMG_OG_v02_BILLBOARD_CANONICAL.png` (1200×630). Derivación: crop superior + resize desde `FG_DETROIT_P2_IMG_INLINE_MANGA02_v01_20260502_CANONICAL.png` (panel “Welcome to Detroit”). `FG_DETROIT_P2_IMG_OG_v01_20260502_CANONICAL.png` permanece en repo sin borrar.
+Rutas verificadas bajo `website/public/images/articles/` (patrón `FG_DETROIT_P2_*_CANONICAL`). Sin archivos inventados.
 
----
-
-## Assets referenciados en frontmatter
-
-Rutas exactas que el artículo espera encontrar:
-
-| Campo | Ruta esperada | Existe |
-|---|---|---|
-| image | /images/articles/techno-detroit-hero.png | NO |
-| heroImageWebp | /images/articles/techno-detroit-hero.webp | NO |
-| cardImage | /images/articles/bass-borders-detroit-card.webp | NO |
-| ogImage | /images/articles/techno-detroit-og.png | NO |
-| inline figure 1 | /images/articles/techno-detroit-billboard-manga-v1-rebuilt.png | NO |
-| inline figure 1 webp | /images/articles/techno-detroit-billboard-manga-v1-rebuilt.webp | NO |
-| inline figure 2 | /images/articles/techno-detroit-manga-02-master-v2.png | NO |
-| inline figure 2 webp | /images/articles/techno-detroit-manga-02-master-v2.webp | NO |
-| inline figure 3 | /images/articles/techno-detroit-manga-03.png | NO |
-| inline figure 3 webp | /images/articles/techno-detroit-manga-03.webp | NO |
-
-> ALERTA: Todas las rutas referenciadas en el frontmatter y cuerpo del artículo NO EXISTEN como archivos.
-> Existen assets con nombres distintos en /images/articles/ (prefijo FG_DETROIT_*) que no coinciden con las rutas esperadas.
+| Activo | Ruta en repo | Ruta web |
+|--------|----------------|----------|
+| Hero web | `website/public/images/articles/FG_DETROIT_P2_IMG_HERO_WEB_v01_20260502_CANONICAL.png` | `/images/articles/FG_DETROIT_P2_IMG_HERO_WEB_v01_20260502_CANONICAL.png` |
+| Card / feed cuadrado | `website/public/images/articles/FG_DETROIT_P2_IMG_CARD_SOCIAL_v01_20260502_CANONICAL.png` | `/images/articles/FG_DETROIT_P2_IMG_CARD_SOCIAL_v01_20260502_CANONICAL.png` |
+| OG (variante documentada v01) | `website/public/images/articles/FG_DETROIT_P2_IMG_OG_v01_20260502_CANONICAL.png` | `/images/articles/FG_DETROIT_P2_IMG_OG_v01_20260502_CANONICAL.png` |
+| OG billboard v02 | `website/public/images/articles/FG_DETROIT_P2_IMG_OG_v02_BILLBOARD_CANONICAL.png` | `/images/articles/FG_DETROIT_P2_IMG_OG_v02_BILLBOARD_CANONICAL.png` |
+| Inline 1 (open still) | `website/public/images/articles/FG_DETROIT_P2_IMG_INLINE_OPEN_STILL_v01_20260502_CANONICAL.png` | `/images/articles/FG_DETROIT_P2_IMG_INLINE_OPEN_STILL_v01_20260502_CANONICAL.png` |
+| Inline 2 (manga / Welcome) | `website/public/images/articles/FG_DETROIT_P2_IMG_INLINE_MANGA02_v01_20260502_CANONICAL.png` | `/images/articles/FG_DETROIT_P2_IMG_INLINE_MANGA02_v01_20260502_CANONICAL.png` |
+| Inline 3 (manga / bóveda) | `website/public/images/articles/FG_DETROIT_P2_IMG_INLINE_MANGA03_v01_20260502_CANONICAL.png` | `/images/articles/FG_DETROIT_P2_IMG_INLINE_MANGA03_v01_20260502_CANONICAL.png` |
 
 ---
 
-## Assets existentes en /images/articles/ relacionados con Detroit
+## Frontmatter del artículo (consumo actual)
 
-| Archivo actual | Tamaño | Ruta convención | Acción recomendada |
-|---|---|---|---|
-| FG_DETROIT_HERO_WEB_v1.png | 450KB | techno-detroit-hero.png | Renombrar o crear symlink |
-| FG_BASS_BORDERS_DETROIT_CARD_v2.png | 937KB | techno-detroit-featured-card.png | Candidato para featured card |
-| FG_DETROIT_OG_v1.png | 1.1MB | techno-detroit-og.png | Candidato para ogImage |
-| FG_DETROIT_BILLBOARD_MANGA_HD_v1.png | 1.2MB | techno-detroit-billboard-manga-v1-rebuilt.png | Candidato inline fig 1 |
-| FG_DETROIT_MANGA_EDITORIAL_HD_v2.png | 2.1MB | techno-detroit-manga-02-master-v2.png | Candidato inline fig 2 |
-| FG_DETROIT_FEATURED_REDESIGN_v1.png | 629KB | — | Evaluar uso |
-| techno-detroit-featured-card.png | 1.4MB | techno-detroit-featured-card.png | Ya tiene nombre convención |
+Referencias en `techno-detroit-historia-musica-electronica.md` frente a archivos en repo:
 
----
+| Campo | Ruta en markdown | Estado |
+|-------|------------------|--------|
+| `image` | `/images/articles/FG_DETROIT_P2_IMG_HERO_WEB_v01_20260502_CANONICAL.png` | OK — archivo presente |
+| `cardImage` | `/images/articles/FG_DETROIT_P2_IMG_CARD_SOCIAL_v01_20260502_CANONICAL.png` | OK — archivo presente |
+| `ogImage` | `/images/articles/FG_DETROIT_P2_IMG_OG_v01_20260502_CANONICAL.png` | OK — archivo presente |
 
-## Assets según estándar de derivación visual (pendientes)
-
-| Asset | Ruta convención | Estado | Método | Notas |
-|---|---|---|---|---|
-| Featured card | techno-detroit-historia-musica-electronica-featured-card.png | PENDIENTE | ComfyUI | Brief listo en ARTICLE_VISUAL_BRIEF.md |
-| Thumbnail | techno-detroit-historia-musica-electronica-thumbnail.png | PENDIENTE | ComfyUI | Prompts listos en ASSET_PROMPTS.md |
-| Social preview | techno-detroit-historia-musica-electronica-social-1200x630.png | FUTURO | ComfyUI | No prioridad inmediata |
+**Nota OG:** existe además `FG_DETROIT_P2_IMG_OG_v02_BILLBOARD_CANONICAL.png` (1200×630, derivación documentada en ops desde el panel manga02). El frontmatter sigue apuntando a **v01**; cualquier alineación futura de `ogImage` al v02 es decisión editorial/producto fuera de este manifiesto.
 
 ---
 
-## Acción pendiente bloqueante
+## Imágenes inline en cuerpo (HTML)
 
-Antes de publicar este artículo en producción sin 404:
-
-1. Decidir si renombrar los assets FG_DETROIT_* a las rutas exactas del frontmatter, O
-2. Actualizar el frontmatter para que apunte a los archivos que sí existen.
-
-Opción 2 (actualizar frontmatter) es menos disruptiva. Requiere aprobación editorial.
+| Figura | Ruta web | Estado |
+|--------|----------|--------|
+| Primera ilustración | `/images/articles/FG_DETROIT_P2_IMG_INLINE_OPEN_STILL_v01_20260502_CANONICAL.png` | OK |
+| Segunda ilustración | `/images/articles/FG_DETROIT_P2_IMG_INLINE_MANGA02_v01_20260502_CANONICAL.png` | OK |
+| Tercera ilustración | `/images/articles/FG_DETROIT_P2_IMG_INLINE_MANGA03_v01_20260502_CANONICAL.png` | OK |
 
 ---
 
-## Validation (estado al 2026-04-26)
+## Consumidor adicional (home)
 
-- HTTP 200 en preview: NO VERIFICADO (archivos ausentes en rutas referenciadas)
-- Build: PASS (Astro no falla en build por imágenes 404, solo en runtime)
-- Preview /pilares/bass-and-borders: muestra cards sin imagen si el path no existe
-- Alt text visible: NO (componente usa alt={title} en img, no texto visible extra)
-- 404 en runtime: PROBABLE para hero, cardImage, ogImage e imágenes inline
+- `website/src/pages/index.astro` — señal destacada: `/images/articles/FG_DETROIT_P2_IMG_CARD_SOCIAL_v01_20260502_CANONICAL.png` (alineado con `cardImage` según QA documentado).
+
+---
+
+## Validation (D40 — 2026-04-27)
+
+- Archivos `FG_DETROIT_P2_*_CANONICAL` listados arriba: presentes en `website/public/images/articles/`.
+- Rutas legacy del manifiesto previo (`techno-detroit-hero.png`, `bass-borders-detroit-card.webp`, etc.): **no** usadas por el artículo actual; retiradas de este documento para evitar señales falsas de 404.
