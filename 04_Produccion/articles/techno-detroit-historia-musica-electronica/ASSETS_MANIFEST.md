@@ -33,9 +33,9 @@ Referencias en `techno-detroit-historia-musica-electronica.md` frente a archivos
 |-------|------------------|--------|
 | `image` | `/images/articles/FG_DETROIT_P2_IMG_HERO_WEB_v01_20260502_CANONICAL.png` | OK — archivo presente |
 | `cardImage` | `/images/articles/FG_DETROIT_P2_IMG_CARD_SOCIAL_v01_20260502_CANONICAL.png` | OK — archivo presente |
-| `ogImage` | `/images/articles/FG_DETROIT_P2_IMG_OG_v01_20260502_CANONICAL.png` | OK — archivo presente |
+| `ogImage` | `/images/articles/FG_DETROIT_P2_IMG_OG_v02_BILLBOARD_CANONICAL.png` | OK — archivo presente |
 
-**Nota OG:** existe además `FG_DETROIT_P2_IMG_OG_v02_BILLBOARD_CANONICAL.png` (1200×630, derivación documentada en ops desde el panel manga02). El frontmatter sigue apuntando a **v01**; cualquier alineación futura de `ogImage` al v02 es decisión editorial/producto fuera de este manifiesto.
+**Nota OG (D42):** `ogImage` del artículo usa **v02 billboard** (1200×630, crop documentado desde `FG_DETROIT_P2_IMG_INLINE_MANGA02_*`, coherente con ops D25/D37). `FG_DETROIT_P2_IMG_OG_v01_20260502_CANONICAL.png` permanece en repo como baseline histórico.
 
 ---
 
@@ -55,7 +55,7 @@ Referencias en `techno-detroit-historia-musica-electronica.md` frente a archivos
 
 ---
 
-## Validation (D40 — 2026-04-27)
+## Validation (D40–D44 — 2026-04-27)
 
 - Archivos `FG_DETROIT_P2_*_CANONICAL` listados arriba: presentes en `website/public/images/articles/`.
 - Rutas legacy del manifiesto previo (`techno-detroit-hero.png`, `bass-borders-detroit-card.webp`, etc.): **no** usadas por el artículo actual; retiradas de este documento para evitar señales falsas de 404.

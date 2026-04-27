@@ -5,6 +5,18 @@
 
 ---
 
+## Equivalencias nombre prompt → archivo canónico en web (D43)
+
+Los destinos listados abajo son convenciones de salida históricas; el sitio consume rutas `FG_DETROIT_P2_*_CANONICAL` bajo `/images/articles/`.
+
+| Destino citado en este archivo | Archivo canónico en repo (`website/public/images/articles/`) |
+|--------------------------------|----------------------------------------------------------------|
+| `techno-detroit-historia-musica-electronica-featured-card.png` | `FG_DETROIT_P2_IMG_CARD_SOCIAL_v01_20260502_CANONICAL.png` |
+| `techno-detroit-historia-musica-electronica-thumbnail.png` | No hay PNG homónimo en `public`; roles de card/listados los cubre el card canónico y el hero según layout. |
+| `techno-detroit-historia-musica-electronica-social-1200x630.png` | Open Graph activo: `FG_DETROIT_P2_IMG_OG_v02_BILLBOARD_CANONICAL.png`; baseline alterno: `FG_DETROIT_P2_IMG_OG_v01_20260502_CANONICAL.png`. |
+
+---
+
 ## Featured card prompt
 
 **Para:** `website/public/images/articles/techno-detroit-historia-musica-electronica-featured-card.png`

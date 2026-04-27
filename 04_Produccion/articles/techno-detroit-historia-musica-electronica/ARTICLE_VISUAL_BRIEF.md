@@ -104,8 +104,8 @@ Rutas web tal como están en `website/public/images/articles/`. Estado según ve
 |--------------|-----------------|---------------|--------|-------------------|
 | Hero web | `/images/articles/FG_DETROIT_P2_IMG_HERO_WEB_v01_20260502_CANONICAL.png` | Hero del artículo (`image`), atmósfera + marca | CANONICAL en repo | 16:9; overlay legible |
 | Card social | `/images/articles/FG_DETROIT_P2_IMG_CARD_SOCIAL_v01_20260502_CANONICAL.png` | `cardImage`; home destacada alineada (index) | CANONICAL en repo | Misma pieza para card y señal home |
-| OG v01 | `/images/articles/FG_DETROIT_P2_IMG_OG_v01_20260502_CANONICAL.png` | `ogImage` en frontmatter actual | CANONICAL en repo | Alternativa baseline OG |
-| OG v02 billboard | `/images/articles/FG_DETROIT_P2_IMG_OG_v02_BILLBOARD_CANONICAL.png` | Crop 1200×630 para estrategia OG documentada (ops) | CANONICAL en repo | Derivado manga02; ver `ASSETS_MANIFEST` si frontmatter pasa a v02 |
+| OG v02 billboard | `/images/articles/FG_DETROIT_P2_IMG_OG_v02_BILLBOARD_CANONICAL.png` | `ogImage` en frontmatter (1200×630) | CANONICAL en repo | Crop desde manga02; ops D25/D37 |
+| OG v01 | `/images/articles/FG_DETROIT_P2_IMG_OG_v01_20260502_CANONICAL.png` | Baseline histórico en repo | CANONICAL en repo | Ya no es `ogImage` activo tras D42 |
 | Inline open still | `/images/articles/FG_DETROIT_P2_IMG_INLINE_OPEN_STILL_v01_20260502_CANONICAL.png` | Primera figura — arquitectura / contraluz | CANONICAL en repo | Puente al párrafo de “señal” |
 | Inline manga 02 | `/images/articles/FG_DETROIT_P2_IMG_INLINE_MANGA02_v01_20260502_CANONICAL.png` | Segunda figura — Welcome to Detroit | CANONICAL en repo | Base documentada del crop OG v02 |
 | Inline manga 03 | `/images/articles/FG_DETROIT_P2_IMG_INLINE_MANGA03_v01_20260502_CANONICAL.png` | Tercera figura — bóveda / multitud | CANONICAL en repo | Memoria y custodia del relato |
@@ -114,4 +114,4 @@ Rutas web tal como están en `website/public/images/articles/`. Estado según ve
 
 ## Nota de alcance
 
-Los nombres tipo `techno-detroit-historia-musica-electronica-featured-card.png` en prompts históricos (`ASSET_PROMPTS.md`) son convenciones de **generación** previas; la pieza consumida en web usa **únicamente** los `FG_DETROIT_P2_*_CANONICAL` anteriores. Actualizar prompts en un ticket futuro si se exige paridad literal de nombres.
+Los nombres tipo `techno-detroit-historia-musica-electronica-featured-card.png` en prompts históricos (`ASSET_PROMPTS.md`) son convenciones de **generación** previas; la pieza consumida en web usa los `FG_DETROIT_P2_*_CANONICAL` del manifiesto. Tabla legacy → canónico en `ASSET_PROMPTS.md` (D43).

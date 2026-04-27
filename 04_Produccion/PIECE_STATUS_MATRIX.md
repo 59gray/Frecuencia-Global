@@ -17,6 +17,7 @@
 | FG_001 | Carrusel + video FB | Narrativa (minerales críticos) | — | ✓ [`FG_001_PublishReady.md`](FG_001_PublishReady.md) | ✓ sandbox | pend | SANDBOX_EDITORIAL_DRAFT | Sandbox editorial — [`SANDBOX_CONTENT_INDEX.md`](../07_Operaciones/SANDBOX_CONTENT_INDEX.md); política derivada §2.3 | — |
 | P1_003 | — | Geopolitik Drop (brief) | — | ✓ [`P1_003_Brief.md`](../03_Editorial/P1_003_Brief.md) | — | — | — | **Pipeline siguiente** — orden mecánico antes que P1_004 | — |
 | P1_004 | — | Geopolitik Drop (brief) | — | ✓ [`P1_004_Brief.md`](../03_Editorial/P1_004_Brief.md) | — | — | — | En cola tras P1_003 (mismo bucket brief; ver `HUMAN_ACTION_QUEUE` HA-006 cerrado) | — |
+| **P2_DETROIT_TECHNO_WEB** | Artículo web | Bass & Borders | ✓ [`EDITORIAL_BRIEF_VERIFIED.md`](articles/techno-detroit-historia-musica-electronica/EDITORIAL_BRIEF_VERIFIED.md) | ✓ [`techno-detroit-historia-musica-electronica.md`](../website/src/content/articles/techno-detroit-historia-musica-electronica.md) | ✓ [`ASSETS_MANIFEST.md`](articles/techno-detroit-historia-musica-electronica/ASSETS_MANIFEST.md) | ✓ documental (QA D10 / checklists carpeta pieza) | — | Piloto web P2 — canon D39, manifest D40, alcance D41, OG/prompts/track D42–D44; validación deploy pendiente cuando aplique | — |
 
 ---
 
@@ -37,4 +38,4 @@ Las piezas `TEST_*` y `TEST_ECO_001` son **SANDBOX_INFRA**; no entran en matriz 
 
 ---
 
-*Última actualización: 2026-04-14 — CAPA 4 activa. MVP_01–03 PUBLISHED (MVP_03 2026-04-14 API).*
+*Última actualización: 2026-04-27 — Piloto web Detroit (P2) registrado en matriz; CAPA 4 histórica MVP_01–03.*
